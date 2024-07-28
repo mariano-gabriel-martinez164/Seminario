@@ -10,7 +10,8 @@ from .serializers import PacienteSerializer
 #from rest_framework import status
 #from rest_framework.views import APIView
 from rest_framework import generics
-
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters
 # Create your views here.
 '''class PacientesList(APIView):
     def get(self, request):
@@ -50,9 +51,18 @@ from rest_framework import generics
         paciente.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)'''
 
+class PacientesPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
 class PacientesList(generics.ListCreateAPIView):
-    queryset = Paciente.objects.all()
+    queryset = Paciente.objects.all().order_by('apellido')
     serializer_class = PacienteSerializer
+    pagination_class = PacientesPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nombre', 'apellido', 'dni']
 
 class PacienteDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Paciente.objects.all()
