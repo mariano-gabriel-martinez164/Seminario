@@ -11,6 +11,7 @@ from .serializers import PacienteSerializer
 #from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters
 # Create your views here.
 '''class PacientesList(APIView):
     def get(self, request):
@@ -60,6 +61,8 @@ class PacientesList(generics.ListCreateAPIView):
     queryset = Paciente.objects.all().order_by('apellido')
     serializer_class = PacienteSerializer
     pagination_class = PacientesPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nombre', 'apellido', 'dni']
 
 class PacienteDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Paciente.objects.all()
