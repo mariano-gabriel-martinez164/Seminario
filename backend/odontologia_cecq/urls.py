@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include('pacientes.urls')),
     path('', include('basic.urls')),
     path('auth/', include('custom_auth.urls')),
+    path('', include('Agenda.urls')),
 ]

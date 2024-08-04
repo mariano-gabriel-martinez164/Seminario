@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'basic',
     'custom_auth',
     'rest_framework.authtoken',
+    'Agenda',
 ]
 
 MIDDLEWARE = [
