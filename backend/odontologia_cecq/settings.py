@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'pacientes',
     'basic',
+    'custom_auth',
+    'rest_framework.authtoken',
     'Agenda',
 ]
 
@@ -125,3 +127,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'custom_auth.Administrativo'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
