@@ -23,4 +23,5 @@ urlpatterns = [
     path('', include('basic.urls')),
     path('auth/', include('custom_auth.urls')),
     path('', include('Agenda.urls')),
+    path('', include('turnos.urls')),
 ]
