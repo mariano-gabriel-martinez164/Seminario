@@ -13,9 +13,9 @@ class Turno(models.Model):
     esSobreturno = models.BooleanField()
     monto = models.FloatField()
 
-    agenda = models.ForeignKey(Agenda, on_delete=models.SET_NULL, null=True)
-    paciente = models.ForeignKey(Paciente, on_delete=models.SET_NULL, null=True)
-    administrativo = models.ForeignKey(Administrativo, on_delete=models.SET_NULL, null=True)
+    agenda = models.ForeignKey(Agenda, related_name='turnos_agenda',on_delete=models.SET_NULL, null=True)
+    paciente = models.ForeignKey(Paciente, related_name='turnos_paciente', on_delete=models.SET_NULL, null=True)
+    administrativo = models.ForeignKey(Administrativo, related_name='turnos_administrativo',on_delete=models.SET_NULL, null=True)
 
     choices = (
         ('Disponible', 'Disponible'),
