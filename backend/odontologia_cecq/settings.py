@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'custom_auth',
     'rest_framework.authtoken',
     'Agenda',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
