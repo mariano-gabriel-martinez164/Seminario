@@ -9,16 +9,11 @@ from django.db.models import Q
 # Create your views here.
 
 class AgendaFilter(django_filters.FilterSet):
-    odontologo = django_filters.CharFilter(method='filter_odontologo')
 
     class Meta:
         model = Agenda
         fields = ['odontologo', 'CentroOdontologico']
     
-    def filter_odontologo(self, queryset, _, value):
-        return queryset.filter(
-            Q(odontologo__nombre__icontains=value) | Q(odontologo__apellido__icontains=value)
-        )
 
 class AgendaList(generics.ListCreateAPIView):
     queryset = Agenda.objects.all()
