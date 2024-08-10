@@ -15,13 +15,14 @@
 	
 }
 
+
 .offcanvas-body .nav {
 	display: flex;
 	flex-direction: column;
 	padding-left: 0;
   }
   
-.offcanvas-body .nav-link {
+  .offcanvas-body .nav-link {
 	color: #fff; 
 	border-radius: 1.25rem;
 }

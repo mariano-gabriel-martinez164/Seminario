@@ -1,0 +1,32 @@
+body{
+    background-color: #cfd8dc;
+}
+
+
+#col1{
+    background-color: #dfe4ea;
+    border-radius: 20px;
+    margin-left: 10px;
+}
+
+#col2{
+    
+    border-radius: 20px;
+    margin-left: 20px;
+    
+    
+}
+
+#row{
+    background-color: #e9ecef;
+    border-start-start-radius: 20px;
+}
+
+#h2{
+    display: flex;
+    justify-content: center
+}
+
+#container{
+    margin-top: 20px;
+}

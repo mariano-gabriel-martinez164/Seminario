@@ -9,32 +9,19 @@ export default function Navbar() {
       <header className="bg-dark text-white">
         <nav className="navbar">
           <div className="row container-fluid">
-            <div className="col-1 d-flex justify-content-center">
-              <button className="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
+            <div className="col-1 d-flex align-items-center justify-content-start">
+              <button className="btn btn-secondary me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
                 <span className="navbar-toggler-icon"></span>
               </button>
+              <div id='imgcecq' className="d-flex align-items-center">
+                <img src={img} className="img-fluid" alt="..." id="img-icon-brand" />
+                <a id="CECQ" href="#">CECQ</a>
+              </div>
             </div>
+
+           
+            
             <div className="col-1 d-flex justify-content-end">
-              <img src={img} className="img-fluid" alt="..." id="img-icon-brand" />
-              <a id="CECQ" href="#">CECQ</a>
-            </div>
-            <div className="col-7">
-              <form className="d-flex" role="search">
-                <input className="form-control me-2" type="search" placeholder="Ingrese una fecha" aria-label="Search" />
-                <button className="btn btn-outline-success btn-light" type="submit">Buscar</button>
-              </form>
-            </div>
-            <div className="col-1 d-flex justify-content-end dropdown">
-              <a id="dropdownMenuButton" className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Odontólogo</a>
-              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                <li><a className="dropdown-item" href="#">Odontólogo 1</a></li>
-                <li><hr className="dropdown-divider" /></li>
-                <li><a className="dropdown-item" href="#">Odontólogo 2</a></li>
-                <li><hr className="dropdown-divider" /></li>
-                <li><a className="dropdown-item" href="#">Odontólogo 3</a></li>
-              </ul>
-            </div>
-            <div className="col-1 d-flex justify-content-center">
               <a className="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="bi bi-person-fill-down fs-3"></i></a>
               <ul className="dropdown-menu dropdown-menu-end">
                 <li><a className="dropdown-item" href="#">Nombre:</a></li>
