@@ -28,7 +28,7 @@ export default function Navbar() {
                 <li><a className="dropdown-item" href="#">Apellido:</a></li>
                 <li><a className="dropdown-item" href="#">Cambiar contraseña</a></li>
                 <li><hr className="dropdown-divider" /></li>
-                <li><a className="dropdown-item" href="#">Cerrar sesión</a></li>
+                <li><a className="dropdown-item" href="/">Cerrar sesión</a></li>
               </ul>
             </div>
           </div>
@@ -43,7 +43,7 @@ export default function Navbar() {
           <div className="offcanvas-body">
             <ul className="nav">
               <li className="nav-item">
-              <Link className="nav-link p-3 fs-5" to="/">
+              <Link className="nav-link p-3 fs-5" to="/verAgenda">
                 <i className="bi bi-calendar-date-fill"></i> Ver agenda
               </Link>
               </li>
