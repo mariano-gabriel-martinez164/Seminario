@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
 from .models import Turno, TurnosPieza
-from .serializers import TurnoSerializer
+from .serializers import TurnoSerializer, TurnoAndTTCommonSerializer
 from rest_framework.exceptions import ValidationError
 from Agenda.models import Agenda, TurnoTemplate
 from django_filters.rest_framework import DjangoFilterBackend
@@ -22,7 +22,7 @@ class TurnoList(generics.ListCreateAPIView):
 
 class TurnoAndTurnoTemplateList(generics.ListAPIView):
     queryset = Turno.objects.all()
-    serializer_class = TurnoSerializer
+    serializer_class = TurnoAndTTCommonSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TurnoFilter
 
@@ -83,13 +83,13 @@ class TurnoAndTurnoTemplateList(generics.ListAPIView):
         agendas = Agenda.objects.filter(pk__in=agendas_ids)
         turnosList = list(turnos.select_related('agenda').all())
         turnosFull = list(turnos) # la lista de turnos que se devolverá al final
-        print(turnos_template)
+        # print(turnos_template)
 
 
-        print(f'fecha inicio: {dt_min}, fecha fin: {dt_max}')
+        # print(f'fecha inicio: {dt_min}, fecha fin: {dt_max}')
         for fecha in range((dt_max - dt_min).days + 1):
             fecha = dt_min + timedelta(days=fecha)
-            print(f'Fecha: {fecha}')
+            # print(f'Fecha: {fecha}')
             for agenda in agendas:
                 # aux_tt = turnos_template.filter(agendaID=agenda, diaSemana=fecha.weekday())
                 aux_tt = [tt for tt in turnos_template if tt.agenda == agenda and tt.diaSemana == str(fecha.weekday())]

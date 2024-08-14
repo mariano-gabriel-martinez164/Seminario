@@ -6,3 +6,8 @@ class TurnoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Turno
         fields = '__all__'
+
+class TurnoAndTTCommonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Turno
+        exclude = ['monto', 'observaciones']
