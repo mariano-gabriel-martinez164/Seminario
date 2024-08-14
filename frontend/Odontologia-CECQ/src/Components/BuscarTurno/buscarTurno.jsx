@@ -9,14 +9,14 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { CustomToggle, CustomMenu, CustomCalendarMenu, CustomOnlyMenu } from './Dropdown/Dropdown';
 import { handleSelect} from './HandleAndRemove/handleAndRemove';
 import { mostrarFiltros } from './MostrarFiltros/mostrarFiltros';
-
+import {verTurno} from './VerInfoTurno/verInfoTurno';
   
   export default function buscarTurno() {
     const [selectedPatient, setSelectedPatient] = useState([]);
     const [selectedDentist, setSelectedDentist] = useState([]);
     const [selectedState, setSelectedState] = useState([]);
     const [selectedDuration, setSelectedDuration] = useState([]);
-    
+    const [modalShow, setModalShow] = React.useState(false);
   return (
   
     <Container id='container' fluid>
@@ -117,6 +117,7 @@ import { mostrarFiltros } from './MostrarFiltros/mostrarFiltros';
                   <th>Paciente</th>
                   <th>Odontologo</th>
                   <th>Estado</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -126,6 +127,16 @@ import { mostrarFiltros } from './MostrarFiltros/mostrarFiltros';
                   <td>Tomas</td>
                   <td>Mariano</td>
                   <td>Completado</td>
+                  <td>    
+                    <Button variant="primary" onClick={() => setModalShow(true)}>
+                      Launch vertically centered modal
+                    </Button>
+              
+                    <verTurno
+                      show={modalShow}
+                      onHide={() => setModalShow(false)}
+                    />
+                  </td>
                 </tr>
               </tbody>
             </Table>
