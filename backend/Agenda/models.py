@@ -6,13 +6,13 @@ from enum import Enum
 
 
 class DiaSemanaEnum(Enum):
-    LUNES = 'Lunes'
-    MARTES = 'Martes'
-    MIERCOLES = 'Miércoles'
-    JUEVES = 'Jueves'
-    VIERNES = 'Viernes'
-    SABADO = 'Sábado'
-    DOMINGO = 'Domingo'
+    LUNES = 0
+    MARTES = 1
+    MIERCOLES = 2
+    JUEVES = 3
+    VIERNES = 4
+    SABADO = 5
+    DOMINGO = 6
 
 
 class Agenda(models.Model):
@@ -28,9 +28,8 @@ class turnoTemplate(models.Model):
     turnoTemplateId = models.AutoField(primary_key=True, null=False)
     horaInicio = models.TimeField()
     horaFin = models.TimeField()
-    diaSemana = models.CharField(
-        max_length=20,
-        choices=[(dia.name, dia.value) for dia in DiaSemanaEnum]
+    diaSemana = models.PositiveSmallIntegerField(
+        choices=[(dia.value, dia.name) for dia in DiaSemanaEnum]
     )
     agendaID = models.ForeignKey(Agenda, related_name='turnos', on_delete=models.CASCADE, null=True)
 

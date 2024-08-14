@@ -25,6 +25,12 @@ class Turno(models.Model):
     )
     estado = models.CharField(max_length=20, choices=choices, default='Disponible')
 
+    def __str__(self):
+        return f"agenda: {self.agenda.agendaID}, fecha: {self.fecha}, horaInicio: {self.horaInicio}, estado: {self.estado}"
+    class Meta:
+        ordering = ['fecha', 'horaInicio'] 
+
+
 class TurnosPieza(models.Model):
     turno = models.ForeignKey(Turno, on_delete=models.CASCADE)
     pieza = models.ForeignKey(PiezaDental, on_delete=models.CASCADE)
