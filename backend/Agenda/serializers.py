@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import Agenda, turnoTemplate
+from .models import Agenda, TurnoTemplate
 
 class TurnoTemplateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = turnoTemplate
+        model = TurnoTemplate
         fields = '__all__'
 
 class AgendaSerializer(serializers.ModelSerializer):

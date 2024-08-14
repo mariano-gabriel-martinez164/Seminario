@@ -1,0 +1,64 @@
+
+.logocecq {
+    position:absolute;
+    height:500px;
+    margin-left: 510px;    
+    margin-top:84px;
+  }
+
+.form {
+  background-color: #333333c6;
+  position: absolute;
+  height:200px;
+  width:500px;
+  margin-left:510px;
+  margin-top:220px;
+  border: 4px solid black;
+  border-radius: 10px; 
+}
+
+.usuario {
+  width: 330px;
+  position: absolute;
+  background-color: #333333c6;
+  border: 4px solid black;
+  border-radius: 10px; 
+  margin-top: 20px;
+  margin-left: 80px;
+  color: rgb(136, 134, 134);
+  font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  padding-left: 7px;
+}
+
+.contrasena {
+  width: 330px;
+  position: absolute;
+  background-color: #333333c6;
+  border: 4px solid black;
+  border-radius: 10px; 
+  margin-top: 80px;
+  margin-left: 80px;
+  color: rgb(136, 134, 134);
+  font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  padding-left: 7px;
+}
+
+.submit {
+  width: 150px;
+  margin-top: 140px;
+  margin-left: 170px;
+  font-family:Impact, Haettenschweiler, 'Arial Narrow', sans-serif;
+  color: black;
+  background-color: rgb(198, 238, 198);
+  border: 4px solid black;
+  border-radius: 10px; 
+}
+
+.contrasena::placeholder {
+  color: rgb(148, 148, 148);
+}
+
+.usuario::placeholder {
+  color: rgb(148, 148, 148);
+}
+

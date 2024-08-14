@@ -1,0 +1,34 @@
+#img-icon-brand 
+{
+	width: 50%;
+	height: auto;
+}
+
+#CECQ
+{
+	margin: 2px;
+	color: rgba(255, 255, 255, 0.2); 
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+	font-weight: bold; 
+	font-size: 2em; 
+	
+	
+}
+
+
+.offcanvas-body .nav {
+	display: flex;
+	flex-direction: column;
+	padding-left: 0;
+  }
+  
+  .offcanvas-body .nav-link {
+	color: #fff; 
+	border-radius: 1.25rem;
+}
+  
+.offcanvas-body .nav-link:hover {
+	background-color: #343a40; 
+	
+  }
+  
