@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
 from .models import Turno, TurnosPieza
-from .serializers import TurnoSerializer, TurnoAndTTCommonSerializer
+from .serializers import TurnoSerializer, ShortTurnoSerializer
 from rest_framework.exceptions import ValidationError
 from Agenda.models import Agenda, TurnoTemplate
 from django_filters.rest_framework import DjangoFilterBackend
@@ -16,13 +16,20 @@ from typing import List, Set
 
 class TurnoList(generics.ListCreateAPIView):
     queryset = Turno.objects.all()
-    serializer_class = TurnoSerializer
+    serializer_class = ShortTurnoSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TurnoFilter
 
+class TurnoDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Turno.objects.all().prefetch_related(
+        'turnospieza_set__prestacion', 
+        'turnospieza_set__pieza',
+    )
+    serializer_class = TurnoSerializer
+
 class TurnoAndTurnoTemplateList(generics.ListAPIView):
     queryset = Turno.objects.all()
-    serializer_class = TurnoAndTTCommonSerializer
+    serializer_class = ShortTurnoSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TurnoFilter
 
