@@ -3,7 +3,7 @@ from rest_framework import generics
 from .models import Turno, TurnosPieza
 from .serializers import TurnoSerializer
 from rest_framework.exceptions import ValidationError
-from Agenda.models import Agenda, turnoTemplate
+from Agenda.models import Agenda, TurnoTemplate
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from django.db.models import Q
@@ -79,11 +79,11 @@ class TurnoAndTurnoTemplateList(generics.ListAPIView):
     
     
     def transformar_template_a_turno(self, dt_min:datetime, dt_max:datetime, agendas_ids:set, turnos) -> list:
-        turnos_template = list(turnoTemplate.objects.filter(agendaID__in=agendas_ids))
-        agendas = Agenda.objects.filter(agendaID__in=agendas_ids)
+        turnos_template = list(TurnoTemplate.objects.filter(agenda__in=agendas_ids))
+        agendas = Agenda.objects.filter(pk__in=agendas_ids)
         turnosList = list(turnos.select_related('agenda').all())
         turnosFull = list(turnos) # la lista de turnos que se devolverá al final
-
+        print(turnos_template)
 
 
         print(f'fecha inicio: {dt_min}, fecha fin: {dt_max}')
@@ -92,7 +92,7 @@ class TurnoAndTurnoTemplateList(generics.ListAPIView):
             print(f'Fecha: {fecha}')
             for agenda in agendas:
                 # aux_tt = turnos_template.filter(agendaID=agenda, diaSemana=fecha.weekday())
-                aux_tt = [tt for tt in turnos_template if tt.agendaID == agenda and tt.diaSemana == str(fecha.weekday())]
+                aux_tt = [tt for tt in turnos_template if tt.agenda == agenda and tt.diaSemana == str(fecha.weekday())]
 
                 aux_tt_turnos = [Turno(
                     fecha=fecha.date(),
