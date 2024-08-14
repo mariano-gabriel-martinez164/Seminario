@@ -2,6 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/CECQIcon.png'
 import './login.css'
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
+import Image from 'react-bootstrap/Image';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,30 +16,20 @@ const Login = () => {
   };
 
 return (
-  <div className = "padre">
-    <img src={Logo} className= "logocecq"/>
-    <form onSubmit={handleSubmit}>
-    <div className = "form">
-        <input
-          type="text"
-          id="usuario"
-          placeholder="Usuario..."
-          required
-          className="usuario"
-        />
-      <input
-          type="password"
-          id="contraseña"
-          placeholder="Contraseña..."
-          required
-          className="contrasena"
-        />
-      <button type="submit" className="submit">
+  <Container className="container">
+    <Image src={Logo} Id="Image"/>
+    <Form onSubmit={handleSubmit} className="form-overlay">
+      <Form.Group className="mb-4" controlId="formBasicEmail">
+        <Form.Control className="form-control-custom" placeholder="Usuario..." />
+      </Form.Group>
+      <Form.Group className="mb-4" controlId="formBasicPassword">
+        <Form.Control className="form-control-custom" type="password" placeholder="Contraseña..."/>
+      </Form.Group>
+      <Button variant="primary" type="submit">
         Iniciar sesión
-      </button>
-     </div>
-    </form>
-  </div>
+      </Button>
+    </Form>
+  </Container>
 );
 }
 export default Login;
