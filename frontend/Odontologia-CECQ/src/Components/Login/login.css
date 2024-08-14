@@ -1,64 +1,44 @@
 
-.logocecq {
-    position:absolute;
-    height:500px;
-    margin-left: 510px;    
-    margin-top:84px;
-  }
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 90vh; /* Hace que el contenedor ocupe toda la altura de la pantalla */
+  position: relative;
+}
 
-.form {
-  background-color: #333333c6;
-  position: absolute;
-  height:200px;
-  width:500px;
-  margin-left:510px;
-  margin-top:220px;
+#Image {
+  max-width: 100%;
+  min-height:500px;
+  min-width:500px;
+  height: auto;
+  display: block;
+}
+
+.container .form-overlay {
+  position:absolute;
+  background-color: rgba(0, 0, 0, 0.65);
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 250px;
+  color: white;
   border: 4px solid black;
-  border-radius: 10px; 
+  margin-bottom: 34px;
+  align-items: center;
+  text-align: center;
 }
 
-.usuario {
-  width: 330px;
-  position: absolute;
-  background-color: #333333c6;
-  border: 4px solid black;
-  border-radius: 10px; 
-  margin-top: 20px;
-  margin-left: 80px;
-  color: rgb(136, 134, 134);
-  font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  padding-left: 7px;
+.form-overlay .form-control-custom {
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 2px solid #000; 
+  border-radius: 5px; 
+  padding: 10px; 
+  color:rgba(255, 255, 255, 0.768);
 }
 
-.contrasena {
-  width: 330px;
-  position: absolute;
-  background-color: #333333c6;
-  border: 4px solid black;
-  border-radius: 10px; 
-  margin-top: 80px;
-  margin-left: 80px;
-  color: rgb(136, 134, 134);
-  font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  padding-left: 7px;
+.form-overlay .form-control-custom::placeholder {
+  color:rgba(255, 255, 255, 0.768);
 }
-
-.submit {
-  width: 150px;
-  margin-top: 140px;
-  margin-left: 170px;
-  font-family:Impact, Haettenschweiler, 'Arial Narrow', sans-serif;
-  color: black;
-  background-color: rgb(198, 238, 198);
-  border: 4px solid black;
-  border-radius: 10px; 
-}
-
-.contrasena::placeholder {
-  color: rgb(148, 148, 148);
-}
-
-.usuario::placeholder {
-  color: rgb(148, 148, 148);
-}
-
