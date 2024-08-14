@@ -92,17 +92,21 @@ class TurnoAndTurnoTemplateList(generics.ListAPIView):
             # print(f'Fecha: {fecha}')
             for agenda in agendas:
                 # aux_tt = turnos_template.filter(agendaID=agenda, diaSemana=fecha.weekday())
-                aux_tt = [tt for tt in turnos_template if tt.agenda == agenda and tt.diaSemana == str(fecha.weekday())]
+                # aux_tt = [tt for tt in turnos_template if tt.agenda == agenda and int(tt.diaSemana) == fecha.weekday()]
 
-                aux_tt_turnos = [Turno(
-                    fecha=fecha.date(),
-                    horaInicio=tt.horaInicio,
-                    horaFin=tt.horaFin,
-                    agenda=agenda,
-                    esSobreturno=False,
-                    monto=0,
-                    estado='Disponible'
-                ) for tt in aux_tt] 
+                aux_tt_turnos = [
+                    Turno(
+                        fecha=fecha.date(),
+                        horaInicio=tt.horaInicio,
+                        horaFin=tt.horaFin,
+                        agenda=agenda,
+                        esSobreturno=False,
+                        monto=0,
+                        estado='Disponible'
+                    ) for tt in turnos_template if 
+                        tt.agenda == agenda and 
+                        int(tt.diaSemana) == fecha.weekday()
+                ] 
                 # print(f'pre filtro: {aux_tt_turnos}')
 
                 # aux_turnos = turnos.filter(fecha=fecha, agenda=agenda, esSobreturno=False)
