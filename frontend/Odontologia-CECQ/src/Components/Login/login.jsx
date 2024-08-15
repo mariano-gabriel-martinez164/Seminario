@@ -18,14 +18,14 @@ const Login = () => {
 return (
   <Container className="container">
     <Image src={Logo} Id="Image"/>
-    <Form onSubmit={handleSubmit} className="form-overlay">
+    <Form onSubmit={handleSubmit} className="bg">
       <Form.Group className="mb-4" controlId="formBasicEmail">
         <Form.Control className="form-control-custom" placeholder="Usuario..." />
       </Form.Group>
       <Form.Group className="mb-4" controlId="formBasicPassword">
         <Form.Control className="form-control-custom" type="password" placeholder="Contraseña..."/>
       </Form.Group>
-      <Button variant="primary" type="submit">
+      <Button variant="primary" type="submit" style={{ border: '2px solid blue' }}>
         Iniciar sesión
       </Button>
     </Form>
