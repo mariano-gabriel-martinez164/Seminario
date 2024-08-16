@@ -17,7 +17,6 @@
 }
 
 .container .bg {
-  margin-top: 20px;
   background-color: rgba(108, 117, 125, 0.812);
   position:absolute;
   padding: 20px;
@@ -26,7 +25,6 @@
   max-width: 500px;
   min-height: 100px;
   max-height: 250px;
-  color: white;
   border: 4px solid black;
   margin-bottom: 34px;
   align-items: center;
@@ -37,5 +35,7 @@
   border: 2px solid #000; 
   border-radius: 5px; 
   padding: 10px; 
-  color:rgba(255, 255, 255, 0.768);
+  color: rgb(40, 40, 40);
 }
+
+
