@@ -3,10 +3,12 @@ import { Form } from 'react-bootstrap';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import './Dropdown.css';
 
 export const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
-    className="btn btn-outline-secondary ms-2 w-100"
+    style={{backgroundColor: 'white'}} 
+    className="btn btn-outline-secondary ms-2 w-100 custom"
     href=""
     ref={ref} // <a> se comporta como un dropdown.toggle que es pasado como ref
     onClick={(e) => {
@@ -14,7 +16,7 @@ export const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
       onClick(e);
     }}
   >
-    {children} &#x25bc;
+    {children}
   </a> // children contiene al texto que muestra dropdown.toggle
 ));
 
@@ -30,8 +32,9 @@ export const CustomMenu = React.forwardRef(
         aria-labelledby={labeledBy}
       >
         <Form.Control
+          style={{width: '90%'}}
           autoFocus
-          className="mx-3 my-2 w-auto"
+          className="mx-3 my-2"
           placeholder="Buscar..."
           onChange={(e) => setValue(e.target.value)}
           value={value}

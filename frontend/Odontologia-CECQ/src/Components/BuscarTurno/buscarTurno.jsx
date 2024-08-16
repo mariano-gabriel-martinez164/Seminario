@@ -10,7 +10,8 @@ import { CustomToggle, CustomMenu, CustomCalendarMenu, CustomOnlyMenu } from './
 import { handleSelect} from './HandleAndRemove/handleAndRemove';
 import { mostrarFiltros } from './MostrarFiltros/mostrarFiltros';
 import {verTurno} from './VerInfoTurno/verInfoTurno';
-  
+import Button from 'react-bootstrap/Button';
+
   export default function buscarTurno() {
     const [selectedPatient, setSelectedPatient] = useState([]);
     const [selectedDentist, setSelectedDentist] = useState([]);
@@ -23,9 +24,7 @@ import {verTurno} from './VerInfoTurno/verInfoTurno';
         <Row>
           
           <Col id='col1' xs={2} >
-              <Row id='row'>
-                <h2 id='h2'>Turnos</h2>
-              </Row>
+              
               <Row>
                 <h6>Paciente</h6>
                 <Dropdown>
@@ -128,14 +127,12 @@ import {verTurno} from './VerInfoTurno/verInfoTurno';
                   <td>Mariano</td>
                   <td>Completado</td>
                   <td>    
-                    <Button variant="primary" onClick={() => setModalShow(true)}>
-                      Launch vertically centered modal
+                    <Button variant="secondary" onClick={() => setModalShow(true)}>
+                      Ver mas...
                     </Button>
-              
-                    <verTurno
-                      show={modalShow}
-                      onHide={() => setModalShow(false)}
-                    />
+                    {verTurno({ show: modalShow, onHide: () => setModalShow(false),
+                      duration: '30 minutos', date: '10/08/2024', patient: 'Tomas', 
+                      dentist: 'Mariano', state: 'Completado'})}
                   </td>
                 </tr>
               </tbody>

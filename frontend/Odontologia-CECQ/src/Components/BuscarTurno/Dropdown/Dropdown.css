@@ -1,0 +1,10 @@
+.custom {
+    color: black;
+    background-color: white;
+    text-align: left;
+
+}
+
+.custom:hover {
+    color:#6c757d;
+}
