@@ -45,6 +45,11 @@ INSTALLED_APPS = [
     'Agenda',
     'turnos',
     'django_filters',
+    'corsheaders', # permite mandar request desde el frontend
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173", # url del frontend
 ]
 
 MIDDLEWARE = [
@@ -55,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'odontologia_cecq.urls'
