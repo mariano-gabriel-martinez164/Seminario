@@ -1,5 +1,5 @@
 import './buscarTurno.css'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -7,24 +7,35 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { CustomToggle, CustomMenu, CustomCalendarMenu, CustomOnlyMenu } from './Dropdown/Dropdown';
-import { handleSelect} from './HandleAndRemove/handleAndRemove';
+import { handleSelect, uniqueArray} from './HandleAndRemove/handleAndRemove';
 import { mostrarFiltros } from './MostrarFiltros/mostrarFiltros';
 import {verTurno} from './VerInfoTurno/verInfoTurno';
 import Button from 'react-bootstrap/Button';
 
+
   export default function buscarTurno() {
     const [selectedPatient, setSelectedPatient] = useState([]);
-    const [selectedDentist, setSelectedDentist] = useState([]);
+    const [selectedAgenda, setSelectedAgenda] = useState([]);
     const [selectedState, setSelectedState] = useState([]);
-    const [selectedDuration, setSelectedDuration] = useState([]);
+    const [selectedStartTime, setSelectedStartTime] = useState([]);
     const [modalShow, setModalShow] = React.useState(false);
+    const [turnos, setTurnos] = useState([]);
+    const API_URL = 'http://127.0.0.1:8000/turnos/';
+    
+    useEffect(() => {
+      fetch(API_URL)
+        .then((response) => response.json())
+        .then((data) => {
+          setTurnos(data);
+        })
+        .catch((error) => console.log(error));
+    }, []);
+    
   return (
   
     <Container id='container' fluid>
         <Row>
-          
           <Col id='col1' xs={2} >
-              
               <Row>
                 <h6>Paciente</h6>
                 <Dropdown>
@@ -33,31 +44,27 @@ import Button from 'react-bootstrap/Button';
                   </Dropdown.Toggle>
               
                   <Dropdown.Menu as={CustomMenu}>
-                    <Dropdown.Item onClick = {() => handleSelect(selectedPatient, setSelectedPatient, 'Mariano')} eventKey="1">Mariano</Dropdown.Item>
-                    <Dropdown.Item onClick = {() => handleSelect(selectedPatient, setSelectedPatient, 'Tomas')} eventKey="2">Tomas</Dropdown.Item>
-                    <Dropdown.Item onClick = {() => handleSelect(selectedPatient, setSelectedPatient, 'Juan')} eventKey="3">Juan</Dropdown.Item>
-                    <Dropdown.Item onClick = {() => handleSelect(selectedPatient, setSelectedPatient, 'Santi')} eventKey="1">Santi</Dropdown.Item>
+                    {uniqueArray(turnos, 'paciente').map((turno) => (
+                      <Dropdown.Item  onClick = {() => handleSelect(selectedPatient, setSelectedPatient, turno.paciente)} key={turno.id} >{turno.paciente}</Dropdown.Item>))}
                   </Dropdown.Menu>
                 </Dropdown>
                 <br />
                 {mostrarFiltros(selectedPatient, setSelectedPatient)}
                 <br />
 
-                <h6>Odontologo</h6>
+                <h6>Agenda</h6>
                 <Dropdown>
                   <Dropdown.Toggle as={CustomToggle}>
-                    Seleccionar odontologo...
+                    Seleccionar agenda...
                   </Dropdown.Toggle>
               
                   <Dropdown.Menu as={CustomMenu}>
-                    <Dropdown.Item onClick={() => handleSelect(selectedDentist, setSelectedDentist, 'Mariano')} eventKey="1">Mariano</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedDentist, setSelectedDentist,'Tomas')} eventKey="2">Tomas</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedDentist, setSelectedDentist,'Juan')} eventKey="3">Juan</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedDentist, setSelectedDentist,'Santi')} eventKey="1">Santi</Dropdown.Item>
+                    {uniqueArray(turnos, 'agenda').map((turno) => (
+                      <Dropdown.Item onClick = {() => handleSelect(selectedAgenda, setSelectedAgenda, turno.agenda)} key={turno.id} >{turno.agenda}</Dropdown.Item>))}
                   </Dropdown.Menu>
                 </Dropdown>
                 <br />
-                {mostrarFiltros(selectedDentist, setSelectedDentist)}
+                {mostrarFiltros(selectedAgenda, setSelectedAgenda)}
                 <br />
 
                 <h6>Estado</h6>
@@ -66,30 +73,28 @@ import Button from 'react-bootstrap/Button';
                     Seleccionar estado...
                   </Dropdown.Toggle>
               
-                  <Dropdown.Menu as={CustomOnlyMenu}>
-                    <Dropdown.Item onClick={() => handleSelect(selectedState, setSelectedState,'Completado')} eventKey="1">Completado</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedState, setSelectedState,'Pendiente')} eventKey="2">Pendiente</Dropdown.Item>
+                  <Dropdown.Menu as={CustomMenu}>
+                    {uniqueArray(turnos, 'estado').map((turno) => (
+                      <Dropdown.Item onClick = {() => handleSelect(selectedState, setSelectedState, turno.estado)} key={turno.id} >{turno.estado}</Dropdown.Item>))}
                   </Dropdown.Menu>
                 </Dropdown>
                 <br />
                 {mostrarFiltros(selectedState, setSelectedState)}
                 <br />
                 
-                <h6>Duracion</h6>
+                <h6>Hora inicio</h6>
                 <Dropdown>
                   <Dropdown.Toggle as={CustomToggle}>
-                    Seleccionar duracion...
+                    Seleccionar hora inicio...
                   </Dropdown.Toggle>
               
-                  <Dropdown.Menu as={CustomOnlyMenu}>
-                    <Dropdown.Item onClick={() => handleSelect(selectedDuration, setSelectedDuration,'15 Minutos')} eventKey="1">15 minutos</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedDuration, setSelectedDuration,'30 minutos')} eventKey="2">30 minutos</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedDuration, setSelectedDuration,'45 minutos')} eventKey="3">45 minutos</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedDuration, setSelectedDuration,'60 minutos')} eventKey="4">60 minutos</Dropdown.Item>
+                  <Dropdown.Menu as={CustomMenu}>
+                    {uniqueArray(turnos, 'horaInicio').map((turno) => (
+                      <Dropdown.Item onClick = {() => handleSelect(selectedStartTime, setSelectedStartTime, turno.horaInicio)} key={turno.id} >{turno.horaInicio}</Dropdown.Item>))}
                   </Dropdown.Menu>
                 </Dropdown>
                 <br />
-                {mostrarFiltros(selectedDuration, setSelectedDuration)}
+                {mostrarFiltros(selectedStartTime, setSelectedStartTime)}
                 <br />
 
                 <h6>Rango de fechas</h6>
@@ -97,44 +102,50 @@ import Button from 'react-bootstrap/Button';
                   <Dropdown.Toggle as={CustomToggle}>
                     Seleccionar rango de fechas...
                   </Dropdown.Toggle>
-                  <Dropdown.Menu as={CustomCalendarMenu}></Dropdown.Menu>
+                  <Dropdown.Menu as={CustomCalendarMenu}>
+                    
+                  </Dropdown.Menu>
                 </Dropdown>
                 </Row>
-            
           </Col>
           <Col id='col2' xs={8} >
-            <Form>
-              <Form.Control className='my-3'
-                placeholder='Buscar turno'
-                />
-            </Form>
             <Table striped bordered hover>
               <thead>
                 <tr>
-                  <th>Duracion</th>
-                  <th>Fecha de inicio</th>
+                  <th>Hora inicio</th>
+                  <th>Hora fin</th>
+                  <th>Fecha</th>
                   <th>Paciente</th>
-                  <th>Odontologo</th>
+                  <th>Agenda</th>
                   <th>Estado</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>30 minutos</td>
-                  <td>10/08/2024</td>
-                  <td>Tomas</td>
-                  <td>Mariano</td>
-                  <td>Completado</td>
-                  <td>    
-                    <Button variant="secondary" onClick={() => setModalShow(true)}>
-                      Ver mas...
-                    </Button>
-                    {verTurno({ show: modalShow, onHide: () => setModalShow(false),
-                      duration: '30 minutos', date: '10/08/2024', patient: 'Tomas', 
-                      dentist: 'Mariano', state: 'Completado'})}
-                  </td>
-                </tr>
+                {turnos.map((turno) => (
+                  <tr key={turno.id}>
+                    <td>{turno.horaInicio}</td>
+                    <td>{turno.horaFin}</td>
+                    <td>{turno.fecha}</td>
+                    <td>{turno.paciente}</td>
+                    <td>{turno.agenda}</td>
+                    <td>{turno.estado}</td>
+                    {/* <td>
+                      <Button variant="secondary" onClick={() => setModalShow(true)}>
+                        Ver más...
+                      </Button>
+                      {verTurno({ 
+                        show: modalShow, 
+                        onHide: () => setModalShow(false),
+                        duration: `${Math.round((new Date(turno.horaFin) - new Date(turno.horaInicio)) / 60000)} minutos`, 
+                        date: turno.fecha, 
+                        patient: turno.paciente, 
+                        dentist: turno.administrativo, 
+                        state: turno.estado 
+                      })}
+                    </td> */}
+                  </tr>
+                ))}
               </tbody>
             </Table>
           </Col>
