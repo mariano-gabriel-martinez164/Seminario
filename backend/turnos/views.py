@@ -28,7 +28,7 @@ class TurnoDetail(generics.RetrieveUpdateDestroyAPIView):
     )
     serializer_class = TurnoSerializer
 
-class TurnoAndTurnoTemplateList(generics.ListAPIView):
+class TurnoAndTurnoTemplateList(generics.ListCreateAPIView):
     queryset = Turno.objects.all()
     serializer_class = ShortTurnoSerializer
     filter_backends = (DjangoFilterBackend,)
@@ -37,6 +37,7 @@ class TurnoAndTurnoTemplateList(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
+        # obtener parametros de la query
         min_date, max_date, odontologo, centro, agenda, administrativo, paciente, sobreturno = [
             self.request.query_params.get(a, None) for a in 
             [
