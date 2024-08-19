@@ -14,6 +14,7 @@ from .models import Turno
 from datetime import datetime, timedelta
 from typing import List, Set
 
+#! TurnoList no se usa en el código
 class TurnoList(generics.ListCreateAPIView):
     queryset = Turno.objects.all()
     serializer_class = ShortTurnoSerializer
@@ -36,21 +37,36 @@ class TurnoAndTurnoTemplateList(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
-        min_date, max_date, odontologo, centro, agenda = [
+        min_date, max_date, odontologo, centro, agenda, administrativo, paciente, sobreturno = [
             self.request.query_params.get(a, None) for a in 
-            ['fecha_inicio', 'fecha_fin', 'id_odontologo', 'id_centro', 'id_agenda']
+            [
+                'fecha_inicio', 
+                'fecha_fin', 
+                'id_odontologo', 
+                'id_centro', 
+                'id_agenda',
+                'id_administrativo',
+                'id_paciente',
+                'sobreturno'
+            ]
         ]
+        estados = self.request.query_params.getlist('estado')
+        print(estados)
+        if not estados:
+            estados = [a[0] for a in Turno.choices]
+        
 
         # Validaciones del rango de fechas
         dt_min, dt_max = self.validar_rango_fechas(min_date, max_date)
     
-        agendas = self.obtener_agendas(odontologo, centro, agenda)
-        # print(agendas)
 
-        # turnos_dict = self.turnos_a_dict(queryset)
-        turnos_template = self.transformar_template_a_turno(dt_min, dt_max, agendas, queryset)
-
-        serializer = self.get_serializer(turnos_template, many=True)
+        # Rellenar con turnos de template
+        if 'Disponible' in estados and not (paciente or administrativo or sobreturno): 
+            agendas = self.obtener_agendas(odontologo, centro, agenda)
+            queryset = self.transformar_template_a_turno(dt_min, dt_max, agendas, queryset)
+        
+        # Serializar y devolver respuesta
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
         
     
@@ -82,7 +98,7 @@ class TurnoAndTurnoTemplateList(generics.ListAPIView):
         if centro:
             agendas = agendas.filter(CentroOdontologico=centro)
 
-        return set(agendas.values_list('agendaID', flat=True))
+        return set(agendas.values_list('id', flat=True))
     
     
     def transformar_template_a_turno(self, dt_min:datetime, dt_max:datetime, agendas_ids:set, turnos) -> list:

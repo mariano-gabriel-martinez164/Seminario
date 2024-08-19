@@ -6,9 +6,14 @@ class TurnoTemplateSerializer(serializers.ModelSerializer):
         model = TurnoTemplate
         fields = '__all__'
 
-class AgendaSerializer(serializers.ModelSerializer):
+class FullAgendaSerializer(serializers.ModelSerializer):
     turnos = TurnoTemplateSerializer(many=True, read_only=True)
 
+    class Meta:
+        model = Agenda
+        fields = '__all__'
+
+class AgendaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Agenda
         fields = '__all__'
