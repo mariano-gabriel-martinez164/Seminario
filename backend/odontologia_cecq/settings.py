@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", # url del frontend
+    "http://localhost:*",
 ]
 
 MIDDLEWARE = [
