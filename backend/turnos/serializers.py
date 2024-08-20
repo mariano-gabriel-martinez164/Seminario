@@ -27,9 +27,12 @@ class TurnosPiezaSerializer(serializers.ModelSerializer):
 
 class TurnoSerializer(serializers.ModelSerializer): 
     from Agenda.serializers import AgendaSerializer
+    from custom_auth.serializers import ShortAdministrativoSerializer
+
     turnosPieza = TurnosPiezaSerializer(many=True, read_only=True, source='turnospieza_set') # el _set es porque es un reverse relation
     paciente = PacienteSerializer(read_only=True)
     agenda = AgendaSerializer(read_only=True)
+    administrativo = ShortAdministrativoSerializer(read_only=True)
     class Meta:
         model = Turno
         fields = '__all__'
