@@ -3,6 +3,11 @@ from .models import Turno, TurnosPieza
 from basic.models import PiezaDental, Prestacion
 from pacientes.models import Paciente
 
+class PacienteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Paciente
+        fields = ['dni', 'nombre', 'apellido']
+
 class TurnosPiezaSerializer(serializers.ModelSerializer):
     class PiezaDentalSerializer(serializers.ModelSerializer):
         class Meta:
@@ -21,16 +26,15 @@ class TurnosPiezaSerializer(serializers.ModelSerializer):
         fields = ['id', 'pieza', 'prestacion']
 
 class TurnoSerializer(serializers.ModelSerializer): 
+    from Agenda.serializers import AgendaSerializer
     turnosPieza = TurnosPiezaSerializer(many=True, read_only=True, source='turnospieza_set') # el _set es porque es un reverse relation
+    paciente = PacienteSerializer(read_only=True)
+    agenda = AgendaSerializer(read_only=True)
     class Meta:
         model = Turno
         fields = '__all__'
 
 class ShortTurnoSerializer(serializers.ModelSerializer):
-    class PacienteSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Paciente
-            fields = ['dni', 'nombre', 'apellido']
     paciente = PacienteSerializer(read_only=True)
     dni = serializers.IntegerField(write_only=True, source='paciente__dni')
 

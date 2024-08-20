@@ -13,3 +13,8 @@ class AdministrativoSerializer(serializers.ModelSerializer):
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+class ShortAdministrativoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Administrativo
+        fields = ['id', 'email', 'first_name', 'last_name']
