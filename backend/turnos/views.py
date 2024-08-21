@@ -72,6 +72,15 @@ class TurnoAndTurnoTemplateList(generics.ListCreateAPIView):
         
     
         
+    def obtener_turnos_en_rango(self, min_date, max_date, agendas_ids):
+        return Turno.objects.filter(
+            fecha__gte=min_date, 
+            fecha__lte=max_date, 
+            agenda__in=agendas_ids
+        ).exclude(
+            estado='Disponible'
+        )
+
     def validar_rango_fechas(self, min_date, max_date):
         if min_date is None or max_date is None:
             raise ValidationError('Se deben enviar las fechas min_date y max_date')
@@ -105,7 +114,7 @@ class TurnoAndTurnoTemplateList(generics.ListCreateAPIView):
     def transformar_template_a_turno(self, dt_min:datetime, dt_max:datetime, agendas_ids:set, turnos) -> list:
         turnos_template = list(TurnoTemplate.objects.filter(agenda__in=agendas_ids))
         agendas = Agenda.objects.filter(pk__in=agendas_ids)
-        turnosList = list(turnos.select_related('agenda').all())
+        turnosList = list(self.obtener_turnos_en_rango(dt_min, dt_max, agendas_ids))
         turnosFull = list(turnos) # la lista de turnos que se devolverá al final
         # print(turnos_template)
 
