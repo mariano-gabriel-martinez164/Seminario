@@ -5,15 +5,31 @@ import CloseButton from 'react-bootstrap/CloseButton';
 
 export const mostrarFiltros = (selectedItem, setSelectedItem) => {
   // Verificar si `selectedItem` está vacío o nulo
-  if (!selectedItem) return null;
+  if (selectedItem === null || selectedItem.key === '') return null;
+
 
   return (
     <div>
       <br />
-      <span className='bg-light rounded m-2'>
-        {selectedItem} 
-        <CloseButton onClick={() => setSelectedItem("")}></CloseButton>
-      </span>
+        <span className='bg-light rounded m-2'>
+          {selectedItem === false ? (
+            <>
+            No
+            <CloseButton onClick={() => setSelectedItem(null)}></CloseButton>
+            </>
+           
+          ) : selectedItem === true ? (
+            <>
+            Si
+            <CloseButton onClick={() => setSelectedItem(null)}></CloseButton>
+          </>
+          ) : (
+            <>
+              {selectedItem.nombre} {selectedItem.apellido}
+              <CloseButton onClick={() => setSelectedItem({key: ''})}></CloseButton>
+            </>
+          )}
+        </span>
       <br /><br />
     </div>
   );

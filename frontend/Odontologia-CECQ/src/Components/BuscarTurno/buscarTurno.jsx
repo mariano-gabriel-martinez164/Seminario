@@ -2,27 +2,32 @@ import './buscarTurno.css'
 import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { CustomToggle, CustomMenu, CustomCalendarMenu, CustomOnlyMenu } from './Dropdown/Dropdown';
+import { CustomToggle, CustomMenu, CustomCalendarMenu, CustomOnlyMenu, CustomPacientes } from './Dropdown/Dropdown';
 import { mostrarFiltros, mostrarFiltrosArray } from './MostrarFiltros/mostrarFiltros';
-import {verTurno} from './VerInfoTurno/verInfoTurno';
+import { VerTurno } from './VerInfoTurno/verInfoTurno';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
 import { useFetch } from '../Fetchs/fetchs';
 import { handleSelect } from './HandleAndRemove/handleAndRemove';
+import { Filtro } from './Filtros/filtros';
 
   export default function buscarTurno() {
-    const [selectedPatient, setSelectedPatient] = useState("");
-    const [selectedAgenda, setSelectedAgenda] = useState("");
-    const [selectedState, setSelectedState] = useState([]);
-    const [selectedOdontologo, setSelectedOdontologo] = useState("");
-    const [selectedCentro, setSelectedCentro] = useState("");
+    const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
+    const [selectedAgenda, setSelectedAgenda] = useState({key: ''});
+    const [selectedEstado, setSelectedEstado] = useState([]);
+    const [selectedOdontologo, setSelectedOdontologo] = useState({key: ''});
+    const [selectedCentro, setSelectedCentro] = useState({key: ''});
+    const [selectedSobreturno, setSelectedSobreturno] = useState(null);
+    const [selectedAdministrativo, setSelectedAdministrativo] = useState({key: ''});
     const [modalShow, setModalShow] = useState(false);
     const [selectedTurno, setSelectedTurno] = useState({});
     const [turnos, setTurnos] = useState([]);
+    const [value, setValue] = useState('');
+    const [paciente, setPaciente] = useState([]);
+
     const today = new Date();
     const monthLater = new Date();
     monthLater.setMonth(today.getMonth() + 1);
@@ -34,9 +39,22 @@ import { handleSelect } from './HandleAndRemove/handleAndRemove';
     const areDatesEqual = (date1, date2) => {
       return date1.toISOString().split('T')[0] === date2.toISOString().split('T')[0];
     };
-    const estadosSeleccionados = selectedState.length > 0 ? selectedState.map((estado) => `&estado=${estado}`).join('') : '';
-    const API_URL = `http://127.0.0.1:8000/turnos/?fecha_inicio=${formatDate(startDate)}&fecha_fin=${formatDate(endDate)}&id_odontologo=${selectedOdontologo}&id_centro=${selectedCentro}&id_agenda=${selectedAgenda}&id_administrativo=&id_paciente=${selectedPatient}${estadosSeleccionados}&sobreturno=unknown`;
-    
+
+    useEffect(() => {
+    if(value){
+    fetch(`http://127.0.0.1:8000/pacientes/?search=${value}`)
+    .then((response) => response.json())
+    .then((data) => {
+        setPaciente(data.results);
+    });
+    } else {
+      setPaciente([]);
+    }  
+  }, [value]);
+  
+
+    const estadosSeleccionados = selectedEstado.length > 0 ? selectedEstado.map((estado) => `&estado=${estado}`).join('') : '';
+    const API_URL = `http://127.0.0.1:8000/turnos/?fecha_inicio=${formatDate(startDate)}&fecha_fin=${formatDate(endDate)}&id_odontologo=${selectedOdontologo.key}&id_centro=${selectedCentro.key}&id_agenda=${selectedAgenda.key}&id_administrativo=${selectedAdministrativo.key}&id_paciente=${selectedPaciente.key}${estadosSeleccionados}&sobreturno=${selectedSobreturno}`;
     useEffect(() => {
       fetch(API_URL)
         .then((response) => response.json())
@@ -44,7 +62,7 @@ import { handleSelect } from './HandleAndRemove/handleAndRemove';
           setTurnos(data);
         })
         .catch((error) => console.log(error));
-    }, [startDate, endDate, selectedPatient, selectedAgenda, selectedState, selectedCentro, selectedOdontologo]);
+    }, [startDate, endDate, selectedPaciente.key, selectedAgenda.key, selectedEstado, selectedCentro.key, selectedOdontologo.key, selectedSobreturno, selectedAdministrativo.key]);
     
   return (
   
@@ -52,19 +70,24 @@ import { handleSelect } from './HandleAndRemove/handleAndRemove';
         <Row>
           <Col id='col1' xs={2} >
               <Row>
-                <h6>Paciente</h6>
                 <Dropdown>
+                  <h6>Paciente</h6>
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar paciente...
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu as={CustomMenu}>
-                    {useFetch('http://127.0.0.1:8000/pacientes/').map((paciente) => (
-                      <Dropdown.Item onClick = {() => (setSelectedPatient( paciente.dni))} key={paciente.dni} >{paciente.dni}</Dropdown.Item>))}
-                  </Dropdown.Menu>
+                  <Dropdown.Menu as={CustomPacientes} valor={value} setValor={setValue} pacientes={paciente} setPacientes={setPaciente}>
+                    {paciente.map((paciente) => (
+                      <Dropdown.Item onClick = {() => setSelectedPaciente(
+                      {   key: paciente.dni, 
+                          nombre: paciente.nombre, 
+                          apellido: paciente.apellido || null
+                      })} 
+                      key={paciente.dni} >{paciente.nombre} {paciente.apellido} </Dropdown.Item>))}
+                  </Dropdown.Menu> 
                 </Dropdown>
-                <br />
-                {mostrarFiltros(selectedPatient, setSelectedPatient)}
+                <br /><br />
+                {mostrarFiltros(selectedPaciente, setSelectedPaciente)}
                 <br />
 
                 <h6>Odontologo</h6>
@@ -72,11 +95,8 @@ import { handleSelect } from './HandleAndRemove/handleAndRemove';
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar odontologo...
                   </Dropdown.Toggle>
+                  <Filtro selectedItem={selectedOdontologo} setSelectedItem={setSelectedOdontologo} api_url={'http://127.0.0.1:8000/odontologos/'} itemKey={'matricula'} valor1={'nombre'} valor2={'apellido'}/>
 
-                  <Dropdown.Menu as={CustomMenu}>
-                    {useFetch('http://127.0.0.1:8000/odontologos/').map((odontologo) => (
-                      <Dropdown.Item onClick = {() => (setSelectedOdontologo( odontologo.matricula))} key={odontologo.matricula} >{odontologo.matricula}</Dropdown.Item>))}
-                  </Dropdown.Menu>
                 </Dropdown>
                 <br />
                 {mostrarFiltros(selectedOdontologo, setSelectedOdontologo)}
@@ -87,11 +107,7 @@ import { handleSelect } from './HandleAndRemove/handleAndRemove';
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar centro...
                   </Dropdown.Toggle>
-
-                  <Dropdown.Menu as={CustomMenu}>
-                    {useFetch('http://127.0.0.1:8000/centros/').map((centro) => (
-                      <Dropdown.Item onClick = {() => (setSelectedCentro( centro.id))} key={centro.id} >{centro.id}</Dropdown.Item>))}
-                  </Dropdown.Menu>
+                  <Filtro selectedItem={selectedCentro} setSelectedItem={setSelectedCentro} api_url={'http://127.0.0.1:8000/centros/' } itemKey={'id'} valor1={'nombre'} valor2={''}/>
                 </Dropdown>
                 <br />
                 {mostrarFiltros(selectedCentro, setSelectedCentro)}
@@ -102,17 +118,18 @@ import { handleSelect } from './HandleAndRemove/handleAndRemove';
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar administrativo...
                   </Dropdown.Toggle>
+                  <Filtro selectedItem={selectedAdministrativo} setSelectedItem={setSelectedAdministrativo} api_url={'http://127.0.0.1:8000/auth/administrativos/' } itemKey={'id'} valor1={'first_name'} valor2={'last_name'}/>
                 </Dropdown>
+                <br />
+                {mostrarFiltros(selectedAdministrativo, setSelectedAdministrativo)}
+                <br />
+
                 <h6>Agenda</h6>
                 <Dropdown>
                   <Dropdown.Toggle as={CustomToggle}>
                     Seleccionar agenda...
                   </Dropdown.Toggle>
-              
-                  <Dropdown.Menu as={CustomMenu}>
-                    {useFetch('http://127.0.0.1:8000/agendas/').map((agenda) => (
-                      <Dropdown.Item onClick = {() => (setSelectedAgenda(agenda.id))} key={agenda.id} >{agenda.id}</Dropdown.Item>))}
-                  </Dropdown.Menu>
+                  <Filtro selectedItem={selectedAgenda} setSelectedItem={setSelectedAgenda} api_url={'http://127.0.0.1:8000/agendas/' } itemKey={'id'} valor1={'id'} valor2={''}/>
                 </Dropdown>
                 <br />
                 {mostrarFiltros(selectedAgenda, setSelectedAgenda)}
@@ -125,16 +142,31 @@ import { handleSelect } from './HandleAndRemove/handleAndRemove';
                   </Dropdown.Toggle>
               
                   <Dropdown.Menu as={CustomOnlyMenu}>
-                    <Dropdown.Item onClick={() => handleSelect(selectedState, setSelectedState, 'Disponible')} eventKey="1">Disponible</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedState, setSelectedState,'Asignado')} eventKey="2">Asignado</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedState, setSelectedState,'Cancelado')} eventKey="3">Cancelado</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedState, setSelectedState,'Realizado')} eventKey="4">Realizado</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado, 'Disponible')} eventKey="1">Disponible</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado,'Asignado')} eventKey="2">Asignado</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado,'Cancelado')} eventKey="3">Cancelado</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado,'Realizado')} eventKey="4">Realizado</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
                 <br />
-                {mostrarFiltrosArray(selectedState, setSelectedState)}
+                {mostrarFiltrosArray(selectedEstado, setSelectedEstado)}
                 <br />
               
+                <h6>Sobreturno</h6>
+                <Dropdown>
+                  <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
+                    Seleccionar...
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu as={CustomOnlyMenu}>
+                  <Dropdown.Item onClick={() => (setSelectedSobreturno(true))} eventKey="1">Si</Dropdown.Item>
+                  <Dropdown.Item onClick={() => (setSelectedSobreturno(false))} eventKey="2">No</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+                <br />
+                {mostrarFiltros(selectedSobreturno, setSelectedSobreturno)}
+                <br />
+
                 <h6>Rango de fechas</h6>
                 <Dropdown>
                   <Dropdown.Toggle as={CustomToggle}>
@@ -160,7 +192,6 @@ import { handleSelect } from './HandleAndRemove/handleAndRemove';
                   <th>Hora fin</th>
                   <th>Fecha</th>
                   <th>Paciente</th>
-                  <th>Paciente apellido</th>
                   <th>Agenda</th>
                   <th>Estado</th>
                   <th></th>
@@ -172,15 +203,14 @@ import { handleSelect } from './HandleAndRemove/handleAndRemove';
                     <td>{turno.horaInicio}</td>
                     <td>{turno.horaFin}</td>
                     <td>{turno.fecha}</td>
-                    <td>{turno.paciente.dni}</td>
-                    <td>{turno.paciente.apellido}</td>
+                    <td>{turno.paciente.nombre} {turno.paciente.apellido}</td>
                     <td>{turno.agenda}</td>
                     <td>{turno.estado}</td>
                     <td>
                       <Button variant="secondary" onClick={() => (setModalShow(true), setSelectedTurno(turno))}>
                         Ver más...
                       </Button>
-                      {verTurno( modalShow, () => setModalShow(false), selectedTurno)}
+                      <VerTurno show={modalShow} onHide={() => setModalShow(false)} turno={selectedTurno} />
                     </td>
                   </tr>
                 ))}
