@@ -6,8 +6,6 @@ import CloseButton from 'react-bootstrap/CloseButton';
 export const mostrarFiltros = (selectedItem, setSelectedItem) => {
   // Verificar si `selectedItem` está vacío o nulo
   if (selectedItem === null || selectedItem.key === '') return null;
-
-
   return (
     <div>
       <br />
@@ -29,6 +27,7 @@ export const mostrarFiltros = (selectedItem, setSelectedItem) => {
               <CloseButton onClick={() => setSelectedItem({key: ''})}></CloseButton>
             </>
           )}
+
         </span>
       <br /><br />
     </div>

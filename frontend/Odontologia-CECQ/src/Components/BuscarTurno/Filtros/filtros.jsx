@@ -19,3 +19,18 @@ export function Filtro({ selectedItem, setSelectedItem, api_url, itemKey, valor1
     );
 }
 
+export function FiltroAnidado({ selectedItem, setSelectedItem, api_url, itemKey, itemKey2, valor1, valor11, valor2, valor22 }) {
+    return (
+    <div>
+        <Dropdown.Menu as={CustomMenu}>
+            {useFetch(api_url).map((item) => (
+                <Dropdown.Item onClick = {() => setSelectedItem(
+                    {   key: item[itemKey][itemKey2], 
+                        nombre: item[valor1][valor11], 
+                        apellido: item[valor2][valor22] || null
+                    })} 
+                    key={item[itemKey][itemKey2]} >{item[valor1][valor11]} {valor2 ? item[valor2][valor22] : ''} </Dropdown.Item>))}
+            </Dropdown.Menu>       
+        </div>
+    );
+}

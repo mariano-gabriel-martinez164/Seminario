@@ -10,7 +10,6 @@ import { mostrarFiltros, mostrarFiltrosArray } from './MostrarFiltros/mostrarFil
 import { VerTurno } from './VerInfoTurno/verInfoTurno';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
-import { useFetch } from '../Fetchs/fetchs';
 import { handleSelect } from './HandleAndRemove/handleAndRemove';
 import { Filtro } from './Filtros/filtros';
 
@@ -23,7 +22,7 @@ import { Filtro } from './Filtros/filtros';
     const [selectedSobreturno, setSelectedSobreturno] = useState(null);
     const [selectedAdministrativo, setSelectedAdministrativo] = useState({key: ''});
     const [modalShow, setModalShow] = useState(false);
-    const [selectedTurno, setSelectedTurno] = useState({});
+    const [selectedTurno, setSelectedTurno] = useState('');
     const [turnos, setTurnos] = useState([]);
     const [value, setValue] = useState('');
     const [paciente, setPaciente] = useState([]);
@@ -41,16 +40,16 @@ import { Filtro } from './Filtros/filtros';
     };
 
     useEffect(() => {
-    if(value){
-    fetch(`http://127.0.0.1:8000/pacientes/?search=${value}`)
-    .then((response) => response.json())
-    .then((data) => {
-        setPaciente(data.results);
-    });
-    } else {
-      setPaciente([]);
-    }  
-  }, [value]);
+      if(value){
+      fetch(`http://127.0.0.1:8000/pacientes/?search=${value}`)
+      .then((response) => response.json())
+      .then((data) => {
+          setPaciente(data.results);
+      });
+      } else {
+        setPaciente([]);
+      }  
+    }, [value]);
   
 
     const estadosSeleccionados = selectedEstado.length > 0 ? selectedEstado.map((estado) => `&estado=${estado}`).join('') : '';
@@ -81,9 +80,9 @@ import { Filtro } from './Filtros/filtros';
                       <Dropdown.Item onClick = {() => setSelectedPaciente(
                       {   key: paciente.dni, 
                           nombre: paciente.nombre, 
-                          apellido: paciente.apellido || null
+                          apellido: paciente.apellido
                       })} 
-                      key={paciente.dni} >{paciente.nombre} {paciente.apellido} </Dropdown.Item>))}
+                      key={paciente.dni}>{paciente.nombre} {paciente.apellido} {paciente.dni ? '': ''}</Dropdown.Item>))}
                   </Dropdown.Menu> 
                 </Dropdown>
                 <br /><br />
@@ -203,18 +202,19 @@ import { Filtro } from './Filtros/filtros';
                     <td>{turno.horaInicio}</td>
                     <td>{turno.horaFin}</td>
                     <td>{turno.fecha}</td>
-                    <td>{turno.paciente.nombre} {turno.paciente.apellido}</td>
+                    <td>{turno.paciente?.nombre} {turno.paciente?.apellido}</td>
                     <td>{turno.agenda}</td>
                     <td>{turno.estado}</td>
                     <td>
-                      <Button variant="secondary" onClick={() => (setModalShow(true), setSelectedTurno(turno))}>
+                      <Button variant="secondary" onClick={() => (setModalShow(true), setSelectedTurno(turno.id))}>
                         Ver más...
                       </Button>
-                      <VerTurno show={modalShow} onHide={() => setModalShow(false)} turno={selectedTurno} />
+                      <VerTurno show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno}/>
                     </td>
                   </tr>
                 ))}
               </tbody>
+
             </Table>
           </Col>
         </Row>

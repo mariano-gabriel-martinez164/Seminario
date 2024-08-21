@@ -4,6 +4,7 @@ import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import './Dropdown.css';
+import { set } from 'date-fns';
 
 export const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
@@ -126,26 +127,18 @@ export const CustomOnlyMenu = React.forwardRef(
 );
 
 export const CustomPacientes = React.forwardRef(
-  ({ className, 'aria-labelledby': labeledBy, valor, setValor, pacientes, setPacientes }, ref) => {
-  useEffect(() => {
-    // Limpiar el timeout anterior
-    const handler = setTimeout(() => {
-      if (valor) {
+  ({ children, className, 'aria-labelledby': labeledBy, valor, setValor, pacientes, setPacientes }, ref) => {
+    useEffect(() => {
+      if(valor){
         fetch(`http://127.0.0.1:8000/pacientes/?search=${valor}`)
           .then((response) => response.json())
           .then((data) => {
             setPacientes(data.results);
           });
       } else {
-        setPacientes([]);
-      }
-    }, 3000); // Retraso de 3 segundos
-
-    // Limpiar el timeout si el valor cambia antes de que se ejecute
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [valor, setPacientes]);
+        setPacientes([]);}
+    }, [valor, setPacientes]);
+    
 
     return (
       <div
@@ -161,20 +154,13 @@ export const CustomPacientes = React.forwardRef(
           placeholder="Buscar..."
           onChange={(e) => setValor(e.target.value)}
           value={valor}
-        />
-        <ul className="list-unstyled">
-          {pacientes.filter((item) => {
-            // Convertir los valores de nombre, apellido, dni a cadenas
-            const itemText = item.nombre.toString();
-            const itemText2 = item.apellido.toString() 
-            const itemKey = item.dni.toString();
-            // Filtrar pacientes según el valor
-            return itemText.startsWith(valor) || itemText2.startsWith(valor) || itemKey.startsWith(valor);
-          }).map((item) => (
-            <li key={item.dni} className="mx-3 my-2">
-              {item.nombre} {item.apellido}
-            </li>
-          ))}
+        />   
+         <ul className="list-unstyled">
+          {React.Children.toArray(children).filter((child) => {
+            // Convertir child.props.children a una cadena
+            const childText = child.props.children.toString();
+            return childText.startsWith(valor) || child.key.includes(valor);
+            })} 
         </ul>
       </div>
     );
