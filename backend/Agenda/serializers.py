@@ -20,6 +20,12 @@ class FullAgendaSerializer(serializers.ModelSerializer):
 class AgendaSerializer(serializers.ModelSerializer):
     odontologo = OdontologoSerializer(read_only=True)
     CentroOdontologico = CentroOdontologicoSerializer(read_only=True)
+    
+    class Meta:
+        model = Agenda
+        fields = '__all__'
+
+class AgendaCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Agenda
         fields = '__all__'
