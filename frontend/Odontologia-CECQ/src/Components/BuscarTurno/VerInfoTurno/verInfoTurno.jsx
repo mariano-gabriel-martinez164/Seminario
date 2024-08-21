@@ -2,9 +2,14 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { CustomToggle, CustomMenu, CustomCalendarMenu, CustomOnlyMenu } from '../Dropdown/Dropdown';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { useState } from 'react';
+import { useFetch } from '../../Fetchs/fetchs';
+import { Filtro } from '../Filtros/filtros';
 import './verInfoTurno.css';
-export function verTurno(show, onHide, turno) {
+import { useState } from 'react';
+
+export function VerTurno({show, onHide, turno}) {
+  const [selectedPaciente, setSelectedPaciente] = useState("");
+  const [selectedOdontologo, setSelectedOdontologo] = useState("");
 
   return (
     <Modal
@@ -20,16 +25,21 @@ export function verTurno(show, onHide, turno) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-      <h6>Paciente</h6>
-        <Dropdown>
-          <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
-          {!turno.paciente ? 'Seleccionar paciente...' : turno.paciente}
-          </Dropdown.Toggle>
-      
-          <Dropdown.Menu as={CustomMenu}>
-            
-          </Dropdown.Menu>
-        </Dropdown>
+      <Dropdown>
+        <h6>Paciente</h6>
+        <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
+          {turno?.paciente?.dni === "" ? "Seleccionar paciente..." : selectedPaciente === '' ? turno?.paciente?.dni: selectedPaciente}
+        </Dropdown.Toggle>
+          <Filtro selectedItem={selectedPaciente} setSelectedItem={setSelectedPaciente} api_url={'http://127.0.0.1:8000/pacientes/'} itemKey={'dni'} />
+      </Dropdown>
+      <br /><br />
+      <Dropdown>
+        <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
+          {selectedOdontologo === "" ? "Seleccionar odontólogo..." : selectedOdontologo}
+        </Dropdown.Toggle>
+        <Filtro selectedItem={selectedOdontologo} setSelectedItem={setSelectedOdontologo} api_url={'http://127.0.0.1:8000/odontologos/'} itemKey={'matricula'}/>
+      </Dropdown>
+        
 
         <h6>Fecha: {turno.fecha}</h6>
         <h6>Hora de inicio: {turno.horaInicio}</h6>
@@ -37,7 +47,8 @@ export function verTurno(show, onHide, turno) {
         <h6>Odontólogo: {turno.odontologo}</h6>
         <h6>Centro: {turno.centro}</h6>
         <h6>Agenda: {turno.agenda}</h6>
-        <h6>Paciente: {turno.paciente}</h6>
+        <h6>Paciente: {turno?.paciente?.apellido}</h6>
+
         <h6>Estado: {turno.estado}</h6>
         <h6>Observaciones: {turno.observaciones}</h6>
       </Modal.Body>
