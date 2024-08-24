@@ -39,15 +39,15 @@ class TurnoSerializer(serializers.ModelSerializer):
 
 class ShortTurnoSerializer(serializers.ModelSerializer):
     paciente = PacienteSerializer(read_only=True)
-    dni = serializers.IntegerField(write_only=True, source='paciente__dni')
+    dni = serializers.IntegerField(write_only=True, source='paciente__dni', required=False, allow_null=True, default=None)
 
     def create(self, validated_data):
-        dni = validated_data.pop('paciente__dni')
-        try:
-            paciente = Paciente.objects.get(dni=dni)
-        except Paciente.DoesNotExist:
-            raise serializers.ValidationError('El paciente no existe')
-        validated_data['paciente'] = paciente
+        if dni := validated_data.pop('paciente__dni'):
+            try:
+                paciente = Paciente.objects.get(dni=dni)
+            except Paciente.DoesNotExist:
+                raise serializers.ValidationError('El paciente no existe')
+            validated_data['paciente'] = paciente
         return super().create(validated_data)
     class Meta:
         model = Turno
