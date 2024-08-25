@@ -62,7 +62,7 @@ class TurnoAndTurnoTemplateList(generics.ListCreateAPIView):
     
 
         # Rellenar con turnos de template
-        if 'Disponible' in estados and not (paciente or administrativo or sobreturno):
+        if 'Disponible' in estados and not (paciente or administrativo or sobreturno==True): 
             agendas = self.obtener_agendas(odontologo, centro, agenda)
             queryset = self.transformar_template_a_turno(dt_min, dt_max, agendas, queryset)
         
@@ -156,5 +156,3 @@ class TurnoAndTurnoTemplateList(generics.ListCreateAPIView):
 
         # print('-'   * 50)
         return sorted(turnosFull , key=lambda x: (x.fecha, x.horaInicio)) 
-
-
