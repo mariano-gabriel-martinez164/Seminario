@@ -12,6 +12,7 @@ import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
 import { handleSelect } from './HandleAndRemove/handleAndRemove';
 import { Filtro } from './Filtros/filtros';
+import { Alert } from 'react-bootstrap';
 
   export default function buscarTurno() {
     const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
@@ -26,6 +27,8 @@ import { Filtro } from './Filtros/filtros';
     const [turnos, setTurnos] = useState([]);
     const [value, setValue] = useState('');
     const [paciente, setPaciente] = useState([]);
+    const [estadoModal, setEstadoModal] = useState('');
+    const [selectedTurnoTemplate, setSelectedTurnoTemplate] = useState({});
 
     const today = new Date();
     const monthLater = new Date();
@@ -61,16 +64,32 @@ import { Filtro } from './Filtros/filtros';
           setTurnos(data);
         })
         .catch((error) => console.log(error));
-    }, [startDate, endDate, selectedPaciente.key, selectedAgenda.key, selectedEstado, selectedCentro.key, selectedOdontologo.key, selectedSobreturno, selectedAdministrativo.key]);
+    }, [startDate, endDate, selectedPaciente.key, selectedAgenda.key, selectedEstado, selectedCentro.key, selectedOdontologo.key, selectedSobreturno, selectedAdministrativo.key, estadoModal]);
     
   return (
-  
     <Container id='container' fluid>
         <Row>
           <Col id='col1' xs={2} >
               <Row>
+              <h6>Rango de fechas</h6>
                 <Dropdown>
-                  <h6>Paciente</h6>
+                  <Dropdown.Toggle as={CustomToggle}>
+                    Seleccionar rango de fechas...
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu as={CustomCalendarMenu} setStartDate={setStartDate} setEndDate={setEndDate} startDate={startDate} endDate={endDate}>
+                    
+                  </Dropdown.Menu>
+                </Dropdown>
+                <span className='bg-light rounded m-2'>
+                  {formatDate(startDate)} - {formatDate(endDate)} 
+                  {(!areDatesEqual(startDate, new Date()) || !areDatesEqual(endDate, monthLater)) &&
+                  <CloseButton onClick={() => {setStartDate(new Date); setEndDate(monthLater)}}></CloseButton>
+                }
+                </span>
+                <br />
+
+                <h6>Paciente</h6>
+                <Dropdown>
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar paciente...
                   </Dropdown.Toggle>
@@ -85,7 +104,7 @@ import { Filtro } from './Filtros/filtros';
                       key={paciente.dni}>{paciente.nombre} {paciente.apellido} {paciente.dni ? '': ''}</Dropdown.Item>))}
                   </Dropdown.Menu> 
                 </Dropdown>
-                <br /><br />
+                <br />
                 {mostrarFiltros(selectedPaciente, setSelectedPaciente)}
                 <br />
 
@@ -165,31 +184,20 @@ import { Filtro } from './Filtros/filtros';
                 <br />
                 {mostrarFiltros(selectedSobreturno, setSelectedSobreturno)}
                 <br />
-
-                <h6>Rango de fechas</h6>
-                <Dropdown>
-                  <Dropdown.Toggle as={CustomToggle}>
-                    Seleccionar rango de fechas...
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu as={CustomCalendarMenu} setStartDate={setStartDate} setEndDate={setEndDate} startDate={startDate} endDate={endDate}>
-                    
-                  </Dropdown.Menu>
-                </Dropdown>
-                <span className='bg-light rounded m-2'>
-                  {formatDate(startDate)} - {formatDate(endDate)} 
-                  {(!areDatesEqual(startDate, new Date()) || !areDatesEqual(endDate, monthLater)) &&
-                  <CloseButton onClick={() => {setStartDate(new Date); setEndDate(monthLater)}}></CloseButton>
-                }
-                </span>
                 </Row>
           </Col>
           <Col id='col2' xs={8} >
+          {estadoModal === 'Disponible' && <Alert variant='info' dismissible >Turno {estadoModal}</Alert>}
+          {estadoModal === 'Asignado' && <Alert variant='warning' dismissible >Turno {estadoModal}</Alert>}
+          {estadoModal === 'Cancelado' && <Alert variant='danger' dismissible >Turno {estadoModal}</Alert>}
+          {estadoModal === 'Realizado' && <Alert variant='success' dismissible >Turno {estadoModal}</Alert>}
+
             <Table striped bordered hover>
               <thead>
                 <tr>
+                  <th>Fecha</th>
                   <th>Hora inicio</th>
                   <th>Hora fin</th>
-                  <th>Fecha</th>
                   <th>Paciente</th>
                   <th>Agenda</th>
                   <th>Estado</th>
@@ -199,17 +207,31 @@ import { Filtro } from './Filtros/filtros';
               <tbody>
                 {turnos.map((turno) => (
                   <tr key={turno.id || `${turno.paciente}-${turno.agenda}-${turno.fecha}`}>
+                    <td>{turno.fecha}</td>
                     <td>{turno.horaInicio}</td>
                     <td>{turno.horaFin}</td>
-                    <td>{turno.fecha}</td>
                     <td>{turno.paciente?.nombre} {turno.paciente?.apellido}</td>
                     <td>{turno.agenda}</td>
-                    <td>{turno.estado}</td>
+                    {turno.estado === 'Realizado' ? <td className='bg-success bg-opacity-50 rounded'>{turno.estado}</td> :
+                    turno.estado === 'Cancelado' ? <td className='bg-danger bg-opacity-50 rounded'>{turno.estado}</td> :
+                    turno.estado === 'Asignado' ? <td className='bg-warning bg-opacity-50 rounded'>{turno.estado}</td> :
+                    turno.estado === 'Disponible' ? <td className='bg-info bg-opacity-50 rounded'>{turno.estado}</td> :
+                    <td>{turno.estado}</td>}
+                    
                     <td>
-                      <Button variant="secondary" onClick={() => (setModalShow(true), setSelectedTurno(turno.id))}>
-                        Ver más...
-                      </Button>
-                      <VerTurno show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno}/>
+                    <Button className='w-100' variant="primary" onClick={() => {
+                      setModalShow(true);
+                      if (turno.id !== null) {
+                        setSelectedTurno(turno.id);
+                        setSelectedTurnoTemplate({});
+                      } else {
+                        setSelectedTurnoTemplate(turno);
+                        setSelectedTurno('');
+                      }
+                    }}>
+                      Ver más...</Button>
+
+                      <VerTurno show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno} setTurnoClick={setSelectedTurno} turnoTemplate={selectedTurnoTemplate} setEstadoModal={setEstadoModal} estadoModal={estadoModal}/>
                     </td>
                   </tr>
                 ))}

@@ -137,7 +137,7 @@ export const CustomPacientes = React.forwardRef(
           });
       } else {
         setPacientes([]);}
-    }, [valor, setPacientes]);
+    }, [valor]);
     
 
     return (
