@@ -4,9 +4,13 @@ import { CustomToggle, CustomMenu, CustomCalendarMenu, CustomOnlyMenu, CustomPac
 import Dropdown from 'react-bootstrap/Dropdown';
 import './verInfoTurno.css';
 import { useEffect, useState } from 'react';
-import { mostrarFiltros } from '../MostrarFiltros/mostrarFiltros';
-import { Alert } from 'react-bootstrap';
 import CloseButton from 'react-bootstrap/CloseButton';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import { Alert } from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate ,setEstadoModal, estadoModal}) {
   const [turno, setTurno] = useState({});
@@ -15,6 +19,7 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
   const [paciente, setPaciente] = useState([]);
   const [value, setValue] = useState('');
   const [agendaDetails, setAgendaDetails] = useState({});
+  const [piezasDentales, setPiezasDentales] = useState([]);
   
   const turnoTemplateAsignado = {
     "dni": selectedPaciente.key,
@@ -23,11 +28,33 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
     "horaFin": turnoTemplate.horaFin,
     "esSobreturno": turnoTemplate.esSobreturno,
     "monto": 0,
-    "estado": estadoModal,
+    "estado": "Asignado",
     "agenda": turnoTemplate.agenda,
     "administrativo": null,
   };
-  
+
+  const turnoTemplateCancelar = {
+    "dni": null,
+    "fecha": turnoTemplate.fecha,
+    "horaInicio": turnoTemplate.horaInicio,
+    "horaFin": turnoTemplate.horaFin,
+    "esSobreturno": turnoTemplate.esSobreturno,
+    "monto": 0,
+    "estado": "Cancelado",
+    "agenda": turnoTemplate.agenda,
+    "administrativo": null,
+  };
+
+  useEffect(() => {
+    if (selectedEstado === 'Finalizado') {
+      fetch('http://127.0.0.1:8000/piezasDentales/')
+        .then((response) => response.json())
+        .then((data) => {
+          setPiezasDentales(data);
+        });
+    }
+  }, [selectedEstado]);
+
   const Liberar = (id) => {
     setEstadoModal('Disponible');
     onHide();
@@ -40,6 +67,7 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
   const Asignar = () => {
     setEstadoModal('Asignado');
     onHide();
+    console.log(turnoTemplateAsignado);
     fetch(`http://127.0.0.1:8000/turnos/`,{
       method: 'POST',
       headers: {
@@ -52,12 +80,13 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
   const CancelarDisponible = () => {
     setEstadoModal('Cancelado');
     onHide();
+    console.log(turnoTemplateCancelar);
     fetch(`http://127.0.0.1:8000/turnos/`,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(turnoTemplateAsignado)
+      body: JSON.stringify(turnoTemplateCancelar)
     })
   }
 
@@ -207,25 +236,79 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
             {turnoTemplate.id === null ? turnoTemplate.horaInicio + '-' + turnoTemplate.horaFin  : turno.horaInicio + '-' + turno.horaFin}
           </Dropdown.Toggle>
         </Dropdown>
+        <br />
+        {selectedEstado === 'Finalizado' && (
+          <>
+            <Alert id='finalizar' variant='success' >Finalizar</Alert>
+            <h6>Monto</h6>
+            <InputGroup className="mb-3">
+              <InputGroup.Text>$</InputGroup.Text>
+              <Form.Control aria-label="Amount (to the nearest dollar)" />
+              <InputGroup.Text>.00</InputGroup.Text>
+            </InputGroup>
+            
+            <h6>Observaciones</h6>
+            <InputGroup>
+              <InputGroup.Text>Observaciones</InputGroup.Text>
+              <Form.Control as="textarea" aria-label="With textarea" />
+            </InputGroup>
+          
+            <Container>
+            <Col>
+              {piezasDentales.slice(0, 10).map((pieza) => (
+              <Button variant="outline-secondary" key={pieza.codigo}>
+                X
+              </Button>
+              ))}
+              </Col>
+              <Col>
+              {piezasDentales.slice(10, 26).map((pieza) => (
+              <Button variant="outline-secondary" key={pieza.codigo}>
+                X
+              </Button>
+              ))}
+              </Col>
+              <Col>
+              {piezasDentales.slice(26, 42).map((pieza) => (
+              <Button variant="outline-secondary" key={pieza.codigo}>
+                X
+              </Button>
+              ))}
+              </Col>
+              <Col>
+              {piezasDentales.slice(42, 52).map((pieza) => (
+              <Button variant="outline-secondary" key={pieza.codigo}>X</Button>
+              ))}
+              </Col>
+
+            </Container>
+            <br />
+            <Modal.Footer className="bg">
+              <CloseButton onClick={() => onHide()}/>
+            </Modal.Footer>
+          </>
+        )}
       </Modal.Body>
 
-      <Modal.Footer className='bg'>
+      { selectedEstado !== 'Finalizado' && (<Modal.Footer className='bg'>
         {turnoTemplate.id === null && 
         <>
         <Button onClick={(Asignar)} variant="warning" disabled={!selectedPaciente.key}>Asignar turno</Button>
         <Button onClick={(CancelarDisponible)} variant="danger">Cancelar turno</Button>
         </>}
-        {turno.estado === 'Asignado' && (
+        
+        {turno.estado === 'Asignado' &&  (
           <>
             <Button onClick={() => Liberar(turno.id)} variant="info">Liberar turno</Button>
             <Button onClick={() => Cancelar(turno.id)} variant="danger">Cancelar turno</Button>
-            <Button variant="success">Finalizar turno</Button>
+            <Button onClick={() => setSelectedEstado('Finalizado')} variant="success">Finalizar turno</Button>
           </>
           )}
           {turno.estado === 'Cancelado' && (
             <Button onClick={() => Liberar(turno.id)} variant="info">Liberar turno</Button>)}
         
-      </Modal.Footer>
+
+      </Modal.Footer>)}
     </Modal>
   );
 }
