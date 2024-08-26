@@ -5,7 +5,7 @@
   align-items: center;
   flex-direction: column; /* Hace que el contenedor ocupe toda la altura de la pantalla */
   position: relative;
-  margin-top: 80px;
+  margin-top: 50px;
 }
 
 #Image {
@@ -38,4 +38,6 @@
   color: rgb(40, 40, 40);
 }
 
-
+.custom-alert-margin {
+  margin-top: 110px; 
+}

@@ -2,8 +2,16 @@ import React from 'react';
 import './navbar.css';
 import img from '../../assets/CECQIcon.png';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../Login/authContext';
 
 export default function Navbar() {
+  const { logout } = useAuth(); 
+
+  const handleLogout = () => {
+    logout(); 
+    window.location.href = '/'; 
+  };
+
   return (
     <>
       <header className="bg-dark text-white">
@@ -28,7 +36,7 @@ export default function Navbar() {
                 <li><a className="dropdown-item" href="#">Apellido:</a></li>
                 <li><a className="dropdown-item" href="#">Cambiar contraseña</a></li>
                 <li><hr className="dropdown-divider" /></li>
-                <li><a className="dropdown-item" href="/">Cerrar sesión</a></li>
+                <li><a className="dropdown-item" href="#" onClick={handleLogout}>Cerrar sesión</a></li>
               </ul>
             </div>
           </div>
