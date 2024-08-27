@@ -1,12 +1,28 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './authContext';
 
-const ProtectedRoute = ({ element }) => {
-  const { isAuthenticated } = useAuth();
+const ProtectedRoutes = ({ routes }) => {
+  const { isAuthenticated, isLoading } = useAuth();
 
-  return isAuthenticated ? element : <Navigate to="/" />;
+  if (isLoading) {
+    return <div>Cargando...</div>;
+  }
+
+  return (
+    <Routes>
+      {routes.map(({ path, Component }) => (
+        <Route
+          key={path}
+          path={path}
+          element={isAuthenticated ? Component : <Navigate to="/" />}
+        />
+      ))}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+  );
 };
 
-export default ProtectedRoute;
+export default ProtectedRoutes;
+
 
