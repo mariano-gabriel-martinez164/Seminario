@@ -1,6 +1,6 @@
 from .models import *
 from .serializers import *
-from rest_framework import generics
+from rest_framework import generics, filters
 
 # Create your views here.
 class OdontologosList(generics.ListCreateAPIView):
@@ -30,6 +30,8 @@ class PiezaDentalDetail(generics.RetrieveUpdateDestroyAPIView):
 class PrestacionesList(generics.ListCreateAPIView):
     queryset = Prestacion.objects.all()
     serializer_class = PrestacionSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['codigo', 'nombre']
 
 class PrestacionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Prestacion.objects.all()
