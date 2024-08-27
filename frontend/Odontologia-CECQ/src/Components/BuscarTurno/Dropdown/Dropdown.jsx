@@ -9,7 +9,7 @@ import { set } from 'date-fns';
 export const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
     style={{backgroundColor: 'white'}} 
-    className="btn btn-outline-secondary ms-2 w-100 custom"
+    className="btn btn-outline-dark ms-2 w-100 custom"
     href=""
     ref={ref} // <a> se comporta como un dropdown.toggle que es pasado como ref
     onClick={(e) => {
@@ -23,7 +23,7 @@ export const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
 
 export const CustomMenu = React.forwardRef(
   ({ children, className, 'aria-labelledby': labeledBy }, ref) => {
-    const [valor, setvalor] = useState('');
+    const [valor, setValor] = useState('');
 
     return (
       <div
@@ -33,24 +33,25 @@ export const CustomMenu = React.forwardRef(
         aria-labelledby={labeledBy}
       >
         <Form.Control
-          style={{width: '90%'}}
+          style={{ width: '90%' }}
           autoFocus
           className="mx-3 my-2"
           placeholder="Buscar..."
-          onChange={(e) => setvalor(e.target.valor)}
-          valor={valor}
+          onChange={(e) => setValor(e.target.value)}  // Cambio aquí
+          value={valor}  // Cambio aquí
         />
         <ul className="list-unstyled">
           {React.Children.toArray(children).filter((child) => {
-          // Convertir child.props.children a una cadena
-          const childText = child.props.children.toString();
-          return !valor || childText.startsWith(valor);
+            const childText = child.props.children.toString();
+            return !valor || childText.toLowerCase().startsWith(valor.toLowerCase());
           })}
         </ul>
       </div>
     );
   }
 );
+
+
 
 export const CustomCalendarMenu = React.forwardRef(
   ({ className, 'aria-labelledby': labeledBy, setStartDate, setEndDate, startDate, endDate }, ref) => {
@@ -159,7 +160,7 @@ export const CustomPacientes = React.forwardRef(
           {React.Children.toArray(children).filter((child) => {
             // Convertir child.props.children a una cadena
             const childText = child.props.children.toString();
-            return childText.startsWith(valor) || child.key.includes(valor);
+            return childText.toLowerCase().startsWith(valor.toLowerCase()) || child.key.includes(valor);
             })} 
         </ul>
       </div>

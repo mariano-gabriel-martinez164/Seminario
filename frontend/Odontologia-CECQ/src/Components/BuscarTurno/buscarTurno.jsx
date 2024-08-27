@@ -13,6 +13,7 @@ import CloseButton from 'react-bootstrap/CloseButton';
 import { handleSelect } from './HandleAndRemove/handleAndRemove';
 import { Filtro } from './Filtros/filtros';
 import { Alert } from 'react-bootstrap';
+import { VerSobreturno }  from './Sobreturno/sobreturno';
 
   export default function buscarTurno() {
     const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
@@ -29,6 +30,7 @@ import { Alert } from 'react-bootstrap';
     const [paciente, setPaciente] = useState([]);
     const [estadoModal, setEstadoModal] = useState('');
     const [selectedTurnoTemplate, setSelectedTurnoTemplate] = useState({});
+    const [modalSobreturnoShow, setModalSobreturnoShow] = useState(false);
 
     const today = new Date();
     const monthLater = new Date();
@@ -185,6 +187,9 @@ import { Alert } from 'react-bootstrap';
                 {mostrarFiltros(selectedSobreturno, setSelectedSobreturno)}
                 <br />
                 </Row>
+                <br />
+                <Button className='w-100' variant="primary" onClick={() => {setModalSobreturnoShow(true);}}>Crear sobreturno</Button>
+                <VerSobreturno show={modalSobreturnoShow} onHide={() => setModalSobreturnoShow(false)}/>
           </Col>
           <Col id='col2' xs={8} >
           {estadoModal === 'Disponible' && <Alert variant='info' dismissible >Turno {estadoModal}</Alert>}

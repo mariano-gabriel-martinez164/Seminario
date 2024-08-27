@@ -8,9 +8,8 @@ import CloseButton from 'react-bootstrap/CloseButton';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { Alert } from 'react-bootstrap';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import MapaPiezas from './mapaPiezas';
+
 
 export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate ,setEstadoModal, estadoModal}) {
   const [turno, setTurno] = useState({});
@@ -21,6 +20,13 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
   const [agendaDetails, setAgendaDetails] = useState({});
   const [piezasDentales, setPiezasDentales] = useState([]);
   
+  const mapaPiezas = [
+    [[55,51], [61,65]],
+    [[18,11], [21,28]],
+    [[48,41], [31,38]],
+    [[85,81], [71,75]]
+  ]
+
   const turnoTemplateAsignado = {
     "dni": selectedPaciente.key,
     "fecha": turnoTemplate.fecha,
@@ -67,7 +73,6 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
   const Asignar = () => {
     setEstadoModal('Asignado');
     onHide();
-    console.log(turnoTemplateAsignado);
     fetch(`http://127.0.0.1:8000/turnos/`,{
       method: 'POST',
       headers: {
@@ -80,7 +85,6 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
   const CancelarDisponible = () => {
     setEstadoModal('Cancelado');
     onHide();
-    console.log(turnoTemplateCancelar);
     fetch(`http://127.0.0.1:8000/turnos/`,{
       method: 'POST',
       headers: {
@@ -120,7 +124,6 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
 
   useEffect(() => {
     if (turnoClick) { 
-      console.log(turnoClick);
       fetch(`http://127.0.0.1:8000/turnos/${turnoClick}/`)
         .then((response) => response.json())
         .then((data) => {
@@ -161,26 +164,32 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
-      <Modal.Header closeButton className='bg' >
-      </Modal.Header>
-      <Modal.Body className='bg'>
-        <h6>Paciente</h6>
-        <Dropdown>
-        <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
-          {selectedPaciente.key ?   selectedPaciente.nombre + ' ' + selectedPaciente.apellido : turnoTemplate.id === null ? 'Seleccionar paciente...'  : turno?.paciente?.nombre + ' ' + turno?.paciente?.apellido}
-        </Dropdown.Toggle>
 
-        {turnoTemplate.id === null && (<Dropdown.Menu as={CustomPacientes} valor={value} setValor={setValue} pacientes={paciente} setPacientes={setPaciente}>
-          {paciente.map((paciente) => (
-            <Dropdown.Item onClick = {() => setSelectedPaciente(
-            {   key: paciente.dni, 
-                nombre: paciente.nombre, 
-                apellido: paciente.apellido
-            })} 
-            key={paciente.dni}>{paciente.nombre} {paciente.apellido} {paciente.dni ? '': ''}</Dropdown.Item>))}
-        </Dropdown.Menu> )}
-      </Dropdown>
-      <br />
+      <Modal.Body className='bg'>
+          <h6>Paciente</h6>
+          <Dropdown>
+          {turnoTemplate.id === null && 
+          <Dropdown.Toggle variant="secondary" className='w-100 text-start'>
+            {selectedPaciente.key ?   selectedPaciente.nombre + ' ' + selectedPaciente.apellido : turnoTemplate.id === null ? 'Seleccionar paciente...'  : turno?.paciente?.nombre + ' ' + turno?.paciente?.apellido}
+          </Dropdown.Toggle>}
+          
+          {turnoTemplate.id !== null &&
+          <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
+            {selectedPaciente.key ?   selectedPaciente.nombre + ' ' + selectedPaciente.apellido : turno?.paciente?.nombre + ' ' + turno?.paciente?.apellido}
+          </Dropdown.Toggle>} 
+          
+          {turnoTemplate.id === null && (<Dropdown.Menu as={CustomPacientes} valor={value} setValor={setValue} pacientes={paciente} setPacientes={setPaciente}>
+            {paciente.map((paciente) => (
+              <Dropdown.Item onClick = {() => setSelectedPaciente(
+                {   key: paciente.dni, 
+                  nombre: paciente.nombre, 
+                  apellido: paciente.apellido
+                })} 
+                key={paciente.dni}>{paciente.nombre} {paciente.apellido} {paciente.dni ? '': ''}</Dropdown.Item>))}
+          </Dropdown.Menu> )}
+        </Dropdown>
+        <br />
+      
 
         <h6>Odontologo</h6>
         <Dropdown>
@@ -236,10 +245,12 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
             {turnoTemplate.id === null ? turnoTemplate.horaInicio + '-' + turnoTemplate.horaFin  : turno.horaInicio + '-' + turno.horaFin}
           </Dropdown.Toggle>
         </Dropdown>
-        <br />
+
         {selectedEstado === 'Finalizado' && (
           <>
+            <br />
             <Alert id='finalizar' variant='success' >Finalizar</Alert>
+            <MapaPiezas mapaPiezas={mapaPiezas} selectedEstado={selectedEstado}/>
             <h6>Monto</h6>
             <InputGroup className="mb-3">
               <InputGroup.Text>$</InputGroup.Text>
@@ -252,37 +263,7 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
               <InputGroup.Text>Observaciones</InputGroup.Text>
               <Form.Control as="textarea" aria-label="With textarea" />
             </InputGroup>
-          
-            <Container>
-            <Col>
-              {piezasDentales.slice(0, 10).map((pieza) => (
-              <Button variant="outline-secondary" key={pieza.codigo}>
-                X
-              </Button>
-              ))}
-              </Col>
-              <Col>
-              {piezasDentales.slice(10, 26).map((pieza) => (
-              <Button variant="outline-secondary" key={pieza.codigo}>
-                X
-              </Button>
-              ))}
-              </Col>
-              <Col>
-              {piezasDentales.slice(26, 42).map((pieza) => (
-              <Button variant="outline-secondary" key={pieza.codigo}>
-                X
-              </Button>
-              ))}
-              </Col>
-              <Col>
-              {piezasDentales.slice(42, 52).map((pieza) => (
-              <Button variant="outline-secondary" key={pieza.codigo}>X</Button>
-              ))}
-              </Col>
 
-            </Container>
-            <br />
             <Modal.Footer className="bg">
               <CloseButton onClick={() => onHide()}/>
             </Modal.Footer>
@@ -307,7 +288,7 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
           {turno.estado === 'Cancelado' && (
             <Button onClick={() => Liberar(turno.id)} variant="info">Liberar turno</Button>)}
         
-
+        <CloseButton onClick={() => onHide()}/>
       </Modal.Footer>)}
     </Modal>
   );
