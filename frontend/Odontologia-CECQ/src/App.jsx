@@ -10,8 +10,8 @@ import Facturaciones from './Components/Facturaciones/facturaciones';
 import VerAgenda from './Components/VerAgenda/verAgenda';
 import Login from './Components/Login/login';
 import HeaderLogin from './Components/HeaderLogin/headerLogin';
-import { AuthProvider, useAuth } from './Components/Login/authContext';
-import ProtectedRoute from './Components/Login/ProtectedRoute';
+import { AuthProvider } from './Components/Login/authContext';
+import ProtectedRoutes from './Components/Login/ProtectedRoute';
 
 function App() {
   return (
@@ -27,16 +27,20 @@ function RouteHandler() {
   const location = useLocation();
   const isLoginPage = location.pathname === '/';
 
+  const protectedRoutes = [
+    { path: '/verAgenda', Component: <VerAgenda /> },
+    { path: '/buscarPaciente', Component: <BuscarPaciente /> },
+    { path: '/buscarTurno', Component: <BuscarTurno /> },
+    { path: '/facturaciones', Component: <Facturaciones /> },
+  ];
+
   return (
     <div>
       {!isLoginPage && <Navbar />}
       {isLoginPage && <HeaderLogin />}
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/verAgenda" element={<ProtectedRoute element={<VerAgenda />} />} />
-        <Route path="/buscarPaciente" element={<ProtectedRoute element={<BuscarPaciente />} />} />
-        <Route path="/buscarTurno" element={<ProtectedRoute element={<BuscarTurno />} />} />
-        <Route path="/facturaciones" element={<ProtectedRoute element={<Facturaciones />} />} />
+        <Route path="/*" element={<ProtectedRoutes routes={protectedRoutes} />} />
       </Routes>
     </div>
   );
