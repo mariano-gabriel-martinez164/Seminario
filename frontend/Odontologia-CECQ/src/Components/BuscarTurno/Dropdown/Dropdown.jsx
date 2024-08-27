@@ -51,7 +51,35 @@ export const CustomMenu = React.forwardRef(
   }
 );
 
+export const CustomOnlySearch = React.forwardRef(
+  ({ children, className, 'aria-labelledby': labeledBy }, ref) => {
+    const [valor, setValor] = useState('');
 
+    return (
+      <div
+        ref={ref}
+        style={{ width: '90%', marginLeft: '3%' }}
+        className={className}
+        aria-labelledby={labeledBy}
+      >
+        <Form.Control
+          style={{ width: '90%' }}
+          autoFocus
+          className="mx-3 my-2"
+          placeholder="Buscar..."
+          onChange={(e) => setValor(e.target.value)}  // Cambio aquí
+          value={valor}  // Cambio aquí
+        />
+        <ul className="list-unstyled">
+          {React.Children.toArray(children).filter((child) => {
+            const childText = child.props.children.toString();
+            return !valor || childText.toLowerCase().startsWith(valor.toLowerCase());
+          })}
+        </ul>
+      </div>
+    );
+  }
+);
 
 export const CustomCalendarMenu = React.forwardRef(
   ({ className, 'aria-labelledby': labeledBy, setStartDate, setEndDate, startDate, endDate }, ref) => {

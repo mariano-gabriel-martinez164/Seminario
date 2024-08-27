@@ -189,8 +189,15 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
           </Dropdown.Menu> )}
         </Dropdown>
         <br />
-      
 
+        <h6>Agenda</h6>
+        <Dropdown>
+          <Dropdown.Toggle as={CustomToggle}>
+          {turnoTemplate.id === null ? turnoTemplate.agenda : turno?.agenda?.id}
+          </Dropdown.Toggle>
+        </Dropdown>
+        <br />
+        
         <h6>Odontologo</h6>
         <Dropdown>
           <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
@@ -207,13 +214,6 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
         </Dropdown>
         <br />
 
-        <h6>Agenda</h6>
-        <Dropdown>
-          <Dropdown.Toggle as={CustomToggle}>
-          {turnoTemplate.id === null ? turnoTemplate.agenda : turno?.agenda?.id}
-          </Dropdown.Toggle>
-        </Dropdown>
-        <br />
 
         <h6>Estado</h6>
         <Dropdown>

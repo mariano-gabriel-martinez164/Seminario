@@ -189,13 +189,14 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
                 </Row>
                 <br />
                 <Button className='w-100' variant="primary" onClick={() => {setModalSobreturnoShow(true);}}>Crear sobreturno</Button>
-                <VerSobreturno show={modalSobreturnoShow} onHide={() => setModalSobreturnoShow(false)}/>
+                {modalSobreturnoShow && <VerSobreturno show={modalSobreturnoShow} onHide={() => setModalSobreturnoShow(false)} setEstadoModal={setEstadoModal} estadoModal={estadoModal}/>}
           </Col>
           <Col id='col2' xs={8} >
           {estadoModal === 'Disponible' && <Alert variant='info' dismissible >Turno {estadoModal}</Alert>}
           {estadoModal === 'Asignado' && <Alert variant='warning' dismissible >Turno {estadoModal}</Alert>}
           {estadoModal === 'Cancelado' && <Alert variant='danger' dismissible >Turno {estadoModal}</Alert>}
           {estadoModal === 'Realizado' && <Alert variant='success' dismissible >Turno {estadoModal}</Alert>}
+          {estadoModal === 'Sobreturno asignado' && <Alert variant='warning' dismissible >Sobreturno asignado</Alert>}
 
             <Table striped bordered hover>
               <thead>
@@ -236,11 +237,11 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
                     }}>
                       Ver más...</Button>
 
-                      <VerTurno show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno} setTurnoClick={setSelectedTurno} turnoTemplate={selectedTurnoTemplate} setEstadoModal={setEstadoModal} estadoModal={estadoModal}/>
                     </td>
                   </tr>
                 ))}
               </tbody>
+                {modalShow && <VerTurno show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno} setTurnoClick={setSelectedTurno} turnoTemplate={selectedTurnoTemplate} setEstadoModal={setEstadoModal} estadoModal={estadoModal}/>}
 
             </Table>
           </Col>
