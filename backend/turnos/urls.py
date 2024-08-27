@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     path('', views.TurnoAndTurnoTemplateList.as_view()),
     path('<int:pk>/', views.TurnoDetail.as_view()),
+    path('piezas/', views.TurnosPiezaList.as_view()),
 ]

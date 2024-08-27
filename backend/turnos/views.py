@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from .models import Turno, TurnosPieza
 from .serializers import TurnoSerializer, ShortTurnoSerializer
+from .serializers import TurnosPiezaCreateSerializer
 from rest_framework.exceptions import ValidationError
 from Agenda.models import Agenda, TurnoTemplate
 from django_filters.rest_framework import DjangoFilterBackend
@@ -156,3 +157,18 @@ class TurnoAndTurnoTemplateList(generics.ListCreateAPIView):
 
         # print('-'   * 50)
         return sorted(turnosFull , key=lambda x: (x.fecha, x.horaInicio)) 
+
+
+class TurnosPiezaList(generics.CreateAPIView):
+    queryset = TurnosPieza.objects.all()
+    serializer_class = TurnosPiezaCreateSerializer
+
+    # el endpoint debe permitir que se creen multiples turnosPieza en un solo request
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        if not isinstance(data, list):
+            data = [data]
+        serializer = self.get_serializer(data=data, many=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)

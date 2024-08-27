@@ -52,3 +52,15 @@ class ShortTurnoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Turno
         exclude = ['observaciones']
+
+class TurnosPiezaCreateSerializer(serializers.ModelSerializer):
+    # permite crear multiples turnosPieza en un solo request, añadiendo un array de objetos
+    # turno = serializers.PrimaryKeyRelatedField(source='turno_id', queryset=Turno.objects.all())
+    class Meta:
+        model = TurnosPieza
+        fields = '__all__'
+
+    def create(self, validated_data):
+        # verifico que el turno exista
+        print(validated_data)
+        return super().create(validated_data)
