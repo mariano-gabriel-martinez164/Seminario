@@ -1,6 +1,6 @@
 import Modal from 'react-bootstrap/Modal';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { CustomToggle, CustomPacientes, CustomOnlyMenu, CustomMenu } from '../Dropdown/Dropdown';
+import { CustomToggle, CustomPacientes, CustomMenu } from '../Dropdown/Dropdown';
 import { useEffect, useState } from 'react';
 import { Filtro } from '../Filtros/filtros';
 import Form from 'react-bootstrap/Form';
@@ -8,7 +8,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
 
-export function VerSobreturno({ show, onHide, setEstadoModal, estadoModal }) {
+export function VerSobreturno({ show, onHide, setEstadoModal }) {
     const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
     const [paciente, setPaciente] = useState([]);
     const [value, setValue] = useState('');

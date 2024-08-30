@@ -4,7 +4,6 @@ import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import './Dropdown.css';
-import { set } from 'date-fns';
 
 export const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
@@ -20,6 +19,8 @@ export const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
     {children}
   </a> // children contiene al texto que muestra dropdown.toggle
 ));
+
+CustomToggle.displayName = 'CustomToggle';
 
 export const CustomMenu = React.forwardRef(
   ({ children, className, 'aria-labelledby': labeledBy }, ref) => {
@@ -51,6 +52,8 @@ export const CustomMenu = React.forwardRef(
   }
 );
 
+CustomMenu.displayName = 'CustomMenu';
+
 export const CustomOnlySearch = React.forwardRef(
   ({ children, className, 'aria-labelledby': labeledBy }, ref) => {
     const [valor, setValor] = useState('');
@@ -80,6 +83,8 @@ export const CustomOnlySearch = React.forwardRef(
     );
   }
 );
+
+CustomOnlySearch.displayName = 'CustomOnlySearch';
 
 export const CustomCalendarMenu = React.forwardRef(
   ({ className, 'aria-labelledby': labeledBy, setStartDate, setEndDate, startDate, endDate }, ref) => {
@@ -133,10 +138,10 @@ export const CustomCalendarMenu = React.forwardRef(
   }
 );
 
+CustomCalendarMenu.displayName = 'CustomCalendarMenu';
 
 export const CustomOnlyMenu = React.forwardRef(
   ({ children, className, 'aria-labelledby': labeledBy }, ref) => {
-    const [valor, setvalor] = useState('');
 
     return (
       <div
@@ -146,17 +151,19 @@ export const CustomOnlyMenu = React.forwardRef(
         aria-labelledby={labeledBy}
       >
         <ul className="list-unstyled">
-          {React.Children.toArray(children).filter(
-            (child) => !valor || child.props.children.startsWith(valor)
-          )}
+          {children.map((child) => {
+            return child
+          })}
         </ul>
       </div>
     );
   }
 );
 
+CustomOnlyMenu.displayName = 'CustomOnlyMenu';
+
 export const CustomPacientes = React.forwardRef(
-  ({ children, className, 'aria-labelledby': labeledBy, valor, setValor, pacientes, setPacientes }, ref) => {
+  ({ children, className, 'aria-labelledby': labeledBy, valor, setValor, setPacientes }, ref) => {
     useEffect(() => {
       if(valor){
         fetch(`http://127.0.0.1:8000/pacientes/?search=${valor}`)
@@ -166,7 +173,7 @@ export const CustomPacientes = React.forwardRef(
           });
       } else {
         setPacientes([]);}
-    }, [valor]);
+    }, [valor, setPacientes]);
     
 
     return (
@@ -195,3 +202,48 @@ export const CustomPacientes = React.forwardRef(
     );
   }
 );
+
+CustomPacientes.displayName = 'CustomPacientes';
+
+export const CustomPrestaciones = React.forwardRef(
+  ({ children, className, 'aria-labelledby': labeledBy, valor, setValor, setPrestaciones }, ref) => {
+    useEffect(() => {
+      if(valor ){
+        fetch(`http://127.0.0.1:8000/prestaciones/?search=${valor}`)
+          .then((response) => response.json())
+          .then((data) => {
+            setPrestaciones(data);
+          });
+      } else {
+        setPrestaciones([]);}
+    }, [valor, setPrestaciones]);
+    
+
+    return (
+      <div
+        ref={ref}
+        style={{  marginLeft: '3%' }}
+        className={className}
+        aria-labelledby={labeledBy}
+      >
+        <Form.Control
+          style={{ width: '90%' }}
+          autoFocus
+          className="mx-3 my-2"
+          placeholder="Buscar..."
+          onChange={(e) => setValor(e.target.value)}
+          value={valor}
+        />   
+         <ul className="list-unstyled">
+          {React.Children.toArray(children).filter((child) => {
+            // Convertir child.props.children a una cadena
+            const childText = child.props.children.toString();
+            return childText.toLowerCase().startsWith(valor.toLowerCase()) || child.key.includes(valor);
+            })} 
+        </ul>
+      </div>
+    );
+  }
+);
+
+CustomPrestaciones.displayName = 'CustomPrestaciones';

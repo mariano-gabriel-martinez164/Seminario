@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { CustomToggle, CustomMenu, CustomCalendarMenu, CustomOnlyMenu, CustomPacientes } from '../Dropdown/Dropdown';
+import { CustomToggle, CustomPacientes } from '../Dropdown/Dropdown';
 import Dropdown from 'react-bootstrap/Dropdown';
 import './verInfoTurno.css';
 import { useEffect, useState } from 'react';
@@ -9,17 +9,31 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { Alert } from 'react-bootstrap';
 import MapaPiezas from './mapaPiezas';
+import { mostrarFiltrosArray } from '../MostrarFiltros/mostrarFiltros';
 
 
-export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate ,setEstadoModal, estadoModal}) {
+
+export function VerTurno({show, onHide, turnoClick, turnoTemplate ,setEstadoModal}) {
   const [turno, setTurno] = useState({});
   const [selectedEstado, setSelectedEstado] = useState('');
   const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
   const [paciente, setPaciente] = useState([]);
   const [value, setValue] = useState('');
   const [agendaDetails, setAgendaDetails] = useState({});
-  const [piezasDentales, setPiezasDentales] = useState([]);
-  
+  const [selectedTurnoPieza, setSelectedTurnoPieza] = useState([]);
+  const [buttonColors, setButtonColors] = useState({});
+
+  const [monto, setMonto] = useState('');
+  const [observaciones, setObservaciones] = useState('');
+
+  const handleMontoChange = (e) => {
+    setMonto(Number(e.target.value));
+  };
+
+  const handleObservacionesChange = (e) => {
+    setObservaciones(e.target.value);
+  };
+
   const mapaPiezas = [
     [[55,51], [61,65]],
     [[18,11], [21,28]],
@@ -51,15 +65,13 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
     "administrativo": null,
   };
 
-  useEffect(() => {
-    if (selectedEstado === 'Finalizado') {
-      fetch('http://127.0.0.1:8000/piezasDentales/')
-        .then((response) => response.json())
-        .then((data) => {
-          setPiezasDentales(data);
-        });
-    }
-  }, [selectedEstado]);
+  const turnoPiezaFinalizado = selectedTurnoPieza.map(item => ({
+    "turno": item.turno,
+    "pieza": item?.pieza?.codigo,
+    "prestacion": item?.prestacion?.codigo
+  }));
+
+
 
   const Liberar = (id) => {
     setEstadoModal('Disponible');
@@ -108,7 +120,29 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
     })
   }
 
-
+  const Finalizar = (id) => {
+    turno.estado = 'Finalizado';
+    turno.monto = monto;
+    turno.observaciones = observaciones;
+    setEstadoModal('Finalizado');
+    onHide();
+    fetch('http://127.0.0.1:8000/turnos/piezas/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(turnoPiezaFinalizado),
+    });
+    turno.turnosPieza = turnoPiezaFinalizado;
+    {console.log(turno)}
+    fetch(`http://127.0.0.1:8000/turnos/${id}/`,{
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(turno),
+    })
+  }
 
   useEffect(() => {
     if(value){
@@ -149,9 +183,9 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
     if (show) {
       setSelectedEstado('');
       setSelectedPaciente({ key: '' });
-      setEstadoModal('');
       setAgendaDetails({});
-      setTurnoClick(null);
+      setTurno({});
+      setSelectedTurnoPieza([]);
     }
   }, [show]);    
 
@@ -250,22 +284,33 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
           <>
             <br />
             <Alert id='finalizar' variant='success' >Finalizar</Alert>
-            <MapaPiezas mapaPiezas={mapaPiezas} selectedEstado={selectedEstado}/>
+            <MapaPiezas mapaPiezas={mapaPiezas} selectedEstado={selectedEstado} turno={turno.id} setSelectedTurnoPieza={setSelectedTurnoPieza} setButtonColors={setButtonColors} buttonColors={buttonColors}/>
+            {mostrarFiltrosArray(selectedTurnoPieza, setSelectedTurnoPieza, setButtonColors, buttonColors)}
+            
             <h6>Monto</h6>
             <InputGroup className="mb-3">
               <InputGroup.Text>$</InputGroup.Text>
-              <Form.Control aria-label="Amount (to the nearest dollar)" />
+              <Form.Control
+                aria-label="Amount (to the nearest dollar)"
+                value={monto}
+                onChange={handleMontoChange}
+              />
               <InputGroup.Text>.00</InputGroup.Text>
             </InputGroup>
             
             <h6>Observaciones</h6>
             <InputGroup>
               <InputGroup.Text>Observaciones</InputGroup.Text>
-              <Form.Control as="textarea" aria-label="With textarea" />
+              <Form.Control
+                as="textarea"
+                aria-label="With textarea"
+                value={observaciones}
+                onChange={handleObservacionesChange}
+              />
             </InputGroup>
 
             <Modal.Footer className="bg">
-              <CloseButton onClick={() => onHide()}/>
+              <Button onClick={() => Finalizar(turno.id, selectedTurnoPieza)} variant="success">Finalizar turno</Button>
             </Modal.Footer>
           </>
         )}
@@ -293,5 +338,4 @@ export function VerTurno({show, onHide, turnoClick, setTurnoClick, turnoTemplate
     </Modal>
   );
 }
-
 

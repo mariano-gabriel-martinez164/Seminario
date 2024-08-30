@@ -1,4 +1,3 @@
-import React from 'react'
 import { removeItem } from '../HandleAndRemove/handleAndRemove';
 import CloseButton from 'react-bootstrap/CloseButton';
 
@@ -36,19 +35,25 @@ export const mostrarFiltros = (selectedItem, setSelectedItem) => {
 
 
 
-export const mostrarFiltrosArray = (selectedItems, setSelectedItems) => {
+export const mostrarFiltrosArray = (selectedItems, setSelectedItems, setButtonColors, buttonColors) => {
   return (
-    <div className={`${selectedItems.length === 0 ? 'd-none' : ''}`}> 
-        {selectedItems.map((item, index) => ( 
+    <div className={`${selectedItems.length === 0 ? 'd-none' : ''}`}>
+      {selectedItems.map((item, index) => (
         <div key={index}>
-        <br />
-        <span className='bg-light rounded m-2'>
-        {item} <CloseButton onClick={() => removeItem(selectedItems, setSelectedItems,item)}></CloseButton>
-        </span> 
-        <br />
-        </div>))}
-        <br />
+          <br />
+          <span className='bg-light rounded m-2'>
+            {typeof item === 'object' 
+              ? `Pieza dental: (${item?.pieza?.codigo}) ${item?.pieza?.nombre} - ${item.prestacion.nombre}` 
+              : item
+            }
+            <CloseButton onClick={() => removeItem(selectedItems, setSelectedItems, item, setButtonColors, buttonColors)}></CloseButton>
+          </span>
+          <br />
+        </div>
+      ))}
+      <br />
     </div>
-    )
-}
+  );
+};
+
 

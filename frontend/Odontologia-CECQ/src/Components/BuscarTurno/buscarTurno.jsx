@@ -1,11 +1,11 @@
 import './buscarTurno.css'
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { CustomToggle, CustomMenu, CustomCalendarMenu, CustomOnlyMenu, CustomPacientes } from './Dropdown/Dropdown';
+import { CustomToggle, CustomCalendarMenu, CustomOnlyMenu, CustomPacientes } from './Dropdown/Dropdown';
 import { mostrarFiltros, mostrarFiltrosArray } from './MostrarFiltros/mostrarFiltros';
 import { VerTurno } from './VerInfoTurno/verInfoTurno';
 import Button from 'react-bootstrap/Button';
@@ -15,7 +15,7 @@ import { Filtro } from './Filtros/filtros';
 import { Alert } from 'react-bootstrap';
 import { VerSobreturno }  from './Sobreturno/sobreturno';
 
-  export default function buscarTurno() {
+  export default function BuscarTurno() {
     const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
     const [selectedAgenda, setSelectedAgenda] = useState({key: ''});
     const [selectedEstado, setSelectedEstado] = useState([]);
@@ -66,7 +66,7 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
           setTurnos(data);
         })
         .catch((error) => console.log(error));
-    }, [startDate, endDate, selectedPaciente.key, selectedAgenda.key, selectedEstado, selectedCentro.key, selectedOdontologo.key, selectedSobreturno, selectedAdministrativo.key, estadoModal]);
+    }, [API_URL, estadoModal]);
     
   return (
     <Container id='container' fluid>
@@ -96,7 +96,7 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
                     Seleccionar paciente...
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu as={CustomPacientes} valor={value} setValor={setValue} pacientes={paciente} setPacientes={setPaciente}>
+                  <Dropdown.Menu as={CustomPacientes} valor={value} setValor={setValue} setPacientes={setPaciente}>
                     {paciente.map((paciente) => (
                       <Dropdown.Item onClick = {() => setSelectedPaciente(
                       {   key: paciente.dni, 
@@ -115,7 +115,7 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar odontologo...
                   </Dropdown.Toggle>
-                  <Filtro selectedItem={selectedOdontologo} setSelectedItem={setSelectedOdontologo} api_url={'http://127.0.0.1:8000/odontologos/'} itemKey={'matricula'} valor1={'nombre'} valor2={'apellido'}/>
+                  <Filtro setSelectedItem={setSelectedOdontologo} api_url={'http://127.0.0.1:8000/odontologos/'} itemKey={'matricula'} valor1={'nombre'} valor2={'apellido'}/>
 
                 </Dropdown>
                 <br />
@@ -127,7 +127,7 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar centro...
                   </Dropdown.Toggle>
-                  <Filtro selectedItem={selectedCentro} setSelectedItem={setSelectedCentro} api_url={'http://127.0.0.1:8000/centros/' } itemKey={'id'} valor1={'nombre'} valor2={''}/>
+                  <Filtro setSelectedItem={setSelectedCentro} api_url={'http://127.0.0.1:8000/centros/' } itemKey={'id'} valor1={'nombre'} valor2={''}/>
                 </Dropdown>
                 <br />
                 {mostrarFiltros(selectedCentro, setSelectedCentro)}
@@ -189,7 +189,7 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
                 </Row>
                 <br />
                 <Button className='w-100' variant="primary" onClick={() => {setModalSobreturnoShow(true);}}>Crear sobreturno</Button>
-                {modalSobreturnoShow && <VerSobreturno show={modalSobreturnoShow} onHide={() => setModalSobreturnoShow(false)} setEstadoModal={setEstadoModal} estadoModal={estadoModal}/>}
+                {modalSobreturnoShow && <VerSobreturno show={modalSobreturnoShow} onHide={() => setModalSobreturnoShow(false)} setEstadoModal={setEstadoModal}/>}
           </Col>
           <Col id='col2' xs={8} >
           {estadoModal === 'Disponible' && <Alert variant='info' dismissible >Turno {estadoModal}</Alert>}
@@ -241,7 +241,7 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
                   </tr>
                 ))}
               </tbody>
-                {modalShow && <VerTurno show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno} setTurnoClick={setSelectedTurno} turnoTemplate={selectedTurnoTemplate} setEstadoModal={setEstadoModal} estadoModal={estadoModal}/>}
+                {modalShow && <VerTurno show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno} turnoTemplate={selectedTurnoTemplate} setEstadoModal={setEstadoModal}/>}
 
             </Table>
           </Col>

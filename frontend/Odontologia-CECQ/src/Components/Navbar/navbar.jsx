@@ -1,4 +1,3 @@
-import React from 'react';
 import './navbar.css';
 import img from '../../assets/CECQIcon.png';
 import { Link } from 'react-router-dom';

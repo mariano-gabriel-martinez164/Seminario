@@ -17,7 +17,7 @@ export function useFetch(url) {
           }
         })
         .catch((error) => console.log(error));
-    }, []);
+    }, [url]);
   
     return data;
   }

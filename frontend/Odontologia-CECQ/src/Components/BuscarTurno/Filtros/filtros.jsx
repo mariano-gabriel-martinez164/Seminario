@@ -1,9 +1,8 @@
-import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { CustomToggle, CustomMenu } from '../Dropdown/Dropdown';
+import { CustomMenu } from '../Dropdown/Dropdown';
 import { useFetch } from '../../Fetchs/fetchs';
 
-export function Filtro({ selectedItem, setSelectedItem, api_url, itemKey, valor1, valor2 }) {
+export function Filtro({ setSelectedItem, api_url, itemKey, valor1, valor2 }) {
     return (
     <div>
         <Dropdown.Menu as={CustomMenu}>
@@ -19,7 +18,7 @@ export function Filtro({ selectedItem, setSelectedItem, api_url, itemKey, valor1
     );
 }
 
-export function FiltroAnidado({ selectedItem, setSelectedItem, api_url, itemKey, itemKey2, valor1, valor11, valor2, valor22 }) {
+export function FiltroAnidado({ setSelectedItem, api_url, itemKey, itemKey2, valor1, valor11, valor2, valor22 }) {
     return (
     <div>
         <Dropdown.Menu as={CustomMenu}>
