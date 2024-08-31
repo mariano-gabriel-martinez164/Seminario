@@ -27,7 +27,7 @@ export function VerTurno({show, onHide, turnoClick, turnoTemplate ,setEstadoModa
   const [observaciones, setObservaciones] = useState('');
 
   const handleMontoChange = (e) => {
-    setMonto(Number(e.target.value));
+    setMonto(e.target.value);
   };
 
   const handleObservacionesChange = (e) => {
@@ -121,8 +121,8 @@ export function VerTurno({show, onHide, turnoClick, turnoTemplate ,setEstadoModa
   }
 
   const Finalizar = (id) => {
-    turno.estado = 'Finalizado';
-    turno.monto = monto;
+    turno.estado = 'Realizado';
+    turno.monto = String(monto);
     turno.observaciones = observaciones;
     setEstadoModal('Finalizado');
     onHide();
@@ -133,7 +133,6 @@ export function VerTurno({show, onHide, turnoClick, turnoTemplate ,setEstadoModa
       },
       body: JSON.stringify(turnoPiezaFinalizado),
     });
-    turno.turnosPieza = turnoPiezaFinalizado;
     {console.log(turno)}
     fetch(`http://127.0.0.1:8000/turnos/${id}/`,{
       method: 'put',
@@ -272,14 +271,49 @@ export function VerTurno({show, onHide, turnoClick, turnoTemplate ,setEstadoModa
           </Dropdown.Toggle>
         </Dropdown>
         <br />
-
+          
         <h6>Hora inicio - hora fin</h6>
         <Dropdown>
           <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
             {turnoTemplate.id === null ? turnoTemplate.horaInicio + '-' + turnoTemplate.horaFin  : turno.horaInicio + '-' + turno.horaFin}
           </Dropdown.Toggle>
         </Dropdown>
-
+        {turno.estado === 'Realizado' && (
+          <>
+          <br />
+          <Alert id='finalizar' variant='success' >Finalizado</Alert>
+            {turno.turnosPieza.map((turnoPieza, index) => (
+              <div key={index}>
+              <br />
+              <h6>Pieza {turnoPieza.pieza.codigo}: {turnoPieza.pieza.nombre} - Prestacion: {turnoPieza.prestacion.nombre}</h6>
+              </div>
+            ))}
+            <br />
+            <h6>Monto</h6>
+            <InputGroup className="mb-3">
+              <InputGroup.Text>$</InputGroup.Text>
+              <Form.Control
+                aria-label="Amount (to the nearest dollar)"
+                value={turno.monto}
+                onChange={handleMontoChange}
+                readOnly 
+              />
+              <InputGroup.Text>.00</InputGroup.Text>
+            </InputGroup>
+            
+            <h6>Observaciones</h6>
+            <InputGroup>
+              <InputGroup.Text>Observaciones</InputGroup.Text>
+              <Form.Control
+                as="textarea"
+                aria-label="With textarea"
+                value={turno.observaciones}
+                onChange={handleObservacionesChange}
+                readOnly 
+              />
+            </InputGroup>
+            </>
+            )}
         {selectedEstado === 'Finalizado' && (
           <>
             <br />
