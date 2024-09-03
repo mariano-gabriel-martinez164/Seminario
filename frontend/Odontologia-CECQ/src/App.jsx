@@ -13,6 +13,9 @@ import HeaderLogin from './Components/HeaderLogin/headerLogin';
 import { AuthProvider, useAuth } from './Components/Login/authContext';
 import ProtectedRoutes from './Components/Login/ProtectedRoute';
 import { useEffect } from 'react';
+import GestionarUsuario from './Components/GestionarUsuario/gestionarUsuario';
+import GestionarAgenda from './Components/GestionarAgenda/gestionarAgenda';
+import GestionarPrestacion from './Components/GestionarPrestacion/gestionarPrestacion';
 
 function App() {
   return (
@@ -41,6 +44,9 @@ function RouteHandler() {
     { path: '/buscarPaciente', Component: <BuscarPaciente /> },
     { path: '/buscarTurno', Component: <BuscarTurno /> },
     { path: '/facturaciones', Component: <Facturaciones /> },
+    { path: '/gestionarUsuario', Component: <GestionarUsuario /> },
+    { path: '/gestionarAgenda', Component: <GestionarAgenda /> },
+    { path: '/gestionarPrestacion', Component: <GestionarPrestacion /> }
   ];
 
   return (

@@ -69,6 +69,21 @@ export default function Navbar() {
                   <i className="bi bi-file-earmark-text-fill"></i> Facturación
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link p-3 fs-5" to="/gestionarUsuario">
+                  <i className="bi bi-file-earmark-person"></i> Gestionar usuarios
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link p-3 fs-5" to="/gestionarAgenda">
+                  <i className="bi bi-calendar-check"></i> Gestionar agendas
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link p-3 fs-5" to="/gestionarPrestacion">
+                  <i className="bi bi-pass-fill"></i> Gestionar prestaciones
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
