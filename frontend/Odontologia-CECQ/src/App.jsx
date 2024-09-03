@@ -10,8 +10,9 @@ import Facturaciones from './Components/Facturaciones/facturaciones';
 import VerAgenda from './Components/VerAgenda/verAgenda';
 import Login from './Components/Login/login';
 import HeaderLogin from './Components/HeaderLogin/headerLogin';
-import { AuthProvider } from './Components/Login/authContext';
+import { AuthProvider, useAuth } from './Components/Login/authContext';
 import ProtectedRoutes from './Components/Login/ProtectedRoute';
+import { useEffect } from 'react';
 
 function App() {
   return (
@@ -26,6 +27,14 @@ function App() {
 function RouteHandler() {
   const location = useLocation();
   const isLoginPage = location.pathname === '/';
+  const { isAuthenticated, logout } = useAuth();
+
+  useEffect(() => {
+    if (isLoginPage && isAuthenticated) {
+      logout(); 
+    }
+  }, [isLoginPage, isAuthenticated, logout]);
+
 
   const protectedRoutes = [
     { path: '/verAgenda', Component: <VerAgenda /> },
