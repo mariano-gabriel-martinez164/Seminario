@@ -1,12 +1,12 @@
 import Dropdown from 'react-bootstrap/Dropdown';
-import { CustomMenu } from '../Dropdown/Dropdown';
-import { useFetch } from '../../Fetchs/fetchs';
+import { CustomMenu } from '../DropdownCustom/DropdownCustom';
+import { useFetchArray } from '../../Hooks/fetch';
 
 export function Filtro({ setSelectedItem, api_url, itemKey, valor1, valor2 }) {
     return (
     <div>
         <Dropdown.Menu as={CustomMenu}>
-            {useFetch(api_url).map((item) => (
+            {useFetchArray(api_url).map((item) => (
                 <Dropdown.Item onClick = {() => setSelectedItem(
                     {   key: item[itemKey], 
                         nombre: item[valor1], 
@@ -22,7 +22,7 @@ export function FiltroAnidado({ setSelectedItem, api_url, itemKey, itemKey2, val
     return (
     <div>
         <Dropdown.Menu as={CustomMenu}>
-            {useFetch(api_url).map((item) => (
+            {useFetchArray(api_url).map((item) => (
                 <Dropdown.Item onClick = {() => setSelectedItem(
                     {   key: item[itemKey][itemKey2], 
                         nombre: item[valor1][valor11], 

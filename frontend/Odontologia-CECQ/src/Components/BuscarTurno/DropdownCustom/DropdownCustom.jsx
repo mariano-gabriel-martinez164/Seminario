@@ -3,7 +3,7 @@ import { Form } from 'react-bootstrap';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
-import './Dropdown.css';
+import './DropdownCustom.css';
 
 export const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
@@ -163,19 +163,7 @@ export const CustomOnlyMenu = React.forwardRef(
 CustomOnlyMenu.displayName = 'CustomOnlyMenu';
 
 export const CustomPacientes = React.forwardRef(
-  ({ children, className, 'aria-labelledby': labeledBy, valor, setValor, setPacientes }, ref) => {
-    useEffect(() => {
-      if(valor){
-        fetch(`http://127.0.0.1:8000/pacientes/?search=${valor}`)
-          .then((response) => response.json())
-          .then((data) => {
-            setPacientes(data.results);
-          });
-      } else {
-        setPacientes([]);}
-    }, [valor, setPacientes]);
-    
-
+  ({children, className, 'aria-labelledby': labeledBy, valor, setValor}, ref) => {
     return (
       <div
         ref={ref}
@@ -188,14 +176,16 @@ export const CustomPacientes = React.forwardRef(
           autoFocus
           className="mx-3 my-2"
           placeholder="Buscar..."
-          onChange={(e) => setValor(e.target.value)}
+          onChange={(e) => {setValor(e.target.value);}}
           value={valor}
         />   
          <ul className="list-unstyled">
           {React.Children.toArray(children).filter((child) => {
             // Convertir child.props.children a una cadena
             const childText = child.props.children.toString();
-            return childText.toLowerCase().startsWith(valor.toLowerCase()) || child.key.includes(valor);
+            if (valor) {
+              return childText.toLowerCase().startsWith(valor.toLowerCase()) || child.key.includes(valor);
+            }            
             })} 
         </ul>
       </div>
@@ -206,19 +196,7 @@ export const CustomPacientes = React.forwardRef(
 CustomPacientes.displayName = 'CustomPacientes';
 
 export const CustomPrestaciones = React.forwardRef(
-  ({ children, className, 'aria-labelledby': labeledBy, valor, setValor, setPrestaciones }, ref) => {
-    useEffect(() => {
-      if(valor ){
-        fetch(`http://127.0.0.1:8000/prestaciones/?search=${valor}`)
-          .then((response) => response.json())
-          .then((data) => {
-            setPrestaciones(data);
-          });
-      } else {
-        setPrestaciones([]);}
-    }, [valor, setPrestaciones]);
-    
-
+  ({ children, className, 'aria-labelledby': labeledBy, valor, setValor }, ref) => {
     return (
       <div
         ref={ref}
@@ -238,7 +216,9 @@ export const CustomPrestaciones = React.forwardRef(
           {React.Children.toArray(children).filter((child) => {
             // Convertir child.props.children a una cadena
             const childText = child.props.children.toString();
+            if (valor) {
             return childText.toLowerCase().startsWith(valor.toLowerCase()) || child.key.includes(valor);
+            }
             })} 
         </ul>
       </div>

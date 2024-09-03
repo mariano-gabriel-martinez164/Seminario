@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Container, Dropdown } from 'react-bootstrap';
-import { CustomPrestaciones } from '../Dropdown/Dropdown';
+import { CustomPrestaciones } from '../DropdownCustom/DropdownCustom';
 import { handleSelectObject } from '../HandleAndRemove/handleAndRemove';
+import { useFetchArray } from '../../Hooks/fetch';
 
-const MapaPiezas = ({ mapaPiezas, selectedEstado, turno, setSelectedTurnoPieza, selectedTurnoPieza, setButtonColors, buttonColors }) => {
+const MapaPiezas = ({ mapaPiezas, turno, setSelectedTurnoPieza, selectedTurnoPieza, setButtonColors, buttonColors }) => {
   const [selectedButton, setSelectedButton] = useState(null);
   const [valor, setValor] = useState('');
-  const [prestaciones, setPrestaciones] = useState([]);
   const [openDropdown, setOpenDropdown] = useState(null); // Estado para manejar qué dropdown está abierto
+  const prestaciones = useFetchArray(`http://127.0.0.1:8000/prestaciones/?search=${valor}`);
 
   const handleButtonClick = (buttonValue) => {
     if (selectedButton && selectedButton.codigo === buttonValue) {
@@ -23,14 +24,6 @@ const MapaPiezas = ({ mapaPiezas, selectedEstado, turno, setSelectedTurnoPieza, 
     }
   };
 
-  useEffect(() => {
-    valor &&
-    fetch(`http://localhost:8000/prestaciones/?search=${valor}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setPrestaciones(data);
-      });
-  }, [valor, selectedEstado]);
 
   const handleItemClick = (buttonValue, prestacion) => {
     handleSelectObject(selectedTurnoPieza, setSelectedTurnoPieza, {
@@ -69,7 +62,7 @@ const MapaPiezas = ({ mapaPiezas, selectedEstado, turno, setSelectedTurnoPieza, 
                     {i}
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu as={CustomPrestaciones} prestaciones={prestaciones} setPrestaciones={setPrestaciones} valor={valor} setValor={setValor}>
+                  <Dropdown.Menu as={CustomPrestaciones} prestaciones={prestaciones} valor={valor} setValor={setValor}>
                     {prestaciones.map((prestacion) => (
                       <Dropdown.Item
                         onClick={() => handleItemClick(i, prestacion)}

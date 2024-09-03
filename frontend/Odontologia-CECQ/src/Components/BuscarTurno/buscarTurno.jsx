@@ -5,15 +5,19 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { CustomToggle, CustomCalendarMenu, CustomOnlyMenu, CustomPacientes } from './Dropdown/Dropdown';
+import { CustomToggle, CustomCalendarMenu, CustomOnlyMenu, CustomPacientes } from './DropdownCustom/DropdownCustom';
 import { mostrarFiltros, mostrarFiltrosArray } from './MostrarFiltros/mostrarFiltros';
-import { VerTurno } from './VerInfoTurno/verInfoTurno';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
 import { handleSelect } from './HandleAndRemove/handleAndRemove';
 import { Filtro } from './Filtros/filtros';
 import { Alert } from 'react-bootstrap';
 import { VerSobreturno }  from './Sobreturno/sobreturno';
+import { useFetchArray } from '../Hooks/fetch';
+import { ModalRealizado } from './CrudTurno/modalRealizado';
+import { ModalDisponible } from './CrudTurno/modalDisponible';
+import { ModalCancelado } from './CrudTurno/modalCancelado';
+import { ModalAsignado } from './CrudTurno/modalAsignado';
 
   export default function BuscarTurno() {
     const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
@@ -27,10 +31,10 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
     const [selectedTurno, setSelectedTurno] = useState('');
     const [turnos, setTurnos] = useState([]);
     const [value, setValue] = useState('');
-    const [paciente, setPaciente] = useState([]);
     const [estadoModal, setEstadoModal] = useState('');
     const [selectedTurnoTemplate, setSelectedTurnoTemplate] = useState({});
     const [modalSobreturnoShow, setModalSobreturnoShow] = useState(false);
+    const [estado, setEstado] = useState('');
 
     const today = new Date();
     const monthLater = new Date();
@@ -44,18 +48,7 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
       return date1.toISOString().split('T')[0] === date2.toISOString().split('T')[0];
     };
 
-    useEffect(() => {
-      if(value){
-      fetch(`http://127.0.0.1:8000/pacientes/?search=${value}`)
-      .then((response) => response.json())
-      .then((data) => {
-          setPaciente(data.results);
-      });
-      } else {
-        setPaciente([]);
-      }  
-    }, [value]);
-  
+    const paciente = useFetchArray(`http://127.0.0.1:8000/pacientes/?search=${value}`);
 
     const estadosSeleccionados = selectedEstado.length > 0 ? selectedEstado.map((estado) => `&estado=${estado}`).join('') : '';
     const API_URL = `http://127.0.0.1:8000/turnos/?fecha_inicio=${formatDate(startDate)}&fecha_fin=${formatDate(endDate)}&id_odontologo=${selectedOdontologo.key}&id_centro=${selectedCentro.key}&id_agenda=${selectedAgenda.key}&id_administrativo=${selectedAdministrativo.key}&id_paciente=${selectedPaciente.key}${estadosSeleccionados}&sobreturno=${selectedSobreturno}`;
@@ -96,7 +89,7 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
                     Seleccionar paciente...
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu as={CustomPacientes} valor={value} setValor={setValue} setPacientes={setPaciente}>
+                  <Dropdown.Menu as={CustomPacientes} valor={value} setValor={setValue}>
                     {paciente.map((paciente) => (
                       <Dropdown.Item onClick = {() => setSelectedPaciente(
                       {   key: paciente.dni, 
@@ -230,9 +223,11 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
                       if (turno.id !== null) {
                         setSelectedTurno(turno.id);
                         setSelectedTurnoTemplate({});
+                        setEstado(turno.estado);
                       } else {
                         setSelectedTurnoTemplate(turno);
                         setSelectedTurno('');
+                        setEstado(turno.estado);
                       }
                     }}>
                       Ver más...</Button>
@@ -241,7 +236,22 @@ import { VerSobreturno }  from './Sobreturno/sobreturno';
                   </tr>
                 ))}
               </tbody>
-                {modalShow && <VerTurno show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno} turnoTemplate={selectedTurnoTemplate} setEstadoModal={setEstadoModal}/>}
+
+                {estado === 'Disponible' && modalShow ? ( 
+                  <ModalDisponible show={modalShow} onHide={() => setModalShow(false)} turnoTemplate={selectedTurnoTemplate} setEstadoModal={setEstadoModal}/>
+                ) : null}
+
+                {estado === 'Realizado' && modalShow ? (
+                  <ModalRealizado show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno} />
+                ) : null}
+
+                {estado === 'Cancelado' && modalShow ? (
+                  <ModalCancelado show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno} turnoTemplate={selectedTurnoTemplate} setEstadoModal={setEstadoModal} />
+                ) : null}
+
+                {estado === 'Asignado' && modalShow ? (
+                  <ModalAsignado show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno} setEstadoModal={setEstadoModal} />
+                ) : null}
 
             </Table>
           </Col>

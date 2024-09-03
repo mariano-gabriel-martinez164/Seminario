@@ -1,23 +1,27 @@
 import Modal from 'react-bootstrap/Modal';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { CustomToggle, CustomPacientes, CustomMenu } from '../Dropdown/Dropdown';
+import { CustomToggle, CustomPacientes, CustomMenu } from '../DropdownCustom/DropdownCustom';
 import { useEffect, useState } from 'react';
 import { Filtro } from '../Filtros/filtros';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
+import { useFetchArray } from '../../Hooks/fetch';
+import { turnoFormato } from '../CrudTurno/turno';
+import { postData } from '../../Hooks/post';
 
 export function VerSobreturno({ show, onHide, setEstadoModal }) {
     const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
-    const [paciente, setPaciente] = useState([]);
     const [value, setValue] = useState('');
     const [selectedAdministrativo, setSelectedAdministrativo] = useState({key: ''});
     const [selectedAgenda, setSelectedAgenda] = useState({id: ''});
-    const [agendas, setAgendas] = useState([]);
     const [horaFin, setHoraFin] = useState('');
     const [horaInicio, setHoraInicio] = useState('');
     const [fecha, setFecha] = useState('');
+
+    const paciente = useFetchArray(`http://127.0.0.1:8000/pacientes/?search=${value}`);
+    const agendas = useFetchArray('http://127.0.0.1:8000/agendas/');
 
     const validarFecha = (fecha) => {
         const formato = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD
@@ -29,29 +33,12 @@ export function VerSobreturno({ show, onHide, setEstadoModal }) {
         return formato.test(hora);
     };
     
-
-    const turnoAsignado = {
-        "dni": selectedPaciente.key,
-        "fecha": fecha,
-        "horaInicio": horaInicio,
-        "horaFin": horaFin,
-        "esSobreturno": true,
-        "monto": 0,
-        "estado": "Asignado",
-        "agenda": selectedAgenda.id,
-        "administrativo": null,
+    const Estado = (onHide, setEstadoModal, estado) => {
+        setEstadoModal(estado);
+        onHide;
     };
 
-    useEffect(() => {
-        if (show) {
-            fetch('http://127.0.0.1:8000/agendas/')
-            .then((response) => response.json())
-            .then((data) => {
-                setAgendas(data);
-            });
-        }
-    }, [show]);
-    
+
     useEffect(() => {
         if (show) {
           setSelectedPaciente({ key: '' });
@@ -60,19 +47,6 @@ export function VerSobreturno({ show, onHide, setEstadoModal }) {
           setValue('');
         }
     }, [show]);    
-
-    const Asignar = () => {
-        setEstadoModal('Sobreturno asignado');
-        onHide();
-        fetch(`http://127.0.0.1:8000/turnos/`,{
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(turnoAsignado)
-        })
-      }
-    
 
   return (
     <Modal
@@ -91,15 +65,15 @@ export function VerSobreturno({ show, onHide, setEstadoModal }) {
             {selectedPaciente.key === '' ? 'Seleccionar paciente...' : selectedPaciente.nombre + ' ' + selectedPaciente.apellido}
         </Dropdown.Toggle>
 
-        <Dropdown.Menu as={CustomPacientes} valor={value} setValor={setValue} pacientes={paciente} setPacientes={setPaciente}>
+        <Dropdown.Menu as={CustomPacientes} valor={value} setValor={setValue} pacientes={paciente}>
             {paciente.map((paciente) => (
-            <Dropdown.Item onClick = {() => setSelectedPaciente(
-            {   key: paciente.dni, 
-                nombre: paciente.nombre, 
-                apellido: paciente.apellido
-            })} 
-            key={paciente.dni}>{paciente.nombre} {paciente.apellido} {paciente.dni ? '': ''}</Dropdown.Item>))}
-        </Dropdown.Menu> 
+              <Dropdown.Item onClick = {() => setSelectedPaciente(
+                {   key: paciente.dni, 
+                  nombre: paciente.nombre, 
+                  apellido: paciente.apellido
+                })} 
+                key={paciente.dni}>{paciente.nombre} {paciente.apellido} {paciente.dni ? '': ''}</Dropdown.Item>))}
+          </Dropdown.Menu> 
         </Dropdown>
         <br />
         <h6>Agenda</h6>
@@ -183,7 +157,10 @@ export function VerSobreturno({ show, onHide, setEstadoModal }) {
 
       </Modal.Body>
       <Modal.Footer className='bg'>
-        <Button variant="warning" onClick={Asignar} 
+        <Button variant="warning" onClick={() => {postData(`http://127.0.0.1:8000/turnos/`,
+        turnoFormato(selectedPaciente.key, fecha, horaInicio, horaFin, true, 0, 'Asignado', selectedAgenda.id),
+        Estado(onHide(), setEstadoModal, 'Sobreturno asignado')
+        )}} 
             disabled={!selectedPaciente.key || !selectedAgenda || !selectedAdministrativo || !validarFecha(fecha) || !validarHora(horaInicio) || !validarHora(horaFin)}>
                 Asignar turno</Button>
         <CloseButton onClick={() => onHide()}/>
