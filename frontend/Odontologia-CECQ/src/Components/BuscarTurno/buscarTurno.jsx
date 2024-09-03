@@ -13,13 +13,13 @@ import { handleSelect } from './HandleAndRemove/handleAndRemove';
 import { Filtro } from './Filtros/filtros';
 import { Alert } from 'react-bootstrap';
 import { VerSobreturno }  from './Sobreturno/sobreturno';
-import { useFetchArray } from '../Request/fetch';
+import { useFetchArray } from '../../Request/fetch.js';
 import { ModalRealizado } from './CrudTurno/modalRealizado';
 import { ModalDisponible } from './CrudTurno/modalDisponible';
 import { ModalCancelado } from './CrudTurno/modalCancelado';
 import { ModalAsignado } from './CrudTurno/modalAsignado';
-import { token } from '../Request/fetch';
-import { apiUrl } from '../Request/fetch';
+import { token } from '../../Request/fetch.js';
+import { apiUrl } from '../../Request/fetch.js';
 
   export default function BuscarTurno() {
 
@@ -51,7 +51,7 @@ import { apiUrl } from '../Request/fetch';
       return date1.toISOString().split('T')[0] === date2.toISOString().split('T')[0];
     };
 
-    const paciente = useFetchArray(`${apiUrl}/pacientes/?search=${value}`);
+    const paciente = useFetchArray(`/pacientes/?search=${value}`);
     const estadosSeleccionados = selectedEstado.length > 0 ? selectedEstado.map((estado) => `&estado=${estado}`).join('') : '';
     const API_URL = `${apiUrl}/turnos/?fecha_inicio=${formatDate(startDate)}&fecha_fin=${formatDate(endDate)}&id_odontologo=${selectedOdontologo.key}&id_centro=${selectedCentro.key}&id_agenda=${selectedAgenda.key}&id_administrativo=${selectedAdministrativo.key}&id_paciente=${selectedPaciente.key}${estadosSeleccionados}&sobreturno=${selectedSobreturno}`;
     useEffect(() => {
@@ -118,7 +118,7 @@ import { apiUrl } from '../Request/fetch';
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar odontologo...
                   </Dropdown.Toggle>
-                  <Filtro setSelectedItem={setSelectedOdontologo} api_url={`${apiUrl}/odontologos/`} itemKey={'matricula'} valor1={'nombre'} valor2={'apellido'}/>
+                  <Filtro setSelectedItem={setSelectedOdontologo} api_url={`/odontologos/`} itemKey={'matricula'} valor1={'nombre'} valor2={'apellido'}/>
 
                 </Dropdown>
                 <br />
@@ -130,7 +130,7 @@ import { apiUrl } from '../Request/fetch';
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar centro...
                   </Dropdown.Toggle>
-                  <Filtro setSelectedItem={setSelectedCentro} api_url={`${apiUrl}/centros/`} itemKey={'id'} valor1={'nombre'} valor2={''}/>
+                  <Filtro setSelectedItem={setSelectedCentro} api_url={`/centros/`} itemKey={'id'} valor1={'nombre'} valor2={''}/>
                 </Dropdown>
                 <br />
                 {mostrarFiltros(selectedCentro, setSelectedCentro)}
@@ -141,7 +141,7 @@ import { apiUrl } from '../Request/fetch';
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar administrativo...
                   </Dropdown.Toggle>
-                  <Filtro selectedItem={selectedAdministrativo} setSelectedItem={setSelectedAdministrativo} api_url={`${apiUrl}/auth/administrativos/`} itemKey={'id'} valor1={'first_name'} valor2={'last_name'}/>
+                  <Filtro selectedItem={selectedAdministrativo} setSelectedItem={setSelectedAdministrativo} api_url={`/auth/administrativos/`} itemKey={'id'} valor1={'first_name'} valor2={'last_name'}/>
                 </Dropdown>
                 <br />
                 {mostrarFiltros(selectedAdministrativo, setSelectedAdministrativo)}
@@ -152,7 +152,7 @@ import { apiUrl } from '../Request/fetch';
                   <Dropdown.Toggle as={CustomToggle}>
                     Seleccionar agenda...
                   </Dropdown.Toggle>
-                  <Filtro selectedItem={selectedAgenda} setSelectedItem={setSelectedAgenda} api_url={`${apiUrl}/agendas/`} itemKey={'id'} valor1={'id'} valor2={''}/>
+                  <Filtro selectedItem={selectedAgenda} setSelectedItem={setSelectedAgenda} api_url={`/agendas/`} itemKey={'id'} valor1={'id'} valor2={''}/>
                 </Dropdown>
                 <br />
                 {mostrarFiltros(selectedAgenda, setSelectedAgenda)}

@@ -1,9 +1,10 @@
-import { token } from './fetch.jsx';
+import { token } from './fetch.js';
+const apiUrl = import.meta.env.VITE_BASE_URL;
 
 export function putData(url, data) {
 
   return (
-    fetch(url, {
+    fetch(apiUrl+url, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

@@ -6,8 +6,7 @@ import CloseButton from 'react-bootstrap/CloseButton';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { Alert } from 'react-bootstrap';
-import { useFetch } from '../../Request/fetch';
-import { apiUrl } from '../../Request/fetch';
+import { useFetch } from '../../../Request/fetch.js';
 
 export const Estado = (onHide, setEstadoModal, estado) => {
   setEstadoModal(estado);
@@ -16,7 +15,7 @@ export const Estado = (onHide, setEstadoModal, estado) => {
 
 export function ModalRealizado({show, onHide, turnoClick }) {
   
-  const turno = useFetch(turnoClick ? `${apiUrl}/turnos/${turnoClick}/` : null);
+  const turno = useFetch(turnoClick ? `/turnos/${turnoClick}/` : null);
   
   return (
     <Modal

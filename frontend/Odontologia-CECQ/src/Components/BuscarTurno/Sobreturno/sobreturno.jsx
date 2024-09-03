@@ -7,10 +7,9 @@ import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
-import { useFetchArray } from '../../Request/fetch';
+import { useFetchArray } from '../../../Request/fetch.js';
 import { turnoFormato } from '../CrudTurno/turno';
-import { postData } from '../../Request/post';
-import { apiUrl } from '../../Request/fetch';
+import { postData } from '../../../Request/post.js';
 
 export function VerSobreturno({ show, onHide, setEstadoModal }) {
 
@@ -22,8 +21,8 @@ export function VerSobreturno({ show, onHide, setEstadoModal }) {
     const [horaInicio, setHoraInicio] = useState('');
     const [fecha, setFecha] = useState('');
 
-    const paciente = useFetchArray(`${apiUrl}/pacientes/?search=${value}`);
-    const agendas = useFetchArray(`${apiUrl}/agendas/`);
+    const paciente = useFetchArray(`/pacientes/?search=${value}`);
+    const agendas = useFetchArray(`/agendas/`);
 
     const validarFecha = (fecha) => {
         const formato = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD
@@ -114,7 +113,7 @@ export function VerSobreturno({ show, onHide, setEstadoModal }) {
             <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
             {selectedAdministrativo.key === '' ? 'Seleccionar administrativo...' : selectedAdministrativo.nombre + ' ' + selectedAdministrativo.apellido}
             </Dropdown.Toggle>
-            <Filtro selectedItem={selectedAdministrativo} setSelectedItem={setSelectedAdministrativo} api_url={`${apiUrl}/auth/administrativos/`} itemKey={'id'} valor1={'first_name'} valor2={'last_name'}/>
+            <Filtro selectedItem={selectedAdministrativo} setSelectedItem={setSelectedAdministrativo} api_url={`/auth/administrativos/`} itemKey={'id'} valor1={'first_name'} valor2={'last_name'}/>
         </Dropdown>
         <br />
 
@@ -159,7 +158,7 @@ export function VerSobreturno({ show, onHide, setEstadoModal }) {
 
       </Modal.Body>
       <Modal.Footer className='bg'>
-        <Button variant="warning" onClick={() => {postData(`${apiUrl}/turnos/`,
+        <Button variant="warning" onClick={() => {postData(`/turnos/`,
         turnoFormato(selectedPaciente.key, fecha, horaInicio, horaFin, true, 0, 'Asignado', selectedAgenda.id),
         Estado(onHide(), setEstadoModal, 'Sobreturno asignado')
         )}} 

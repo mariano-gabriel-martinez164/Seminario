@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Container, Dropdown } from 'react-bootstrap';
 import { CustomPrestaciones } from '../DropdownCustom/DropdownCustom';
 import { handleSelectObject } from '../HandleAndRemove/handleAndRemove';
-import { useFetchArray } from '../../Request/fetch';
-import { apiUrl } from '../../Request/fetch';
+import { useFetchArray } from '../../../Request/fetch.js';
+import { apiUrl } from '../../../Request/fetch.js';
 
 
 const MapaPiezas = ({ mapaPiezas, turno, setSelectedTurnoPieza, selectedTurnoPieza, setButtonColors, buttonColors }) => {
@@ -11,7 +11,7 @@ const MapaPiezas = ({ mapaPiezas, turno, setSelectedTurnoPieza, selectedTurnoPie
   const [selectedButton, setSelectedButton] = useState(null);
   const [valor, setValor] = useState('');
   const [openDropdown, setOpenDropdown] = useState(null); // Estado para manejar qué dropdown está abierto
-  const prestaciones = useFetchArray(`${apiUrl}/prestaciones/?search=${valor}`);
+  const prestaciones = useFetchArray(`/prestaciones/?search=${valor}`);
 
   const handleButtonClick = (buttonValue) => {
     if (selectedButton && selectedButton.codigo === buttonValue) {

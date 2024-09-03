@@ -8,12 +8,12 @@ export function useFetchArray(url) {
     const [datoArray, setDatoArray] = useState([]);
 
     useEffect(() => {
-      fetch(url,
+      fetch(apiUrl+url,
         {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `token ${token}`,
+            'Authorization': `Token ${token}`,
           },
         }
       )
@@ -34,12 +34,12 @@ export function useFetchArray(url) {
   export function useFetch(url) {
     const [dato, setDato] = useState({});
     useEffect(() => {
-      fetch(url,
+      fetch(apiUrl+url,
         {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `token ${token}`,
+            'Authorization': `Token ${token}`,
           },
         }
       )
