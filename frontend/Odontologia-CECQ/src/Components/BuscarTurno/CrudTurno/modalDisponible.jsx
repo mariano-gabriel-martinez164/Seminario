@@ -5,9 +5,11 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import './modal.css';
 import { useEffect, useState } from 'react';
 import CloseButton from 'react-bootstrap/CloseButton';
-import { postData } from '../../Hooks/post';
-import { useFetch, useFetchArray } from '../../Hooks/fetch';
+import { postData } from '../../Request/post';
+import { useFetch, useFetchArray } from '../../Request/fetch';
 import { turnoFormato } from './turno';
+import { apiUrl } from '../../Request/fetch';
+
 
 export const Estado = (onHide, setEstadoModal, estado) => {
   setEstadoModal(estado);
@@ -15,11 +17,12 @@ export const Estado = (onHide, setEstadoModal, estado) => {
 }
 
 export function ModalDisponible({show, onHide, turnoTemplate ,setEstadoModal}) {
+
   const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
   const [value, setValue] = useState('');
     
-  const paciente = useFetchArray(`http://127.0.0.1:8000/pacientes/?search=${value}`);
-  const agendaDetails = useFetch(turnoTemplate.id === null ? `http://127.0.0.1:8000/agendas/${turnoTemplate.agenda}/` : null);
+  const paciente = useFetchArray(`${apiUrl}/pacientes/?search=${value}`);
+  const agendaDetails = useFetch(turnoTemplate.id === null ? `${apiUrl}/agendas/${turnoTemplate.agenda}/` : null);
 
 
   useEffect(() => {
@@ -120,13 +123,13 @@ export function ModalDisponible({show, onHide, turnoTemplate ,setEstadoModal}) {
        
         <Button onClick={() => {
           
-          postData('http://127.0.0.1:8000/turnos/', turnoFormato(selectedPaciente.key, turnoTemplate.fecha,
+          postData(`${apiUrl}/turnos/`, turnoFormato(selectedPaciente.key, turnoTemplate.fecha,
             turnoTemplate.horaInicio, turnoTemplate.horaFin, turnoTemplate.esSobreturno, 0, 'Asignado', turnoTemplate.agenda));
           Estado(onHide(), setEstadoModal, 'Asignado')}} 
           variant="warning" disabled={!selectedPaciente.key}>Asignar turno</Button>
 
         <Button onClick={() => {
-          postData('http://127.0.0.1:8000/turnos/', turnoFormato(null, turnoTemplate.fecha,
+          postData(`${apiUrl}/turnos/`, turnoFormato(null, turnoTemplate.fecha,
             turnoTemplate.horaInicio, turnoTemplate.horaFin, turnoTemplate.esSobreturno, 0, 'Cancelado', turnoTemplate.agenda));
           Estado(onHide(), setEstadoModal, 'Cancelado')}} 
           variant="danger">Cancelar turno</Button>

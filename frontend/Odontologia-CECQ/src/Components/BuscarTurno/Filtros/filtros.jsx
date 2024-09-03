@@ -1,6 +1,6 @@
 import Dropdown from 'react-bootstrap/Dropdown';
 import { CustomMenu } from '../DropdownCustom/DropdownCustom';
-import { useFetchArray } from '../../Hooks/fetch';
+import { useFetchArray } from '../../Request/fetch';
 
 export function Filtro({ setSelectedItem, api_url, itemKey, valor1, valor2 }) {
     return (

@@ -4,8 +4,9 @@ import { CustomToggle } from '../DropdownCustom/DropdownCustom';
 import Dropdown from 'react-bootstrap/Dropdown';
 import './modal.css';
 import CloseButton from 'react-bootstrap/CloseButton';
-import { deleteData } from '../../Hooks/delete';
-import { useFetch } from '../../Hooks/fetch';
+import { deleteData } from '../../Request/delete';
+import { useFetch } from '../../Request/fetch';
+import { apiUrl } from '../../Request/fetch';
 
 export const Estado = (onHide, setEstadoModal, estado) => {
   setEstadoModal(estado);
@@ -13,8 +14,8 @@ export const Estado = (onHide, setEstadoModal, estado) => {
 }
 
 export function ModalCancelado({show, onHide, turnoClick ,setEstadoModal}) {
-
-  const turno = useFetch(turnoClick ? `http://127.0.0.1:8000/turnos/${turnoClick}/` : null);
+  
+  const turno = useFetch(turnoClick ? `${apiUrl}/turnos/${turnoClick}/` : null);
 
   return (
     <Modal
@@ -92,7 +93,7 @@ export function ModalCancelado({show, onHide, turnoClick ,setEstadoModal}) {
         
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={() => {deleteData(`http://127.0.0.1:8000/turnos/${turno.id}/`);
+        <Button onClick={() => {deleteData(`${apiUrl}/turnos/${turno.id}/`);
         Estado(onHide(), setEstadoModal, 'Disponible')}}
         variant="info">Liberar turno</Button>
         

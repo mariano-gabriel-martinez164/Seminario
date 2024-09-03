@@ -2,20 +2,23 @@ import { useState } from 'react';
 import { Container, Dropdown } from 'react-bootstrap';
 import { CustomPrestaciones } from '../DropdownCustom/DropdownCustom';
 import { handleSelectObject } from '../HandleAndRemove/handleAndRemove';
-import { useFetchArray } from '../../Hooks/fetch';
+import { useFetchArray } from '../../Request/fetch';
+import { apiUrl } from '../../Request/fetch';
+
 
 const MapaPiezas = ({ mapaPiezas, turno, setSelectedTurnoPieza, selectedTurnoPieza, setButtonColors, buttonColors }) => {
+
   const [selectedButton, setSelectedButton] = useState(null);
   const [valor, setValor] = useState('');
   const [openDropdown, setOpenDropdown] = useState(null); // Estado para manejar qué dropdown está abierto
-  const prestaciones = useFetchArray(`http://127.0.0.1:8000/prestaciones/?search=${valor}`);
+  const prestaciones = useFetchArray(`${apiUrl}/prestaciones/?search=${valor}`);
 
   const handleButtonClick = (buttonValue) => {
     if (selectedButton && selectedButton.codigo === buttonValue) {
       setSelectedButton(null); // Desmarcar si el mismo botón es clickeado
       setOpenDropdown(null); // Cerrar el dropdown si el botón es desmarcado
     } else {
-      fetch(`http://127.0.0.1:8000/piezasDentales/${buttonValue}/`)
+      fetch(`${apiUrl}/piezasDentales/${buttonValue}/`)
         .then((response) => response.json())
         .then((data) => {
           setSelectedButton(data);

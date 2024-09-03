@@ -10,10 +10,12 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { Alert } from 'react-bootstrap';
 import MapaPiezas from './mapaPiezas';
 import { mostrarFiltrosArray } from '../MostrarFiltros/mostrarFiltros';
-import { postData } from '../../Hooks/post';
-import { deleteData } from '../../Hooks/delete';
-import { putData } from '../../Hooks/put';
-import { useFetch } from '../../Hooks/fetch';
+import { postData } from '../../Request/post';
+import { deleteData } from '../../Request/delete';
+import { putData } from '../../Request/put';
+import { useFetch } from '../../Request/fetch';
+import { apiUrl } from '../../Request/fetch';
+
 
 export const Estado = (onHide, setEstadoModal, estado) => {
   setEstadoModal(estado);
@@ -21,6 +23,7 @@ export const Estado = (onHide, setEstadoModal, estado) => {
 }
 
 export function ModalAsignado({show, onHide, turnoClick, setEstadoModal}) {
+
   const [selectedEstado, setSelectedEstado] = useState('');
   const [selectedTurnoPieza, setSelectedTurnoPieza] = useState([]);
   const [buttonColors, setButtonColors] = useState({});
@@ -28,7 +31,7 @@ export function ModalAsignado({show, onHide, turnoClick, setEstadoModal}) {
   const [monto, setMonto] = useState('');
   const [observaciones, setObservaciones] = useState('');
   
-  const turno = useFetch(turnoClick ? `http://127.0.0.1:8000/turnos/${turnoClick}/` : null);
+  const turno = useFetch(turnoClick ? `${apiUrl}/turnos/${turnoClick}/` : null);
   
   const handleMontoChange = (e) => {
     setMonto(e.target.value);
@@ -59,7 +62,7 @@ export function ModalAsignado({show, onHide, turnoClick, setEstadoModal}) {
   }, [show]);    
 
   const handleLiberarTurno = () => {
-    deleteData(`http://127.0.0.1:8000/turnos/${turno.id}/`);
+    deleteData(`${apiUrl}/turnos/${turno.id}/`);
     Estado(onHide(), setEstadoModal, 'Disponible');
   };
 
@@ -171,8 +174,8 @@ export function ModalAsignado({show, onHide, turnoClick, setEstadoModal}) {
                     turno.estado = 'Realizado';
                     turno.monto = String(monto);
                     turno.observaciones = observaciones;
-                    postData('http://127.0.0.1:8000/turnos/piezas/', turnoPiezaFinalizado);
-                    putData(`http://127.0.0.1:8000/turnos/${turno.id}/`, turno)
+                    postData(`${apiUrl}/turnos/piezas/`, turnoPiezaFinalizado);
+                    putData(`${apiUrl}/turnos/${turno.id}/`, turno)
                     Estado(onHide(), setEstadoModal, 'Realizado')
               }} variant="success">Finalizar turno</Button>
             </Modal.Footer>
@@ -184,7 +187,7 @@ export function ModalAsignado({show, onHide, turnoClick, setEstadoModal}) {
     
         <Button onClick={handleLiberarTurno} variant="info">Liberar turno</Button>
         <Button onClick={() => {
-            turno.estado = 'Cancelado'; putData(`http://127.0.0.1:8000/turnos/${turno.id}/`, turno);
+            turno.estado = 'Cancelado'; putData(`${apiUrl}/turnos/${turno.id}/`, turno);
             Estado(onHide(), setEstadoModal, 'Cancelado')}} 
             variant="danger">Cancelar turno</Button>
         <Button onClick={() => setSelectedEstado('Realizado')} variant="success">Finalizar turno</Button>

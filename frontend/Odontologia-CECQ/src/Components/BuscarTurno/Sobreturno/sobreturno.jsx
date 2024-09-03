@@ -7,11 +7,13 @@ import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
-import { useFetchArray } from '../../Hooks/fetch';
+import { useFetchArray } from '../../Request/fetch';
 import { turnoFormato } from '../CrudTurno/turno';
-import { postData } from '../../Hooks/post';
+import { postData } from '../../Request/post';
+import { apiUrl } from '../../Request/fetch';
 
 export function VerSobreturno({ show, onHide, setEstadoModal }) {
+
     const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
     const [value, setValue] = useState('');
     const [selectedAdministrativo, setSelectedAdministrativo] = useState({key: ''});
@@ -20,8 +22,8 @@ export function VerSobreturno({ show, onHide, setEstadoModal }) {
     const [horaInicio, setHoraInicio] = useState('');
     const [fecha, setFecha] = useState('');
 
-    const paciente = useFetchArray(`http://127.0.0.1:8000/pacientes/?search=${value}`);
-    const agendas = useFetchArray('http://127.0.0.1:8000/agendas/');
+    const paciente = useFetchArray(`${apiUrl}/pacientes/?search=${value}`);
+    const agendas = useFetchArray(`${apiUrl}/agendas/`);
 
     const validarFecha = (fecha) => {
         const formato = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD
@@ -112,7 +114,7 @@ export function VerSobreturno({ show, onHide, setEstadoModal }) {
             <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
             {selectedAdministrativo.key === '' ? 'Seleccionar administrativo...' : selectedAdministrativo.nombre + ' ' + selectedAdministrativo.apellido}
             </Dropdown.Toggle>
-            <Filtro selectedItem={selectedAdministrativo} setSelectedItem={setSelectedAdministrativo} api_url={'http://127.0.0.1:8000/auth/administrativos/' } itemKey={'id'} valor1={'first_name'} valor2={'last_name'}/>
+            <Filtro selectedItem={selectedAdministrativo} setSelectedItem={setSelectedAdministrativo} api_url={`${apiUrl}/auth/administrativos/`} itemKey={'id'} valor1={'first_name'} valor2={'last_name'}/>
         </Dropdown>
         <br />
 
@@ -157,7 +159,7 @@ export function VerSobreturno({ show, onHide, setEstadoModal }) {
 
       </Modal.Body>
       <Modal.Footer className='bg'>
-        <Button variant="warning" onClick={() => {postData(`http://127.0.0.1:8000/turnos/`,
+        <Button variant="warning" onClick={() => {postData(`${apiUrl}/turnos/`,
         turnoFormato(selectedPaciente.key, fecha, horaInicio, horaFin, true, 0, 'Asignado', selectedAgenda.id),
         Estado(onHide(), setEstadoModal, 'Sobreturno asignado')
         )}} 

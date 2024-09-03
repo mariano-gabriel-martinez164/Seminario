@@ -13,13 +13,16 @@ import { handleSelect } from './HandleAndRemove/handleAndRemove';
 import { Filtro } from './Filtros/filtros';
 import { Alert } from 'react-bootstrap';
 import { VerSobreturno }  from './Sobreturno/sobreturno';
-import { useFetchArray } from '../Hooks/fetch';
+import { useFetchArray } from '../Request/fetch';
 import { ModalRealizado } from './CrudTurno/modalRealizado';
 import { ModalDisponible } from './CrudTurno/modalDisponible';
 import { ModalCancelado } from './CrudTurno/modalCancelado';
 import { ModalAsignado } from './CrudTurno/modalAsignado';
+import { token } from '../Request/fetch';
+import { apiUrl } from '../Request/fetch';
 
   export default function BuscarTurno() {
+
     const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
     const [selectedAgenda, setSelectedAgenda] = useState({key: ''});
     const [selectedEstado, setSelectedEstado] = useState([]);
@@ -48,12 +51,19 @@ import { ModalAsignado } from './CrudTurno/modalAsignado';
       return date1.toISOString().split('T')[0] === date2.toISOString().split('T')[0];
     };
 
-    const paciente = useFetchArray(`http://127.0.0.1:8000/pacientes/?search=${value}`);
-
+    const paciente = useFetchArray(`${apiUrl}/pacientes/?search=${value}`);
     const estadosSeleccionados = selectedEstado.length > 0 ? selectedEstado.map((estado) => `&estado=${estado}`).join('') : '';
-    const API_URL = `http://127.0.0.1:8000/turnos/?fecha_inicio=${formatDate(startDate)}&fecha_fin=${formatDate(endDate)}&id_odontologo=${selectedOdontologo.key}&id_centro=${selectedCentro.key}&id_agenda=${selectedAgenda.key}&id_administrativo=${selectedAdministrativo.key}&id_paciente=${selectedPaciente.key}${estadosSeleccionados}&sobreturno=${selectedSobreturno}`;
+    const API_URL = `${apiUrl}/turnos/?fecha_inicio=${formatDate(startDate)}&fecha_fin=${formatDate(endDate)}&id_odontologo=${selectedOdontologo.key}&id_centro=${selectedCentro.key}&id_agenda=${selectedAgenda.key}&id_administrativo=${selectedAdministrativo.key}&id_paciente=${selectedPaciente.key}${estadosSeleccionados}&sobreturno=${selectedSobreturno}`;
     useEffect(() => {
-      fetch(API_URL)
+      fetch(API_URL,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `token ${token}`,
+          },
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
           setTurnos(data);
@@ -108,7 +118,7 @@ import { ModalAsignado } from './CrudTurno/modalAsignado';
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar odontologo...
                   </Dropdown.Toggle>
-                  <Filtro setSelectedItem={setSelectedOdontologo} api_url={'http://127.0.0.1:8000/odontologos/'} itemKey={'matricula'} valor1={'nombre'} valor2={'apellido'}/>
+                  <Filtro setSelectedItem={setSelectedOdontologo} api_url={`${apiUrl}/odontologos/`} itemKey={'matricula'} valor1={'nombre'} valor2={'apellido'}/>
 
                 </Dropdown>
                 <br />
@@ -120,7 +130,7 @@ import { ModalAsignado } from './CrudTurno/modalAsignado';
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar centro...
                   </Dropdown.Toggle>
-                  <Filtro setSelectedItem={setSelectedCentro} api_url={'http://127.0.0.1:8000/centros/' } itemKey={'id'} valor1={'nombre'} valor2={''}/>
+                  <Filtro setSelectedItem={setSelectedCentro} api_url={`${apiUrl}/centros/`} itemKey={'id'} valor1={'nombre'} valor2={''}/>
                 </Dropdown>
                 <br />
                 {mostrarFiltros(selectedCentro, setSelectedCentro)}
@@ -131,7 +141,7 @@ import { ModalAsignado } from './CrudTurno/modalAsignado';
                   <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
                     Seleccionar administrativo...
                   </Dropdown.Toggle>
-                  <Filtro selectedItem={selectedAdministrativo} setSelectedItem={setSelectedAdministrativo} api_url={'http://127.0.0.1:8000/auth/administrativos/' } itemKey={'id'} valor1={'first_name'} valor2={'last_name'}/>
+                  <Filtro selectedItem={selectedAdministrativo} setSelectedItem={setSelectedAdministrativo} api_url={`${apiUrl}/auth/administrativos/`} itemKey={'id'} valor1={'first_name'} valor2={'last_name'}/>
                 </Dropdown>
                 <br />
                 {mostrarFiltros(selectedAdministrativo, setSelectedAdministrativo)}
@@ -142,7 +152,7 @@ import { ModalAsignado } from './CrudTurno/modalAsignado';
                   <Dropdown.Toggle as={CustomToggle}>
                     Seleccionar agenda...
                   </Dropdown.Toggle>
-                  <Filtro selectedItem={selectedAgenda} setSelectedItem={setSelectedAgenda} api_url={'http://127.0.0.1:8000/agendas/' } itemKey={'id'} valor1={'id'} valor2={''}/>
+                  <Filtro selectedItem={selectedAgenda} setSelectedItem={setSelectedAgenda} api_url={`${apiUrl}/agendas/`} itemKey={'id'} valor1={'id'} valor2={''}/>
                 </Dropdown>
                 <br />
                 {mostrarFiltros(selectedAgenda, setSelectedAgenda)}
