@@ -16,11 +16,6 @@ body{
     
 }
 
-#row{
-    background-color: #e9ecef;
-    border-start-start-radius: 20px;
-}
-
 #h2{
     display: flex;
     justify-content: center
