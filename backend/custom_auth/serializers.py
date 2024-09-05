@@ -18,3 +18,10 @@ class ShortAdministrativoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Administrativo
         fields = ['id', 'email', 'first_name', 'last_name']
+
+
+class UpdateAdministrativoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Administrativo
+        fields = ['id', 'email', 'first_name', 'last_name', 'centro','cuil','is_staff']
+        

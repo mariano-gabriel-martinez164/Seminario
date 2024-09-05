@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import AdministrativoSerializer, ChangePasswordSerializer
+from .serializers import AdministrativoSerializer, ChangePasswordSerializer, UpdateAdministrativoSerializer
 from .models import Administrativo
 # Create your views here.
 from rest_framework import generics
@@ -14,7 +14,10 @@ class AdministrativoList(generics.ListCreateAPIView):
 
 class AdministrativoDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Administrativo.objects.all()
-    serializer_class = AdministrativoSerializer
+    def get_serializer_class(self):
+        if self.request.method == 'PUT':
+            return UpdateAdministrativoSerializer
+        return AdministrativoSerializer
 
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
