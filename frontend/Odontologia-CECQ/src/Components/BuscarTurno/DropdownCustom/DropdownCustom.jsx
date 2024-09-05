@@ -44,7 +44,7 @@ export const CustomMenu = React.forwardRef(
         <ul className="list-unstyled">
           {React.Children.toArray(children).filter((child) => {
             const childText = child.props.children.toString();
-            return !valor || childText.toLowerCase().startsWith(valor.toLowerCase());
+            return !valor || childText.toLowerCase().includes(valor.toLowerCase());
           })}
         </ul>
       </div>
@@ -76,7 +76,7 @@ export const CustomOnlySearch = React.forwardRef(
         <ul className="list-unstyled">
           {React.Children.toArray(children).filter((child) => {
             const childText = child.props.children.toString();
-            return !valor || childText.toLowerCase().startsWith(valor.toLowerCase());
+            return !valor || childText.toLowerCase().includes(valor.toLowerCase());
           })}
         </ul>
       </div>
@@ -179,14 +179,8 @@ export const CustomPacientes = React.forwardRef(
           onChange={(e) => {setValor(e.target.value);}}
           value={valor}
         />   
-         <ul className="list-unstyled">
-          {React.Children.toArray(children).filter((child) => {
-            // Convertir child.props.children a una cadena
-            const childText = child.props.children.toString();
-            if (valor) {
-              return childText.toLowerCase().startsWith(valor.toLowerCase()) || child.key.includes(valor);
-            }            
-            })} 
+        <ul className="list-unstyled scrollable">
+          {children} 
         </ul>
       </div>
     );
@@ -212,14 +206,8 @@ export const CustomPrestaciones = React.forwardRef(
           onChange={(e) => setValor(e.target.value)}
           value={valor}
         />   
-         <ul className="list-unstyled">
-          {React.Children.toArray(children).filter((child) => {
-            // Convertir child.props.children a una cadena
-            const childText = child.props.children.toString();
-            if (valor) {
-            return childText.toLowerCase().startsWith(valor.toLowerCase()) || child.key.includes(valor);
-            }
-            })} 
+        <ul className="list-unstyled scrollable">
+          {children} 
         </ul>
       </div>
     );

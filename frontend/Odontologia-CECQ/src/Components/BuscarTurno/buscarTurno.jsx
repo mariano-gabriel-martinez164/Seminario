@@ -5,15 +5,12 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { CustomToggle, CustomCalendarMenu, CustomOnlyMenu, CustomPacientes } from './DropdownCustom/DropdownCustom';
+import { CustomToggle, CustomOnlyMenu } from './DropdownCustom/DropdownCustom';
 import { mostrarFiltros, mostrarFiltrosArray } from './MostrarFiltros/mostrarFiltros';
 import Button from 'react-bootstrap/Button';
-import CloseButton from 'react-bootstrap/CloseButton';
 import { handleSelect } from './HandleAndRemove/handleAndRemove';
-import { Filtro } from './Filtros/filtros';
 import { Alert } from 'react-bootstrap';
 import { VerSobreturno }  from './Sobreturno/sobreturno';
-import { useFetchArray } from '../../Request/fetch.js';
 import { ModalRealizado } from './CrudTurno/modalRealizado';
 import { ModalDisponible } from './CrudTurno/modalDisponible';
 import { ModalCancelado } from './CrudTurno/modalCancelado';
@@ -21,179 +18,27 @@ import { ModalAsignado } from './CrudTurno/modalAsignado';
 import { token } from '../../Request/fetch.js';
 import { apiUrl } from '../../Request/fetch.js';
 
+import { SelectorOdontologo, SelectorCentro, SelectorAdministrativo, SelectorAgenda, SelectorPaciente, SelectorRangoDeFechas } from './Filtros/filtros';
+import { useDatesState } from './Filtros/hooks.js';
+
   export default function BuscarTurno() {
 
-    const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
-    const [selectedAgenda, setSelectedAgenda] = useState({key: ''});
-    const [selectedEstado, setSelectedEstado] = useState([]);
-    const [selectedOdontologo, setSelectedOdontologo] = useState({key: ''});
-    const [selectedCentro, setSelectedCentro] = useState({key: ''});
-    const [selectedSobreturno, setSelectedSobreturno] = useState(null);
-    const [selectedAdministrativo, setSelectedAdministrativo] = useState({key: ''});
     const [modalShow, setModalShow] = useState(false);
     const [selectedTurno, setSelectedTurno] = useState('');
     const [turnos, setTurnos] = useState([]);
-    const [value, setValue] = useState('');
     const [estadoModal, setEstadoModal] = useState('');
     const [selectedTurnoTemplate, setSelectedTurnoTemplate] = useState({});
     const [modalSobreturnoShow, setModalSobreturnoShow] = useState(false);
     const [estado, setEstado] = useState('');
 
-    const today = new Date();
-    const monthLater = new Date();
-    monthLater.setMonth(today.getMonth() + 1);
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(monthLater);
-    const formatDate = (date) => {
-      return date.toISOString().split('T')[0];
-    };
-    const areDatesEqual = (date1, date2) => {
-      return date1.toISOString().split('T')[0] === date2.toISOString().split('T')[0];
-    };
 
-    const paciente = useFetchArray(`/pacientes/?search=${value}`);
-    const estadosSeleccionados = selectedEstado.length > 0 ? selectedEstado.map((estado) => `&estado=${estado}`).join('') : '';
-    const API_URL = `${apiUrl}/turnos/?fecha_inicio=${formatDate(startDate)}&fecha_fin=${formatDate(endDate)}&id_odontologo=${selectedOdontologo.key}&id_centro=${selectedCentro.key}&id_agenda=${selectedAgenda.key}&id_administrativo=${selectedAdministrativo.key}&id_paciente=${selectedPaciente.key}${estadosSeleccionados}&sobreturno=${selectedSobreturno}`;
-    useEffect(() => {
-      fetch(API_URL,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `token ${token}`,
-          },
-        }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          setTurnos(data);
-        })
-        .catch((error) => console.log(error));
-    }, [API_URL, estadoModal]);
-    
   return (
     <Container id='container' fluid>
         <Row>
-          <Col id='col1' xs={2} >
-              <Row>
-              <h6>Rango de fechas</h6>
-                <Dropdown>
-                  <Dropdown.Toggle as={CustomToggle}>
-                    Seleccionar rango de fechas...
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu as={CustomCalendarMenu} setStartDate={setStartDate} setEndDate={setEndDate} startDate={startDate} endDate={endDate}>
-                    
-                  </Dropdown.Menu>
-                </Dropdown>
-                <span className='bg-light rounded m-2'>
-                  {formatDate(startDate)} - {formatDate(endDate)} 
-                  {(!areDatesEqual(startDate, new Date()) || !areDatesEqual(endDate, monthLater)) &&
-                  <CloseButton onClick={() => {setStartDate(new Date); setEndDate(monthLater)}}></CloseButton>
-                }
-                </span>
-                <br />
-
-                <h6>Paciente</h6>
-                <Dropdown>
-                  <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
-                    Seleccionar paciente...
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu as={CustomPacientes} valor={value} setValor={setValue}>
-                    {paciente.map((paciente) => (
-                      <Dropdown.Item onClick = {() => setSelectedPaciente(
-                      {   key: paciente.dni, 
-                          nombre: paciente.nombre, 
-                          apellido: paciente.apellido
-                      })} 
-                      key={paciente.dni}>{paciente.nombre} {paciente.apellido} {paciente.dni ? '': ''}</Dropdown.Item>))}
-                  </Dropdown.Menu> 
-                </Dropdown>
-                <br />
-                {mostrarFiltros(selectedPaciente, setSelectedPaciente)}
-                <br />
-
-                <h6>Odontologo</h6>
-                <Dropdown>
-                  <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
-                    Seleccionar odontologo...
-                  </Dropdown.Toggle>
-                  <Filtro setSelectedItem={setSelectedOdontologo} api_url={`/odontologos/`} itemKey={'matricula'} valor1={'nombre'} valor2={'apellido'}/>
-
-                </Dropdown>
-                <br />
-                {mostrarFiltros(selectedOdontologo, setSelectedOdontologo)}
-                <br />
-
-                <h6>Centro</h6>
-                <Dropdown>
-                  <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
-                    Seleccionar centro...
-                  </Dropdown.Toggle>
-                  <Filtro setSelectedItem={setSelectedCentro} api_url={`/centros/`} itemKey={'id'} valor1={'nombre'} valor2={''}/>
-                </Dropdown>
-                <br />
-                {mostrarFiltros(selectedCentro, setSelectedCentro)}
-                <br />
-
-                <h6>Administrativo</h6>
-                <Dropdown>
-                  <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
-                    Seleccionar administrativo...
-                  </Dropdown.Toggle>
-                  <Filtro selectedItem={selectedAdministrativo} setSelectedItem={setSelectedAdministrativo} api_url={`/auth/administrativos/`} itemKey={'id'} valor1={'first_name'} valor2={'last_name'}/>
-                </Dropdown>
-                <br />
-                {mostrarFiltros(selectedAdministrativo, setSelectedAdministrativo)}
-                <br />
-
-                <h6>Agenda</h6>
-                <Dropdown>
-                  <Dropdown.Toggle as={CustomToggle}>
-                    Seleccionar agenda...
-                  </Dropdown.Toggle>
-                  <Filtro selectedItem={selectedAgenda} setSelectedItem={setSelectedAgenda} api_url={`/agendas/`} itemKey={'id'} valor1={'id'} valor2={''}/>
-                </Dropdown>
-                <br />
-                {mostrarFiltros(selectedAgenda, setSelectedAgenda)}
-                <br />
-
-                <h6>Estado</h6>
-                <Dropdown>
-                  <Dropdown.Toggle as={CustomToggle}>
-                    Seleccionar estado...
-                  </Dropdown.Toggle>
-              
-                  <Dropdown.Menu as={CustomOnlyMenu}>
-                    <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado, 'Disponible')} eventKey="1">Disponible</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado,'Asignado')} eventKey="2">Asignado</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado,'Cancelado')} eventKey="3">Cancelado</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado,'Realizado')} eventKey="4">Realizado</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-                <br />
-                {mostrarFiltrosArray(selectedEstado, setSelectedEstado)}
-                <br />
-              
-                <h6>Sobreturno</h6>
-                <Dropdown>
-                  <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
-                    Seleccionar...
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu as={CustomOnlyMenu}>
-                  <Dropdown.Item onClick={() => (setSelectedSobreturno(true))} eventKey="1">Si</Dropdown.Item>
-                  <Dropdown.Item onClick={() => (setSelectedSobreturno(false))} eventKey="2">No</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-                <br />
-                {mostrarFiltros(selectedSobreturno, setSelectedSobreturno)}
-                <br />
-                </Row>
-                <br />
+          <MenuFiltros turnos={turnos} setTurnos={setTurnos} estadoModal={estadoModal}>
                 <Button className='w-100' variant="primary" onClick={() => {setModalSobreturnoShow(true);}}>Crear sobreturno</Button>
                 {modalSobreturnoShow && <VerSobreturno show={modalSobreturnoShow} onHide={() => setModalSobreturnoShow(false)} setEstadoModal={setEstadoModal}/>}
-          </Col>
+          </MenuFiltros>
           <Col id='col2' xs={8} >
           {estadoModal === 'Disponible' && <Alert variant='info' dismissible >Turno {estadoModal}</Alert>}
           {estadoModal === 'Asignado' && <Alert variant='warning' dismissible >Turno {estadoModal}</Alert>}
@@ -270,4 +115,113 @@ import { apiUrl } from '../../Request/fetch.js';
   
 
   )
+}
+
+
+function MenuFiltros({ children, setTurnos, estadoModal }) {
+  const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
+  const [selectedAgenda, setSelectedAgenda] = useState({key: ''});
+  const [selectedOdontologo, setSelectedOdontologo] = useState({key: ''});
+  const [selectedCentro, setSelectedCentro] = useState({key: ''});
+  const [selectedAdministrativo, setSelectedAdministrativo] = useState({key: ''});
+
+  const [selectedEstado, setSelectedEstado] = useState([]);
+  const [selectedSobreturno, setSelectedSobreturno] = useState(null);
+
+  const formatDate = (date) => date.toISOString().split('T')[0];
+  const [startDate, setStartDate, endDate, setEndDate] = useDatesState();
+
+  const estadosSeleccionados = selectedEstado.length > 0 ? selectedEstado.map((estado) => `&estado=${estado}`).join('') : '';
+  const API_URL = `${apiUrl}/turnos/?fecha_inicio=${formatDate(startDate)}&fecha_fin=${formatDate(endDate)}&id_odontologo=${selectedOdontologo.key}&id_centro=${selectedCentro.key}&id_agenda=${selectedAgenda.key}&id_administrativo=${selectedAdministrativo.key}&id_paciente=${selectedPaciente.key}${estadosSeleccionados}&sobreturno=${selectedSobreturno}`;
+  useEffect(() => {
+    fetch(API_URL,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${token}`,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setTurnos(data);
+      })
+      .catch((error) => console.log(error));
+  }, [API_URL, estadoModal, setTurnos]);
+  
+  return (
+    <Col id='col1' xs={2} >
+    <Row>
+    <h6>Rango de fechas</h6>
+      <SelectorRangoDeFechas
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate} 
+      />
+      <br />
+
+      <h6>Paciente</h6>
+      <SelectorPaciente selectedItem={selectedPaciente} setSelectedItem={setSelectedPaciente}/>
+      <br />
+
+      <h6>Odontologo</h6>
+      <SelectorOdontologo selectedItem={selectedOdontologo} setSelectedItem={setSelectedOdontologo} />
+      <br />
+
+      <h6>Centro</h6>
+      <SelectorCentro selectedItem={selectedCentro} setSelectedItem={setSelectedCentro}/>
+      <br />
+
+      <h6>Administrativo</h6>
+      <SelectorAdministrativo selectedItem={selectedAdministrativo} setSelectedItem={setSelectedAdministrativo}/>
+      <br />
+
+      <h6>Agenda</h6>
+      <SelectorAgenda selectedItem={selectedAgenda} setSelectedItem={setSelectedAgenda}/>
+      <br />
+
+      <h6>Estado</h6>
+      <Dropdown>
+        <Dropdown.Toggle as={CustomToggle}>
+          Seleccionar estado...
+        </Dropdown.Toggle>
+    
+        <Dropdown.Menu as={CustomOnlyMenu}>
+          <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado, 'Disponible')} eventKey="1">Disponible</Dropdown.Item>
+          <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado,'Asignado')} eventKey="2">Asignado</Dropdown.Item>
+          <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado,'Cancelado')} eventKey="3">Cancelado</Dropdown.Item>
+          <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado,'Realizado')} eventKey="4">Realizado</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+      <br />
+      {mostrarFiltrosArray(selectedEstado, setSelectedEstado)}
+      <br />
+    
+      <h6>Sobreturno</h6>
+      <Dropdown>
+        <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
+          Seleccionar...
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu as={CustomOnlyMenu}>
+        <Dropdown.Item onClick={() => (setSelectedSobreturno(true))} eventKey="1">Si</Dropdown.Item>
+        <Dropdown.Item onClick={() => (setSelectedSobreturno(false))} eventKey="2">No</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+      <br />
+      {mostrarFiltros(selectedSobreturno, setSelectedSobreturno)}
+      <br />
+      </Row>
+      <br />
+      {children}
+      <br />
+      <br />
+</Col>
+  )
+
+
+
+
 }

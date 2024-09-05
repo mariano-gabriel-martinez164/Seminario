@@ -8,3 +8,9 @@
 .custom:hover {
     color:#6c757d;
 }
+
+ul.scrollable {
+    max-height: 200px;
+    overflow-y: scroll;
+    overflow-x:auto;
+}
