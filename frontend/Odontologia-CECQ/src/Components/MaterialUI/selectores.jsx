@@ -1,32 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextField, Autocomplete, CircularProgress } from '@mui/material';
+import { useFetchDataOnDemand, useFetchSearch } from '../../Request/v2/fetch';
 
-
-const useFetchDataOnDemand = (url) => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('http://127.0.0.1:8000'+url);
-      const jsonData = await response.json();
-      setData(jsonData);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { data, loading, error, fetchData };
-};
-
-
-
-
-const AutocompleteAPIComponent = ({selectedValue, setSelectedValue, api_url, format, placeholder}) => {
+const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placeholder}) => {
   const [open, setOpen] = useState(false);
   const [fetched, setFetched] = useState(false);
 
@@ -55,7 +31,6 @@ const AutocompleteAPIComponent = ({selectedValue, setSelectedValue, api_url, for
         renderInput={(params) => (
           <CustomTextField
             {...params}
-            placeholder={placeholder}
             label={placeholder}
             loading={loading}
           />
@@ -136,5 +111,118 @@ function SelectorAgenda({selectedValue, setSelectedValue}) {
   );
 }
 
-export { SelectorOdontologo, SelectorCentro, SelectorAdministrativo, SelectorAgenda };
 
+
+const SelectorPacientes = ({ setSelectedValue }) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const parseData = (data) => data.results;
+  const [data, loading, error, searchData] = useFetchSearch('/pacientes/', 300, parseData);
+
+  useEffect(() => {
+    if (inputValue) {
+      searchData(inputValue);
+    } 
+  }, [inputValue, searchData]);
+
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <Autocomplete
+      options={data}
+      getOptionLabel={(option) => option.apellido +' '+option.nombre || ''}
+      getOptionKey={(option) => option.dni}
+      filterOptions={(x) => x}
+      onInputChange={(event, newInputValue) => {
+        setInputValue(newInputValue);
+
+      }}
+      onChange={(event, newValue) => {
+        setSelectedValue(newValue);
+      }}
+      
+      renderInput={(params) => (
+        <CustomTextField
+        {...params}
+        label='Buscar paciente'
+        loading={loading}
+      />
+      )}
+    />
+  );
+};
+
+
+function SelectorSobreTurno({ setSelectedValue }) {
+  const options = [
+    {key: "Si", value:true}, 
+    {key: "No", value:false}
+  ];
+
+  return (
+    <Autocomplete
+      options={options}
+      getOptionLabel={(option) => option.key}
+      onChange={(event, newValue) => setSelectedValue(newValue)}
+      renderInput={(params) => (
+        <CustomTextField
+          {...params}
+          label="Es sobreturno"  
+        /> )}
+    />
+  )
+}
+
+
+function SelectorEstados({ setSelectedValue }) {
+  const options = [
+    {key: "Pendiente", value: "Pendiente"},
+    {key: "Confirmado", value: "Confirmado"},
+    {key: "Cancelado", value: "Cancelado"},
+    {key: "Realizado", value: "Realizado"}
+  ];
+
+  return (
+    <Autocomplete
+      multiple
+      options={options}
+      getOptionLabel={(option) => option.key}
+      onChange={(event, newValue) => setSelectedValue(newValue)}
+      renderInput={(params) => (
+        <CustomTextField
+          {...params}
+          label="Estado/s"
+        />
+      )}
+  />);
+}
+
+function Test() {
+  const [selectedValue, setSelectedValue] = useState(null);
+  console.log(selectedValue);
+  return (
+    <div>
+      <SelectorOdontologo selectedValue={selectedValue} setSelectedValue={setSelectedValue} />
+      <SelectorCentro selectedValue={selectedValue} setSelectedValue={setSelectedValue} />
+      <SelectorAdministrativo selectedValue={selectedValue} setSelectedValue={setSelectedValue} />
+      <SelectorAgenda selectedValue={selectedValue} setSelectedValue={setSelectedValue} />
+      <SelectorPacientes setSelectedValue={setSelectedValue} />
+      <SelectorSobreTurno setSelectedValue={setSelectedValue} />
+      <SelectorEstados setSelectedValue={setSelectedValue} />
+      <h1>Valores:</h1>
+      <p>{selectedValue ? JSON.stringify(selectedValue) : 'No hay valor seleccionado'}</p>
+    </div>
+  );
+}
+
+export default Test;
+export {
+  SelectorOdontologo,
+  SelectorCentro,
+  SelectorAdministrativo,
+  SelectorAgenda,
+  SelectorPacientes,
+  SelectorSobreTurno,
+  SelectorEstados
+  
+};
