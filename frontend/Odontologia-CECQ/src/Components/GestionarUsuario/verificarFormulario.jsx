@@ -1,5 +1,5 @@
 import { postData } from "../../Request/post";
-import { usuarioChange } from "./usuario";
+import { usuarioChange, usuarioFormato } from "./usuario";
 import { putData } from "../../Request/put";
 
 export const handleChange = (event, setFormData) => {
@@ -10,25 +10,19 @@ export const handleChange = (event, setFormData) => {
   }));
 };
 
-export const handleSubmit = (event, setValidated, formData) => {
-  const form = event.currentTarget;
-  if (form.checkValidity() === false || formData.contraseña.length < 8) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-  event.preventDefault();
+export const handleSubmit = (formData) => {
   postData('/auth/administrativos/', usuarioFormato(formData));
-  setValidated(true);
 };
 
-export const handleModify = (event, setValidated, formData, usuarioSeleccionado) => {
-  const form = event.currentTarget;
-  if (form.checkValidity() === false) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-  event.preventDefault();
+export const handleModify = (formData, usuarioSeleccionado) => {
   putData(`/auth/administrativos/${usuarioSeleccionado}/`, usuarioChange(formData));
-  console.log(usuarioFormato(formData));
-  setValidated(true);
+};
+
+
+export const isFormValid = (formData) => {
+  const { nombre, email, apellido, cuil, contraseña, repeatPassword } = formData;
+  const passwordsMatch = contraseña === repeatPassword && contraseña.length >= 8;
+  const fieldsComplete = nombre && email && apellido && cuil && contraseña && repeatPassword;
+  
+  return fieldsComplete && passwordsMatch;
 };

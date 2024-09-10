@@ -1,15 +1,3 @@
 #container{
     margin-top: 20px;
 }
-
-#col1{
-    border-radius: 20px;
-    margin-left: 10px;
-    background-color: #ffffff;
-}
-
-#col2{
-    background-color: #ffffff;
-    border-radius: 20px;
-    margin-left: 20px; 
-}
