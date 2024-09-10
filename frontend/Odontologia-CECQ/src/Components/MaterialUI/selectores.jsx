@@ -197,9 +197,18 @@ function SelectorEstados({ setSelectedValue }) {
   />);
 }
 
+import {SelectorRangoDeFechas} from './selectorRangoDeFechas.jsx';
+import { addDays } from 'date-fns';
 function Test() {
   const [selectedValue, setSelectedValue] = useState(null);
-  console.log(selectedValue);
+  const [range, setRange] = useState([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),
+      key: 'selection'
+    }
+  ]);
+
   return (
     <div>
       <SelectorOdontologo selectedValue={selectedValue} setSelectedValue={setSelectedValue} />
@@ -211,6 +220,11 @@ function Test() {
       <SelectorEstados setSelectedValue={setSelectedValue} />
       <h1>Valores:</h1>
       <p>{selectedValue ? JSON.stringify(selectedValue) : 'No hay valor seleccionado'}</p>
+
+      <SelectorRangoDeFechas
+        range={range}
+        setRange={setRange}
+      /> 
     </div>
   );
 }

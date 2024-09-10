@@ -1,0 +1,13 @@
+.rdrDateDisplayWrapper{display: none;}
+
+.calendarWrap{
+    display: inline-block;
+    position: relative;
+}
+
+.calendarElement{
+    position: absolute;
+    /* left: 50%; */
+    /* transform: translate(-50%, 0); */
+    z-index: 1000;
+}
