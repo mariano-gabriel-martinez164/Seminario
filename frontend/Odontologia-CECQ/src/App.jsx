@@ -50,7 +50,7 @@ function RouteHandler() {
   ];
 
   return (
-    <div>
+    <div style={{ marginTop: 64, marginLeft: 70 }}>
       {!isLoginPage && <Navbar />}
       {isLoginPage && <HeaderLogin />}
       <Routes>

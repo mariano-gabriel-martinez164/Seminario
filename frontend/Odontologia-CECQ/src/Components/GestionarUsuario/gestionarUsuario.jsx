@@ -31,7 +31,7 @@ export default function GestionarUsuario() {
 
       const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
-          backgroundColor: theme.palette.common.black,
+          backgroundColor: '#343a40',
           color: theme.palette.common.white,
         },
         [`&.${tableCellClasses.body}`]: {
