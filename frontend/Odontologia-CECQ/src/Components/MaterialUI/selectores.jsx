@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TextField, Autocomplete, CircularProgress } from '@mui/material';
 import { useFetchDataOnDemand, useFetchSearch } from '../../Request/v2/fetch';
+import { SelectorCalendario } from './SelectorCalendario';
 
 const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placeholder}) => {
   const [open, setOpen] = useState(false);
@@ -197,7 +198,6 @@ function SelectorEstados({ setSelectedValue }) {
   />);
 }
 
-import {SelectorRangoDeFechas} from './selectorRangoDeFechas.jsx';
 import { addDays } from 'date-fns';
 function Test() {
   const [selectedValue, setSelectedValue] = useState(null);
@@ -221,7 +221,7 @@ function Test() {
       <h1>Valores:</h1>
       <p>{selectedValue ? JSON.stringify(selectedValue) : 'No hay valor seleccionado'}</p>
 
-      <SelectorRangoDeFechas
+      <SelectorCalendario
         range={range}
         setRange={setRange}
       /> 

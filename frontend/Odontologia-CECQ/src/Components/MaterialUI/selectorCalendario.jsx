@@ -5,10 +5,12 @@ import { es } from 'date-fns/locale';
 import './calendario.css';
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
-import { TextField } from '@mui/material';
+import { InputAdornment, TextField } from '@mui/material';
 import { useRef } from 'react';
 import { IconButton } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 export function SelectorCalendario({ range, setRange, isWeek, defaultRange }) { 
   const [open, setOpen] = useState(false);
@@ -17,6 +19,8 @@ export function SelectorCalendario({ range, setRange, isWeek, defaultRange }) {
 
   const refOne = useRef(null);
   const refButton = useRef(null);
+  const refLeft = useRef(null);
+  const refRight = useRef(null);
   
   useEffect(() => {
     document.addEventListener('click', hideOnClickOutside, true);
@@ -70,7 +74,7 @@ export function SelectorCalendario({ range, setRange, isWeek, defaultRange }) {
   const renderClearButton = () => {
     if (range == defaultRange) return null;
     return (
-      <IconButton
+      <InputAdornment position='end'> <IconButton
         onClick={() => {
           setRange(defaultRange);
           setOpen(false);
@@ -78,15 +82,60 @@ export function SelectorCalendario({ range, setRange, isWeek, defaultRange }) {
           setDateIsDefault(true);
         }}
         ref={refButton}
-      >
+        >
         <ClearIcon />
-      </IconButton>
+      </IconButton> </InputAdornment>
     );
   };
 
+  const renderButtons = () => {
+    return {
+      readOnly: true,
+      startAdornment: ( isWeek ?
+        <InputAdornment position='start'>
+          <IconButton 
+          ref={refLeft}
+          onClick={() => {
+            moveWeek(-1);
+          }}>
+            <KeyboardArrowLeftIcon/>
+          </IconButton>
+        </InputAdornment> : null
+      ),
+      endAdornment: (<>
+        {dateIsDefault ? null : renderClearButton()}
+        {isWeek ?  
+          <InputAdornment position='end'>
+            <IconButton 
+            ref={refRight}
+            onClick={() => {
+              moveWeek(1);
+            }}>
+              <KeyboardArrowRightIcon/>
+            </IconButton>
+          </InputAdornment> : null
+        }
+      
+      </>)
+    }
+  }
+
+  const moveWeek = (direction) => {
+    const newStartDate = addDays(range[0].startDate, direction * 7);
+    handleChange({
+      selection: {
+        startDate: newStartDate,
+        endDate: newStartDate,
+        key: "selection"
+    }
+    });
+  }
+
   const toggleOpen = (e) => {
-    if (refButton.current && refButton.current.contains(e.target))
-      setOpen(false);
+    if (refButton.current && refButton.current.contains(e.target)
+      || refLeft.current && refLeft.current.contains(e.target)
+      || refRight.current && refRight.current.contains(e.target)
+    ) setOpen(false);
     else setOpen(!open);
   }
 
@@ -95,12 +144,7 @@ export function SelectorCalendario({ range, setRange, isWeek, defaultRange }) {
       <TextField
         sx={{ width: "100%" }}
         variant="standard"
-        slotProps={{
-          input: {
-            readOnly: true,
-            endAdornment: dateIsDefault ? null : renderClearButton(),
-          },
-        }}
+        slotProps={{input: {...renderButtons()}}}
         label={isWeek ? "Seleccionar semana" : "Seleccionar rango de fechas"}
         value={`${format(range[0].startDate, "dd/MM/yyyy")} - ${format(range[0].endDate,"dd/MM/yyyy")}`}
         onClick={toggleOpen}
@@ -120,12 +164,15 @@ export function SelectorCalendario({ range, setRange, isWeek, defaultRange }) {
             locale={es}
             disabledDay={(day) => day.getDay() === 0 || day.getDay() === 6}
             focusedRange={isWeek ? [0, 0] : undefined}
+            dragSelectionEnabled={!isWeek}
           />
         )}
       </div>
     </>
   );
 }
+
+
 
 function Test (){
   /**
