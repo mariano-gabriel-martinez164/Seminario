@@ -1,0 +1,12 @@
+.turnoBox > p{
+    margin: 0;
+    padding: 0;
+}
+
+.turnoBox{
+    display:flex;
+    flex-direction:column;
+    width:90%;
+    margin:auto;
+    min-height:80px;
+}
