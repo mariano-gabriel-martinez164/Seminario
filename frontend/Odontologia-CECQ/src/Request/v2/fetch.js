@@ -19,6 +19,7 @@ export const useFetch = (url) => {
       setloading(true);
       try {
         const response = await _fetchWithHeaders(url);
+        console.log(`fetching ${url}`);
         if (!response.ok) throw new Error(response.statusText);
         const json = await response.json();
         setloading(false);
@@ -61,7 +62,7 @@ export function useFetchSearch(url, delay, getFunc = (x)=>x) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const searchData = useCallback(debounce(async (search) => {
+  const searchData = useCallback(debounce(async (search) => { // eslint-disable-line
     try {
       setLoading(true);
       const response = await _fetchWithHeaders(url +'?search='+ search);
