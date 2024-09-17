@@ -1,0 +1,14 @@
+body{                                                                                                                  
+       background-color: #f8fafd;
+ }
+
+#filaDatos {
+	height : 90vh
+}
+
+.botonNaranja {
+	border-color: rgba(255, 193, 7, 0.7);
+	background-color: rgba(255, 193, 7, 0.5); 
+}
+
+
