@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './verAgenda.css'
-import { SelectorCalendario } from '../MaterialUI/SelectorCalendario'
+import { SelectorCalendario } from '../MaterialUI/selectorCalendario'
 import { SelectorAgenda } from '../MaterialUI/selectores'
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';

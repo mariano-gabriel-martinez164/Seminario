@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TextField, Autocomplete, CircularProgress } from '@mui/material';
 import { useFetchDataOnDemand, useFetchSearch } from '../../Request/v2/fetch';
-import { SelectorCalendario } from './SelectorCalendario';
+import { SelectorCalendario } from './selectorCalendario';
 
 const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placeholder}) => {
   const [open, setOpen] = useState(false);
