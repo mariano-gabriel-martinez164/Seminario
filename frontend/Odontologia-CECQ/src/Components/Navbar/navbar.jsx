@@ -3,7 +3,17 @@ import img from '../../assets/CECQIcon.png';
 import { useAuth } from '../Login/authContext';
 import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
-import {Box, Toolbar, List, Typography, Divider, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
+import { Link } from 'react-router-dom';
+import Box from "@mui/material/Box" 
+import Toolbar from "@mui/material/Toolbar" 
+import List from "@mui/material/List" 
+import Typography from "@mui/material/Typography" 
+import Divider from "@mui/material/Divider" 
+import IconButton from "@mui/material/IconButton" 
+import ListItem from "@mui/material/ListItem" 
+import ListItemButton from "@mui/material/ListItemButton" 
+import ListItemIcon from "@mui/material/ListItemIcon" 
+import ListItemText from "@mui/material/ListItemText" 
 import { Menu as MenuIcon, ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from '@mui/icons-material';
 import { DrawerHeader, AppBar, Drawer } from './navbarEstilos';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
@@ -85,97 +95,79 @@ export default function Navbar() {
         </DrawerHeader>
         <Divider />
         <List  >
-            <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton to="/verAgenda" sx={[{minHeight: 48, px: 2.5,},
-                open? {justifyContent: 'initial',}: {justifyContent: 'center',},]}>
-                <ListItemIcon sx={[{minWidth: 0,justifyContent: 'center',},
-                  open? {mr: 3,}: {mr: 'auto',},]}>
-                  <EventAvailableIcon />
-                </ListItemIcon>
-                <ListItemText primary='Ver agenda' sx={[
-                    open? {opacity: 1,}: {opacity: 0,},]}/>
-              </ListItemButton>
-            </ListItem>
+            <DrawerItem
+              icon={<EventAvailableIcon />} 
+              text='Ver agenda' 
+              link='/verAgenda'
+              setOpen={setOpen}
+            />
 
-            <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton to="/Buscarturno" sx={[{minHeight: 48, px: 2.5,},
-                open? {justifyContent: 'initial',}: {justifyContent: 'center',},]}>
-                <ListItemIcon sx={[{minWidth: 0,justifyContent: 'center',},
-                  open? {mr: 3,}: {mr: 'auto',},]}>
-                  <ManageSearch />
-                </ListItemIcon>
-                <ListItemText primary='Buscar turno' sx={[
-                    open? {opacity: 1,}: {opacity: 0,},]}/>
-              </ListItemButton>
-            </ListItem>
+            <DrawerItem
+              icon={<ManageSearch />} 
+              text='Buscar turno' 
+              link='/Buscarturno'
+              setOpen={setOpen}
+            />
 
-            <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton to="/buscarPaciente" sx={[{minHeight: 48, px: 2.5,},
-                open? {justifyContent: 'initial',}: {justifyContent: 'center',},]}>
-                <ListItemIcon sx={[{minWidth: 0,justifyContent: 'center',},
-                  open? {mr: 3,}: {mr: 'auto',},]}>
-                  <PersonSearch />
-                </ListItemIcon>
-                <ListItemText primary='Buscar paciente' sx={[
-                    open? {opacity: 1,}: {opacity: 0,},]}/>
-              </ListItemButton>
-            </ListItem>
+            <DrawerItem
+              icon={<PersonSearch />} 
+              text='Buscar paciente' 
+              link='/buscarPaciente'
+              setOpen={setOpen}
+            />
 
-            <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton to="/facturaciones" sx={[{minHeight: 48, px: 2.5,},
-                open? {justifyContent: 'initial',}: {justifyContent: 'center',},]}>
-                <ListItemIcon sx={[{minWidth: 0,justifyContent: 'center',},
-                  open? {mr: 3,}: {mr: 'auto',},]}>
-                  <FeedIcon />
-                </ListItemIcon>
-                <ListItemText primary='Facturacion' sx={[
-                    open? {opacity: 1,}: {opacity: 0,},]}/>
-              </ListItemButton>
-            </ListItem>
+            <DrawerItem
+              icon={<FeedIcon />} 
+              text='Facturación' link=
+              '/facturaciones'
+              setOpen={setOpen}
+            />
+
         </List>
         <Divider />
         <List >
-        
-            <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton to="/gestionarUsuario" sx={[{minHeight: 48, px: 2.5,},
-                open? {justifyContent: 'initial',}: {justifyContent: 'center',},]}>
-                <ListItemIcon sx={[{minWidth: 0,justifyContent: 'center',},
-                  open? {mr: 3,}: {mr: 'auto',},]}>
-                  <ManageAccountsIcon />
-                </ListItemIcon>
-                <ListItemText primary='Gestionar usuarios' sx={[
-                  open? {opacity: 1,}: {opacity: 0,},]}/>
-              </ListItemButton>
-            </ListItem>
+            <DrawerItem
+              icon={<ManageAccountsIcon />} 
+              text='Gestionar usuarios' 
+              link='/gestionarUsuario'
+              setOpen={setOpen}
+            />
 
-            <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton to="/gestionarAgenda" sx={[{minHeight: 48, px: 2.5,},
-                open? {justifyContent: 'initial',}: {justifyContent: 'center',},]}>
-                <ListItemIcon sx={[{minWidth: 0,justifyContent: 'center',},
-                  open? {mr: 3,}: {mr: 'auto',},]}>
-                  <AssignmentTurnedInIcon />
-                </ListItemIcon>
-                <ListItemText primary='Gestionar agendas' sx={[
-                  open? {opacity: 1,}: {opacity: 0,},]}/>
-              </ListItemButton>
-            </ListItem>
+            <DrawerItem
+              icon={<AssignmentTurnedInIcon />} 
+              text='Gestionar agendas' 
+              link='/gestionarAgenda'
+              setOpen={setOpen}
+            />
 
-            <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton to="/gestionarPrestacion" sx={[{minHeight: 48, px: 2.5,},
-                open? {justifyContent: 'initial',}: {justifyContent: 'center',},]}>
-                <ListItemIcon sx={[{minWidth: 0,justifyContent: 'center',},
-                  open? {mr: 3,}: {mr: 'auto',},]}>
-                  <DescriptionIcon />
-                </ListItemIcon>
-                <ListItemText primary='Gestionar prestaciones' sx={[
-                  open? {opacity: 1,}: {opacity: 0,},]}/>
-              </ListItemButton>
-            </ListItem>
+            <DrawerItem
+              icon={<DescriptionIcon />} 
+              text='Gestionar Prestaciones' 
+              link='/gestionarPrestacion'
+              setOpen={setOpen}
+            />
+
           </List>
       </Drawer>
     </>
   );
 }
 
-
-
+function DrawerItem({icon, text, link, setOpen}) {
+  return (
+    <ListItem disablePadding sx={{ display: 'block' }}>
+      <ListItemButton 
+        component={Link} 
+        to={link} 
+        onClick={() => setOpen(false)}
+        sx={[{minHeight: 48, px: 2.5,},{justifyContent: 'initial',}]}>
+        <ListItemIcon sx={[{minWidth: 0,justifyContent: 'center',},
+          {mr: 3,}]}>
+          {icon}
+        </ListItemIcon>
+        <ListItemText primary={text} sx={[
+            {opacity: 1,}]}/>
+      </ListItemButton>
+    </ListItem>
+  );
+}

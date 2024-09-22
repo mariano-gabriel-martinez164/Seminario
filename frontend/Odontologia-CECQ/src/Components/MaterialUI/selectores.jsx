@@ -3,7 +3,7 @@ import { TextField, Autocomplete, CircularProgress } from '@mui/material';
 import { useFetchDataOnDemand, useFetchSearch } from '../../Request/v2/fetch';
 import { SelectorCalendario } from './selectorCalendario';
 
-const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placeholder}) => {
+const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placeholder, getOptionKey=null}) => {
   const [open, setOpen] = useState(false);
   const [fetched, setFetched] = useState(false);
 
@@ -27,6 +27,7 @@ const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placehold
         open={open} onOpen={handleOpen} onClose={handleClose}
         options={data} loading={loading}
         getOptionLabel={(option) => format(option)}
+        getOptionKey={getOptionKey}
         onChange={(event, newValue) => setSelectedValue(newValue)}
         noOptionsText="No hay resultados"
         renderInput={(params) => (
@@ -92,6 +93,7 @@ function SelectorAdministrativo({selectedValue, setSelectedValue}) {
     <AutocompleteAPIComponent
       selectedValue={selectedValue}
       setSelectedValue={setSelectedValue}
+      getOptionKey={(x)=>x.id}
       api_url={"/auth/administrativos/"}
       format={administrativoFormat}
       placeholder={"Seleccionar administrativo"}
@@ -201,13 +203,14 @@ function SelectorEstados({ setSelectedValue }) {
 import { addDays } from 'date-fns';
 function Test() {
   const [selectedValue, setSelectedValue] = useState(null);
-  const [range, setRange] = useState([
+  const defaultRange = [
     {
       startDate: new Date(),
       endDate: addDays(new Date(), 7),
       key: 'selection'
     }
-  ]);
+  ]
+  const [range, setRange] = useState(defaultRange);
 
   return (
     <div>
@@ -224,6 +227,13 @@ function Test() {
       <SelectorCalendario
         range={range}
         setRange={setRange}
+        defaultRange={defaultRange}
+      /> 
+      <SelectorCalendario
+        range={range}
+        setRange={setRange}
+        defaultRange={defaultRange}
+        isWeek
       /> 
     </div>
   );
