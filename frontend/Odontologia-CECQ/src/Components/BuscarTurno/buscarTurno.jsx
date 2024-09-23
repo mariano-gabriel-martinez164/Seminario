@@ -1,27 +1,45 @@
-import './buscarTurno.css'
 import { useState, useEffect } from 'react';
-import Table from 'react-bootstrap/Table';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Dropdown from 'react-bootstrap/Dropdown';
-import { CustomToggle, CustomOnlyMenu } from './DropdownCustom/DropdownCustom';
-import { mostrarFiltros, mostrarFiltrosArray } from './MostrarFiltros/mostrarFiltros';
-import Button from 'react-bootstrap/Button';
-import { handleSelect } from './HandleAndRemove/handleAndRemove';
-import { Alert } from 'react-bootstrap';
 import { VerSobreturno }  from './Sobreturno/sobreturno';
 import { ModalRealizado } from './CrudTurno/modalRealizado';
 import { ModalDisponible } from './CrudTurno/modalDisponible';
 import { ModalCancelado } from './CrudTurno/modalCancelado';
 import { ModalAsignado } from './CrudTurno/modalAsignado';
-import { token } from '../../Request/fetch.js';
-import { apiUrl } from '../../Request/fetch.js';
 
-import { SelectorOdontologo, SelectorCentro, SelectorAdministrativo, SelectorAgenda, SelectorPaciente, SelectorRangoDeFechas } from './Filtros/filtros';
-import { useDatesState } from './Filtros/hooks.js';
+import {
+  SelectorOdontologo,
+  SelectorCentro,
+  SelectorAdministrativo,
+  SelectorAgenda,
+  SelectorPacientes,
+  SelectorEstados,
+  SelectorSobreTurno,
+} from '../MaterialUI/selectores.jsx';
+import { SelectorCalendario } from '../MaterialUI/selectorCalendario.jsx';
 
-  export default function BuscarTurno() {
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import {StyledTableCell, StyledTableRow} from '../MaterialUI/styledTable.jsx';
+
+import Paper from '@mui/material/Paper';
+import Chip from '@mui/material/Chip';
+import AddIcon from '@mui/icons-material/Add';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import Button from '@mui/material/Button';
+
+import { format } from 'date-fns';
+
+const estadosChips = {
+  'Disponible': 'info',
+  'Asignado': 'warning',
+  'Cancelado': 'error',
+  'Realizado': 'success',
+  'Sobreturno asignado': 'warning',
+}
+
+export default function BuscarTurno() {
 
     const [modalShow, setModalShow] = useState(false);
     const [selectedTurno, setSelectedTurno] = useState('');
@@ -32,196 +50,246 @@ import { useDatesState } from './Filtros/hooks.js';
     const [estado, setEstado] = useState('');
 
 
+    const formatHour = (hour) => {
+      const [hourString, minuteString] = hour.split(':');
+      return `${hourString.padStart(2, '0')}:${minuteString.padStart(2, '0')}`;
+      
+    }
+    
+    const handleClickTurno = (turno) => {
+        setModalShow(true);
+        if (turno.id !== null) {
+          setSelectedTurno(turno.id);
+          setSelectedTurnoTemplate({});
+          setEstado(turno.estado);
+        } else {
+          setSelectedTurnoTemplate(turno);
+          setSelectedTurno("");
+          setEstado(turno.estado);
+        }
+      }
+
+      
+
   return (
-    <Container id='container' fluid>
-        <Row>
-          <MenuFiltros turnos={turnos} setTurnos={setTurnos} estadoModal={estadoModal}>
-                <Button className='w-100' variant="primary" onClick={() => {setModalSobreturnoShow(true);}}>Crear sobreturno</Button>
-                {modalSobreturnoShow && <VerSobreturno show={modalSobreturnoShow} onHide={() => setModalSobreturnoShow(false)} setEstadoModal={setEstadoModal}/>}
-          </MenuFiltros>
-          <Col id='col2' xs={8} >
-          {estadoModal === 'Disponible' && <Alert variant='info' dismissible >Turno {estadoModal}</Alert>}
-          {estadoModal === 'Asignado' && <Alert variant='warning' dismissible >Turno {estadoModal}</Alert>}
-          {estadoModal === 'Cancelado' && <Alert variant='danger' dismissible >Turno {estadoModal}</Alert>}
-          {estadoModal === 'Realizado' && <Alert variant='success' dismissible >Turno {estadoModal}</Alert>}
-          {estadoModal === 'Sobreturno asignado' && <Alert variant='warning' dismissible >Sobreturno asignado</Alert>}
+    <>
+      <TurnoAlerts estadoModal={estadoModal}/>
+      
+      <Grid container gap={4} mt={4}>
+        <MenuFiltros
+          turnos={turnos}
+          setTurnos={setTurnos}
+          estadoModal={estadoModal}
+        />
 
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Hora inicio</th>
-                  <th>Hora fin</th>
-                  <th>Paciente</th>
-                  <th>Agenda</th>
-                  <th>Estado</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
+        <Grid xs={8} size={9}>
+
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <StyledTableRow>
+                  {
+                    ['Fecha', 'Hora', 'Paciente', 'Agenda', 'Estado', ''].map((header, index) => (
+                      <StyledTableCell key={index}>{header}</StyledTableCell>
+                    ))
+                  }
+                </StyledTableRow>
+              </TableHead>
+              <TableBody>
                 {turnos.map((turno) => (
-                  <tr key={turno.id || `${turno.paciente}-${turno.agenda}-${turno.fecha}`}>
-                    <td>{turno.fecha}</td>
-                    <td>{turno.horaInicio}</td>
-                    <td>{turno.horaFin}</td>
-                    <td>{turno.paciente?.nombre} {turno.paciente?.apellido}</td>
-                    <td>{turno.agenda}</td>
-                    {turno.estado === 'Realizado' ? <td className='bg-success bg-opacity-50 rounded'>{turno.estado}</td> :
-                    turno.estado === 'Cancelado' ? <td className='bg-danger bg-opacity-50 rounded'>{turno.estado}</td> :
-                    turno.estado === 'Asignado' ? <td className='bg-warning bg-opacity-50 rounded'>{turno.estado}</td> :
-                    turno.estado === 'Disponible' ? <td className='bg-info bg-opacity-50 rounded'>{turno.estado}</td> :
-                    <td>{turno.estado}</td>}
-                    
-                    <td>
-                    <Button className='w-100' variant="primary" onClick={() => {
-                      setModalShow(true);
-                      if (turno.id !== null) {
-                        setSelectedTurno(turno.id);
-                        setSelectedTurnoTemplate({});
-                        setEstado(turno.estado);
-                      } else {
-                        setSelectedTurnoTemplate(turno);
-                        setSelectedTurno('');
-                        setEstado(turno.estado);
+                  <StyledTableRow
+                    key={
+                      turno.id ||
+                      `${turno.paciente}-${turno.agenda}-${turno.fecha}`
+                    }
+                  >
+                    <StyledTableCell>{format(turno.fecha, "MMM dd")}</StyledTableCell>
+                    <StyledTableCell>
+                      {formatHour(turno.horaInicio)} -{" "}
+                      {formatHour(turno.horaFin)}
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      {
+                        turno.paciente
+                        && `${turno.paciente.apellido}, ${turno.paciente.nombre[0]}.`  
+
                       }
-                    }}>
-                      Ver más...</Button>
+                    </StyledTableCell>
+                    <StyledTableCell>{turno.agenda}</StyledTableCell>
+                    <StyledTableCell>
+                      <Chip
+                        label={turno.estado}
+                        color={estadosChips[turno.estado]}
+                      />
+                    </StyledTableCell>
 
-                    </td>
-                  </tr>
+                    <StyledTableCell>
+                      <Button
+                        color="primary"
+                        onClick={handleClickTurno.bind(this, turno)}
+                      >Ver más...</Button>
+                    </StyledTableCell>
+
+                  </StyledTableRow>
                 ))}
-              </tbody>
-
-                {estado === 'Disponible' && modalShow ? ( 
-                  <ModalDisponible show={modalShow} onHide={() => setModalShow(false)} turnoTemplate={selectedTurnoTemplate} setEstadoModal={setEstadoModal}/>
-                ) : null}
-
-                {estado === 'Realizado' && modalShow ? (
-                  <ModalRealizado show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno} />
-                ) : null}
-
-                {estado === 'Cancelado' && modalShow ? (
-                  <ModalCancelado show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno} turnoTemplate={selectedTurnoTemplate} setEstadoModal={setEstadoModal} />
-                ) : null}
-
-                {estado === 'Asignado' && modalShow ? (
-                  <ModalAsignado show={modalShow} onHide={() => setModalShow(false)} turnoClick={selectedTurno} setEstadoModal={setEstadoModal} />
-                ) : null}
-
+              </TableBody>
             </Table>
-          </Col>
-        </Row>
-      </Container>
-  
+          </TableContainer>
+        </Grid>
+      </Grid>
+      {estado === "Disponible" && modalShow ? (
+        <ModalDisponible
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          turnoTemplate={selectedTurnoTemplate}
+          setEstadoModal={setEstadoModal}
+        />
+      ) : null}
 
-  )
+      {estado === "Realizado" && modalShow ? (
+        <ModalRealizado
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          turnoClick={selectedTurno}
+        />
+      ) : null}
+
+      {estado === "Cancelado" && modalShow ? (
+        <ModalCancelado
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          turnoClick={selectedTurno}
+          turnoTemplate={selectedTurnoTemplate}
+          setEstadoModal={setEstadoModal}
+        />
+      ) : null}
+
+      {estado === "Asignado" && modalShow ? (
+        <ModalAsignado
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          turnoClick={selectedTurno}
+          setEstadoModal={setEstadoModal}
+        />
+      ) : null}
+
+      <Fab
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          right: 16,
+        }}
+        color="primary"
+        variant="extended"
+        onClick={() => {
+          setModalSobreturnoShow(true);
+        }}
+      >
+        <AddIcon sx={{ mr: 1 }} />
+        Crear sobreturno
+      </Fab>
+      {modalSobreturnoShow && (
+        <VerSobreturno
+          show={modalSobreturnoShow}
+          onHide={() => setModalSobreturnoShow(false)}
+          setEstadoModal={setEstadoModal}
+        />
+      )}
+    </>
+  );
 }
 
 
-function MenuFiltros({ children, setTurnos, estadoModal }) {
-  const [selectedPaciente, setSelectedPaciente] = useState({key: ''});
-  const [selectedAgenda, setSelectedAgenda] = useState({key: ''});
-  const [selectedOdontologo, setSelectedOdontologo] = useState({key: ''});
-  const [selectedCentro, setSelectedCentro] = useState({key: ''});
-  const [selectedAdministrativo, setSelectedAdministrativo] = useState({key: ''});
+import useFetchTurnos from "../../Request/v2/fetchTurnos.js";
+import { addDays } from 'date-fns';
+import Grid from '@mui/material/Grid2';
+import { Fab } from '@mui/material';
 
+function MenuFiltros({ setTurnos }) {
+  const [selectedPaciente, setSelectedPaciente] = useState('');
+  const [selectedAgenda, setSelectedAgenda] = useState('');
+  const [selectedOdontologo, setSelectedOdontologo] = useState('');
+  const [selectedCentro, setSelectedCentro] = useState('');
+  const [selectedAdministrativo, setSelectedAdministrativo] = useState('');
   const [selectedEstado, setSelectedEstado] = useState([]);
   const [selectedSobreturno, setSelectedSobreturno] = useState(null);
 
-  const formatDate = (date) => date.toISOString().split('T')[0];
-  const [startDate, setStartDate, endDate, setEndDate] = useDatesState();
+  const defaultRange = [{
+    startDate: new Date(),
+    endDate: addDays(new Date(),7),
+    key: 'selection',
+  }]; 
+  const [range, setRange] = useState(defaultRange);
 
-  const estadosSeleccionados = selectedEstado.length > 0 ? selectedEstado.map((estado) => `&estado=${estado}`).join('') : '';
-  const API_URL = `${apiUrl}/turnos/?fecha_inicio=${formatDate(startDate)}&fecha_fin=${formatDate(endDate)}&id_odontologo=${selectedOdontologo.key}&id_centro=${selectedCentro.key}&id_agenda=${selectedAgenda.key}&id_administrativo=${selectedAdministrativo.key}&id_paciente=${selectedPaciente.key}${estadosSeleccionados}&sobreturno=${selectedSobreturno}`;
+  const { data, loading, error } = useFetchTurnos(
+    range[0].startDate,
+    range[0].endDate,
+
+    selectedAgenda?.id,
+    selectedOdontologo?.id,
+    selectedCentro?.id,
+    selectedAdministrativo?.id,
+    selectedPaciente?.dni,
+    selectedSobreturno?.value,
+    selectedEstado?.map((estado) => estado.value),
+  );
+
   useEffect(() => {
-    fetch(API_URL,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`,
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setTurnos(data);
-      })
-      .catch((error) => console.log(error));
-  }, [API_URL, estadoModal, setTurnos]);
-  
+    if (data) {
+      setTurnos(data);
+    }
+  }, [data, setTurnos]);
+
   return (
-    <Col id='col1' xs={2} >
-    <Row>
-    <h6>Rango de fechas</h6>
-      <SelectorRangoDeFechas
-        startDate={startDate}
-        setStartDate={setStartDate}
-        endDate={endDate}
-        setEndDate={setEndDate} 
+    <Grid size={2} pl={2}>
+      <SelectorCalendario
+        range={range}
+        setRange={setRange}
+        defaultRange={defaultRange}
       />
-      <br />
+      <SelectorPacientes
+        selectedValue={selectedPaciente}
+        setSelectedValue={setSelectedPaciente} 
+      />
+      <SelectorAgenda
+        selectedValue={selectedAgenda}
+        setSelectedValue={setSelectedAgenda} 
+      />
+      <SelectorOdontologo
+        selectedValue={selectedOdontologo}
+        setSelectedValue={setSelectedOdontologo} 
+      />
+      <SelectorCentro
+        selectedValue={selectedCentro}
+        setSelectedValue={setSelectedCentro} 
+      />
+      <SelectorAdministrativo
+        selectedValue={selectedAdministrativo}
+        setSelectedValue={setSelectedAdministrativo} 
+      />
+      <SelectorEstados
+        selectedValue={selectedEstado}
+        setSelectedValue={setSelectedEstado} 
+      />
+      <SelectorSobreTurno
+        selectedValue={selectedSobreturno}
+        setSelectedValue={setSelectedSobreturno} 
+      />
+    </Grid>
+  );
 
-      <h6>Paciente</h6>
-      <SelectorPaciente selectedItem={selectedPaciente} setSelectedItem={setSelectedPaciente}/>
-      <br />
+}
 
-      <h6>Odontologo</h6>
-      <SelectorOdontologo selectedItem={selectedOdontologo} setSelectedItem={setSelectedOdontologo} />
-      <br />
-
-      <h6>Centro</h6>
-      <SelectorCentro selectedItem={selectedCentro} setSelectedItem={setSelectedCentro}/>
-      <br />
-
-      <h6>Administrativo</h6>
-      <SelectorAdministrativo selectedItem={selectedAdministrativo} setSelectedItem={setSelectedAdministrativo}/>
-      <br />
-
-      <h6>Agenda</h6>
-      <SelectorAgenda selectedItem={selectedAgenda} setSelectedItem={setSelectedAgenda}/>
-      <br />
-
-      <h6>Estado</h6>
-      <Dropdown>
-        <Dropdown.Toggle as={CustomToggle}>
-          Seleccionar estado...
-        </Dropdown.Toggle>
-    
-        <Dropdown.Menu as={CustomOnlyMenu}>
-          <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado, 'Disponible')} eventKey="1">Disponible</Dropdown.Item>
-          <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado,'Asignado')} eventKey="2">Asignado</Dropdown.Item>
-          <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado,'Cancelado')} eventKey="3">Cancelado</Dropdown.Item>
-          <Dropdown.Item onClick={() => handleSelect(selectedEstado, setSelectedEstado,'Realizado')} eventKey="4">Realizado</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-      <br />
-      {mostrarFiltrosArray(selectedEstado, setSelectedEstado)}
-      <br />
-    
-      <h6>Sobreturno</h6>
-      <Dropdown>
-        <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
-          Seleccionar...
-        </Dropdown.Toggle>
-
-        <Dropdown.Menu as={CustomOnlyMenu}>
-        <Dropdown.Item onClick={() => (setSelectedSobreturno(true))} eventKey="1">Si</Dropdown.Item>
-        <Dropdown.Item onClick={() => (setSelectedSobreturno(false))} eventKey="2">No</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-      <br />
-      {mostrarFiltros(selectedSobreturno, setSelectedSobreturno)}
-      <br />
-      </Row>
-      <br />
-      {children}
-      <br />
-      <br />
-</Col>
+function TurnoAlerts({estadoModal}){
+  const keys = Object.keys(estadosChips);
+  if (!keys.includes(estadoModal)) return null;
+  const color = estadosChips[estadoModal];
+  const texto = estadoModal === 'Sobreturno asignado' ? 'Sobreturno asignado' : `Turno ${estadoModal}`;
+  return (
+    <Snackbar open={true}>
+    <Alert severity={color}>
+      {texto}
+    </Alert>
+  </Snackbar>
   )
-
-
-
-
 }

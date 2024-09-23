@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { TextField, Autocomplete, CircularProgress } from '@mui/material';
 import { useFetchDataOnDemand, useFetchSearch } from '../../Request/v2/fetch';
 import { SelectorCalendario } from './selectorCalendario';
+import Chip from '@mui/material/Chip';
 
 const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placeholder, getOptionKey=null}) => {
   const [open, setOpen] = useState(false);
@@ -179,10 +180,10 @@ function SelectorSobreTurno({ setSelectedValue }) {
 
 function SelectorEstados({ setSelectedValue }) {
   const options = [
-    {key: "Pendiente", value: "Pendiente"},
-    {key: "Confirmado", value: "Confirmado"},
-    {key: "Cancelado", value: "Cancelado"},
-    {key: "Realizado", value: "Realizado"}
+    {key: "Disponible", value: "Disponible", color: 'info'},
+    {key: "Asignado", value: "Asignado", color: 'warning'},
+    {key: "Cancelado", value: "Cancelado", color: 'error'},
+    {key: "Realizado", value: "Realizado", color: 'success'},
   ];
 
   return (
@@ -191,13 +192,25 @@ function SelectorEstados({ setSelectedValue }) {
       options={options}
       getOptionLabel={(option) => option.key}
       onChange={(event, newValue) => setSelectedValue(newValue)}
+      renderTags={(value, getTagProps) =>
+        value.map((option, index) => (
+          <Chip
+            key={index}
+            size="small"
+            color={option.color}
+            label={option.key}
+            {...getTagProps({ index })}
+          />
+        ))
+      }
       renderInput={(params) => (
         <CustomTextField
           {...params}
           label="Estado/s"
         />
       )}
-  />);
+    />
+  );
 }
 
 import { addDays } from 'date-fns';

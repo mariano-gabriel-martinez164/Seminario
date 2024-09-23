@@ -150,7 +150,9 @@ function AgendaSemanal({data, range}) {
           display:'flex',
           flexDirection:'row',
           textAlign:'center',
-          bgcolor: 'grey', //TODO cambiar color
+          bgcolor: '#343a40', //TODO cambiar color
+          color: 'white',
+          borderRadius: '5px 5px 0 0',
         }}
       >
         {getDayHeaders()}
