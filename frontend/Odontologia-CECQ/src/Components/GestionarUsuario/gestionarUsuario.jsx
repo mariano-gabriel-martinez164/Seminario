@@ -1,8 +1,20 @@
-import { Button, Container, Alert, TableRow, TableHead, TableContainer, TableBody, Table, Paper, styled, TableCell, tableCellClasses } from '@mui/material';
+import Button from "@mui/material/Button"
+import Container from "@mui/material/Container"
+import Alert from "@mui/material/Alert"
+import TableRow from "@mui/material/TableRow"
+import TableHead from "@mui/material/TableHead"
+import TableContainer from "@mui/material/TableContainer"
+import TableBody from "@mui/material/TableBody"
+import Table from "@mui/material/Table"
+import Paper from "@mui/material/Paper"
+import Fab from "@mui/material/Fab"
+import AddIcon from "@mui/icons-material/Add"
+
 import { useEffect, useState } from 'react'
 import { apiUrl, token } from '../../Request/fetch.js';
 import { ModalModificarUsuario } from './Modal/modalModificarUsuario.jsx';
 import { ModalCrearUsuario } from './Modal/modalCrearUsuario.jsx';
+import { StyledTableCell, StyledTableRow } from '../MaterialUI/styledTable.jsx';
 
 
 export default function GestionarUsuario() {
@@ -29,24 +41,6 @@ export default function GestionarUsuario() {
       setCreado(false);
       }, [estadoModal, creado]);
 
-      const StyledTableCell = styled(TableCell)(({ theme }) => ({
-        [`&.${tableCellClasses.head}`]: {
-          backgroundColor: '#343a40',
-          color: theme.palette.common.white,
-        },
-        [`&.${tableCellClasses.body}`]: {
-          fontSize: 14,
-        },
-      }));
-      
-      const StyledTableRow = styled(TableRow)(({ theme }) => ({
-        '&:nth-of-type(odd)': {
-          backgroundColor: theme.palette.action.hover,
-        },
-        '&:last-child td, &:last-child th': {
-          border: 0,
-        },
-      }));
 
   return (
     <Container fixed sx={{ mt: 2 }}>
@@ -87,9 +81,22 @@ export default function GestionarUsuario() {
           ))}
         </TableBody>
       </Table>
-     </TableContainer>
-      <Button onClick={() => setModalShowCrear(true)} sx={{ mt: 1 }} variant="contained">
-        Crear usuario</Button>
+    </TableContainer>
+    <Fab
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          right: 16,
+        }}
+        color="primary"
+        variant="extended"
+        onClick={() => {
+          setModalShowCrear(true);
+        }}
+      >
+        <AddIcon sx={{ mr: 1 }} />
+        Crear usuario
+      </Fab>
 
       {modalShowModificar && (
         <ModalModificarUsuario
