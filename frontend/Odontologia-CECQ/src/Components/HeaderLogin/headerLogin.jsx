@@ -1,20 +1,23 @@
-import React from 'react';
+import '../Navbar/navbar.css';
 import img from '../../assets/CECQIcon.png';
+import Box from "@mui/material/Box"; 
+import Toolbar from "@mui/material/Toolbar"; 
+import Typography from "@mui/material/Typography"; 
+import { AppBar } from '../Navbar/navbarEstilos';  
 
-
-export default function HeaderLogin() {
-    return (
-<header className="bg-dark text-white">
-  <nav className="navbar">
-    <div className="row container-fluid">
-      <div className="col-1 d-flex align-items-center justify-content-start">
-        <div id='imgcecq' className="d-flex align-items-center">
-          <img src={img} className="img-fluid" alt="Logo" id="img-icon-brand" />
-          <a id="CECQ" href="#">CECQ</a>
-        </div>
-      </div>
-    </div>
-  </nav>
-</header>
-    )
+export default function SimpleNavbar() {
+  return (
+    <AppBar position="fixed" sx={{ backgroundColor: '#343a40' }}>
+      <Toolbar>
+        <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center' }}>
+          {/* Icono a la izquierda */}
+          <img src={img} alt="CECQ Icon" id="img-icon-brand" />
+          {/* Texto CECQ */}
+          <Typography variant="h6" component="a" sx={{ ml: 1 }} id="CECQ">
+            CECQ
+          </Typography>
+        </Box>
+      </Toolbar>
+    </AppBar>
+  );
 }

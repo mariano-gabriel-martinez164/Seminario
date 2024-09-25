@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../../assets/CECQIcon.png';
-import './login.css';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Container from 'react-bootstrap/Container';
-import Image from 'react-bootstrap/Image';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { useAuth } from './authContext';
-import { Alert } from 'react-bootstrap';
+import { Alert, Box, Button, Container, TextField, Typography, IconButton, InputAdornment } from '@mui/material';
+import { LockOutlined as LockOutlinedIcon, Visibility, VisibilityOff } from '@mui/icons-material';
+import Avatar from '@mui/material/Avatar';
+import Paper from '@mui/material/Paper';
+import './login.css'; 
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -16,11 +13,20 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword); 
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault(); 
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
-    
+
     try {
       const response = await fetch('http://127.0.0.1:8000/auth/gettoken/', {
         method: 'POST',
@@ -34,13 +40,12 @@ const Login = () => {
       });
 
       if (response.ok) {
-        const data = await response.json(); 
-        const token = data.token
-        login(token); 
+        const data = await response.json();
+        const token = data.token;
+        login(token);
         navigate('/verAgenda');
       } else {
-        const errorMessage = 'Error de autenticación'; 
-        setError(errorMessage); 
+        setError('Error de autenticación');
       }
     } catch (error) {
       setError('Error al realizar la solicitud');
@@ -48,33 +53,84 @@ const Login = () => {
   };
 
   return (
-    <Container className="container">
-      <Image src={Logo} id="Image" />
-      <Form onSubmit={handleSubmit} className="bg">
-        <FloatingLabel label="Usuario..." className="mb-3 custom-floating-label" controlId="formBasicEmail">
-          <Form.Control
-            className="form-control-custom"
-            placeholder="Usuario..."
-            value={username}
-            onChange={(e) => setUsername(e.target.value)} 
-          />
-        </FloatingLabel>
-        <FloatingLabel label="Contraseña..." className="mb-3" controlId="formBasicPassword">
-          <Form.Control
-            className="form-control-custom"
-            type="password"
-            placeholder="Contraseña..."
-            value={password}
-            onChange={(e) => setPassword(e.target.value)} 
-          />
-        </FloatingLabel>
-        <Button variant="primary" type="submit" style={{ border: '2px solid blue' }}>
-          Iniciar sesión
-        </Button>
-        {error && <Alert variant="danger" className="custom-alert-margin">{error}</Alert>}
-      </Form>
-    </Container>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',   
+        alignItems: 'center',       
+        minHeight: '87vh',    
+      }}
+    >
+      <Container component="main" maxWidth="xs" sx={{ mx: 'auto' }}>
+        <Paper
+          elevation={3}
+          sx={{
+            padding: 4,
+            backgroundColor: 'rgba(255, 255, 255, 0.8)', // Transparencia ajustada
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ bgcolor: 'primary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Iniciar sesión
+            </Typography>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Usuario"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                autoComplete="username"
+                autoFocus
+              />
+               <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Contraseña"
+                type={showPassword ? 'text' : 'password'} // Cambia entre 'text' y 'password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Iniciar sesión
+              </Button>
+              {error && <Alert severity="error">{error}</Alert>}
+            </Box>
+          </Box>
+        </Paper>
+      </Container>
+    </Box>
   );
-}
+};
 
 export default Login;
