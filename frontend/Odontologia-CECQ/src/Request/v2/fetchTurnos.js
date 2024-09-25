@@ -25,3 +25,26 @@ export default function useFetchTurnos (
 
     return useFetch(url);
 }
+
+export function construirUrlTurnos(
+    range,
+    agenda=null,
+    odontologo=null,
+    centro=null,
+    administrativo=null,
+    paciente=null,
+    sobreTurno=null,
+    estados=[],
+){
+    const fecha_inicio = format(range[0].startDate, 'yyyy-MM-dd');
+    const fecha_fin = format(range[0].endDate, 'yyyy-MM-dd');
+    let url = `/turnos/?fecha_inicio=${fecha_inicio}&fecha_fin=${fecha_fin}`;
+    if (agenda) url += `&id_agenda=${agenda.id}`;
+    if (odontologo) url += `&id_odontologo=${odontologo.id}`;
+    if (centro) url += `&id_centro=${centro.id}`;
+    if (administrativo) url += `&id_administrativo=${administrativo.id}`;
+    if (paciente) url += `&id_paciente=${paciente.dni}`;
+    if (sobreTurno != null) url += `&sobreturno=${sobreTurno}`;
+    if (estados.length) url += `&estado=` + estados.join('&estado=');
+    return url;
+}

@@ -41,6 +41,7 @@ export const useFetchDataOnDemand = (url) => {
   const [error, setError] = useState(null);
 
   const fetchData = async () => {
+    console.log(`fetching ${url} on demand`);
     setLoading(true);
     try {
       const response = await _fetchWithHeaders(url);
@@ -76,4 +77,25 @@ export function useFetchSearch(url, delay, getFunc = (x)=>x) {
   }, delay), [url, delay]);
 
   return [data, loading, error, searchData];
+}
+
+export const useMultipleFetch = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const fetchData = useCallback(async (url) => {
+    setLoading(true);
+    try {
+      const response = await _fetchWithHeaders(url);
+      const jsonData = await response.json();
+      setData(jsonData);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return [data, loading, error, fetchData];
 }

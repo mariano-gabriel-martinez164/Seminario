@@ -15,46 +15,26 @@ import {
   SelectorSobreTurno,
 } from '../MaterialUI/selectores.jsx';
 import { SelectorCalendario } from '../MaterialUI/selectorCalendario.jsx';
+import { construirUrlTurnos } from "../../Request/v2/fetchTurnos.js";
+import { addDays } from 'date-fns';
+import Grid from '@mui/material/Grid2';
+import { FabSobreturno } from '../CommonTurno/fabSobreturno.jsx';
+import { TurnoAlerts } from '../CommonTurno/turnoAlerts.jsx';
+import { TablaTurnos } from './tablaTurnos.jsx';
+import { useMultipleFetch } from '../../Request/v2/fetch.js';
 
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import {StyledTableCell, StyledTableRow} from '../MaterialUI/styledTable.jsx';
-
-import Paper from '@mui/material/Paper';
-import Chip from '@mui/material/Chip';
-import AddIcon from '@mui/icons-material/Add';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-import Button from '@mui/material/Button';
-
-import { format } from 'date-fns';
-
-const estadosChips = {
-  'Disponible': 'info',
-  'Asignado': 'warning',
-  'Cancelado': 'error',
-  'Realizado': 'success',
-  'Sobreturno asignado': 'warning',
-}
 
 export default function BuscarTurno() {
 
     const [modalShow, setModalShow] = useState(false);
     const [selectedTurno, setSelectedTurno] = useState('');
-    const [turnos, setTurnos] = useState([]);
     const [estadoModal, setEstadoModal] = useState('');
     const [selectedTurnoTemplate, setSelectedTurnoTemplate] = useState({});
     const [modalSobreturnoShow, setModalSobreturnoShow] = useState(false);
     const [estado, setEstado] = useState('');
+    const [url, setUrl] = useState('');
+    const [data, loading, error, fetchData] = useMultipleFetch();
 
-
-    const formatHour = (hour) => {
-      const [hourString, minuteString] = hour.split(':');
-      return `${hourString.padStart(2, '0')}:${minuteString.padStart(2, '0')}`;
-      
-    }
     
     const handleClickTurno = (turno) => {
         setModalShow(true);
@@ -69,6 +49,15 @@ export default function BuscarTurno() {
         }
       }
 
+      useEffect(() => {
+        fetchData(url);
+      }, [url, fetchData]); 
+      
+      const modalOnHide = () => {
+        setModalShow(false);
+        setModalSobreturnoShow(false);
+        // fetchData(url);
+      }
       
 
   return (
@@ -77,70 +66,21 @@ export default function BuscarTurno() {
       
       <Grid container gap={4} mt={4}>
         <MenuFiltros
-          turnos={turnos}
-          setTurnos={setTurnos}
-          estadoModal={estadoModal}
+          setUrl={setUrl}
         />
-
         <Grid xs={8} size={9}>
-
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <StyledTableRow>
-                  {
-                    ['Fecha', 'Hora', 'Paciente', 'Agenda', 'Estado', ''].map((header, index) => (
-                      <StyledTableCell key={index}>{header}</StyledTableCell>
-                    ))
-                  }
-                </StyledTableRow>
-              </TableHead>
-              <TableBody>
-                {turnos.map((turno) => (
-                  <StyledTableRow
-                    key={
-                      turno.id ||
-                      `${turno.paciente}-${turno.agenda}-${turno.fecha}`
-                    }
-                  >
-                    <StyledTableCell>{format(turno.fecha, "MMM dd")}</StyledTableCell>
-                    <StyledTableCell>
-                      {formatHour(turno.horaInicio)} -{" "}
-                      {formatHour(turno.horaFin)}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {
-                        turno.paciente
-                        && `${turno.paciente.apellido}, ${turno.paciente.nombre[0]}.`  
-
-                      }
-                    </StyledTableCell>
-                    <StyledTableCell>{turno.agenda}</StyledTableCell>
-                    <StyledTableCell>
-                      <Chip
-                        label={turno.estado}
-                        color={estadosChips[turno.estado]}
-                      />
-                    </StyledTableCell>
-
-                    <StyledTableCell>
-                      <Button
-                        color="primary"
-                        onClick={handleClickTurno.bind(this, turno)}
-                      >Ver más...</Button>
-                    </StyledTableCell>
-
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <TablaTurnos 
+            turnos={data} 
+            handleClickTurno={handleClickTurno} 
+            loading={loading}
+          />
         </Grid>
       </Grid>
+
       {estado === "Disponible" && modalShow ? (
         <ModalDisponible
           show={modalShow}
-          onHide={() => setModalShow(false)}
+          onHide={modalOnHide}
           turnoTemplate={selectedTurnoTemplate}
           setEstadoModal={setEstadoModal}
         />
@@ -149,7 +89,7 @@ export default function BuscarTurno() {
       {estado === "Realizado" && modalShow ? (
         <ModalRealizado
           show={modalShow}
-          onHide={() => setModalShow(false)}
+          onHide={modalOnHide}
           turnoClick={selectedTurno}
         />
       ) : null}
@@ -157,7 +97,7 @@ export default function BuscarTurno() {
       {estado === "Cancelado" && modalShow ? (
         <ModalCancelado
           show={modalShow}
-          onHide={() => setModalShow(false)}
+          onHide={modalOnHide}
           turnoClick={selectedTurno}
           turnoTemplate={selectedTurnoTemplate}
           setEstadoModal={setEstadoModal}
@@ -167,31 +107,17 @@ export default function BuscarTurno() {
       {estado === "Asignado" && modalShow ? (
         <ModalAsignado
           show={modalShow}
-          onHide={() => setModalShow(false)}
+          onHide={modalOnHide}
           turnoClick={selectedTurno}
           setEstadoModal={setEstadoModal}
         />
       ) : null}
 
-      <Fab
-        sx={{
-          position: "fixed",
-          bottom: 16,
-          right: 16,
-        }}
-        color="primary"
-        variant="extended"
-        onClick={() => {
-          setModalSobreturnoShow(true);
-        }}
-      >
-        <AddIcon sx={{ mr: 1 }} />
-        Crear sobreturno
-      </Fab>
+      <FabSobreturno onClick={() => setModalSobreturnoShow(true)} />
       {modalSobreturnoShow && (
         <VerSobreturno
           show={modalSobreturnoShow}
-          onHide={() => setModalSobreturnoShow(false)}
+          onHide={modalOnHide}
           setEstadoModal={setEstadoModal}
         />
       )}
@@ -200,45 +126,48 @@ export default function BuscarTurno() {
 }
 
 
-import useFetchTurnos from "../../Request/v2/fetchTurnos.js";
-import { addDays } from 'date-fns';
-import Grid from '@mui/material/Grid2';
-import { Fab } from '@mui/material';
 
-function MenuFiltros({ setTurnos }) {
-  const [selectedPaciente, setSelectedPaciente] = useState('');
-  const [selectedAgenda, setSelectedAgenda] = useState('');
-  const [selectedOdontologo, setSelectedOdontologo] = useState('');
-  const [selectedCentro, setSelectedCentro] = useState('');
-  const [selectedAdministrativo, setSelectedAdministrativo] = useState('');
+function MenuFiltros({ setUrl }) {
+  const [selectedPaciente, setSelectedPaciente] = useState(null);
+  const [selectedAgenda, setSelectedAgenda] = useState(null);
+  const [selectedOdontologo, setSelectedOdontologo] = useState(null);
+  const [selectedCentro, setSelectedCentro] = useState(null);
+  const [selectedAdministrativo, setSelectedAdministrativo] = useState(null);
   const [selectedEstado, setSelectedEstado] = useState([]);
   const [selectedSobreturno, setSelectedSobreturno] = useState(null);
 
   const defaultRange = [{
     startDate: new Date(),
-    endDate: addDays(new Date(),7),
+    endDate: addDays(new Date(),14),
     key: 'selection',
   }]; 
   const [range, setRange] = useState(defaultRange);
 
-  const { data, loading, error } = useFetchTurnos(
-    range[0].startDate,
-    range[0].endDate,
-
-    selectedAgenda?.id,
-    selectedOdontologo?.id,
-    selectedCentro?.id,
-    selectedAdministrativo?.id,
-    selectedPaciente?.dni,
-    selectedSobreturno?.value,
-    selectedEstado?.map((estado) => estado.value),
-  );
-
   useEffect(() => {
-    if (data) {
-      setTurnos(data);
-    }
-  }, [data, setTurnos]);
+    const url = construirUrlTurnos(
+      range,
+      selectedAgenda,
+      selectedOdontologo,
+      selectedCentro,
+      selectedAdministrativo,
+      selectedPaciente,
+      selectedSobreturno,
+      selectedEstado,
+    );
+    setUrl(url);
+    console.log(url);
+  }, [range,
+    selectedAgenda,
+    selectedOdontologo,
+    selectedCentro,
+    selectedAdministrativo,
+    selectedPaciente,
+    selectedSobreturno,
+    selectedEstado,
+    setUrl
+  ]);
+
+
 
   return (
     <Grid size={2} pl={2}>
@@ -278,18 +207,4 @@ function MenuFiltros({ setTurnos }) {
     </Grid>
   );
 
-}
-
-function TurnoAlerts({estadoModal}){
-  const keys = Object.keys(estadosChips);
-  if (!keys.includes(estadoModal)) return null;
-  const color = estadosChips[estadoModal];
-  const texto = estadoModal === 'Sobreturno asignado' ? 'Sobreturno asignado' : `Turno ${estadoModal}`;
-  return (
-    <Snackbar open={true}>
-    <Alert severity={color}>
-      {texto}
-    </Alert>
-  </Snackbar>
-  )
 }
