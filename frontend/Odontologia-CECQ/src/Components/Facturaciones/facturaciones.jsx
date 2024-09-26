@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import './facturaciones.css'
 import Grid from '@mui/material/Grid2'
@@ -12,7 +12,7 @@ import Paper from '@mui/material/Paper';
 import { SelectorCalendario } from '../MaterialUI/selectorCalendario.jsx';
 import addDays from 'date-fns/addDays';
 import { SelectorOdontologo } from '../MaterialUI/selectores.jsx';
-import { useFetchTurnos } from '../../Request/v2/fetch.js';
+import useFetchTurnos from '../../Request/v2/fetchTurnos.js';
 
 
 export default function facturaciones() {
@@ -25,15 +25,30 @@ export default function facturaciones() {
   ];
   const [odontologo, setOdontologo] = useState('')
   const [range, setRange] = useState(defaultRange);
+  const [turnos, setTurnos] = useState([]);
 
   const { data, loading, error } = useFetchTurnos(
     range[0].startDate,
     range[0].endDate,
 
-    odontologoID=odontologo?.id,
-    estados='Realizado',
+    '',
+    odontologo?.id,
+    '',
+    '',
+    '',
+    null,
+    ['Realizado'],
   );
   
+  useEffect(() =>{
+    if(data){
+      setTurnos(data.map( (turno) => {
+        return [odontologo?.nombre+' '+odontologo?.apellido, turno?.paciente.nombre+' '+turno?.paciente.apellido, turno?.fecha, turno?.agenda, turno?.monto]
+      }))
+      console.log(turnos)
+    }
+  }, [odontologo, range])
+
   return (
     <Grid container spacing={2} sx={{my:4, alignItems:'center', display:'flex', justifyContent:'center'}}>
       <Grid size={3}>
@@ -48,7 +63,6 @@ export default function facturaciones() {
           range={range}
           setRange={setRange}
           defaultRange={defaultRange}
-          isWeek
         /> 
       </Grid>
       <Grid size={8}>
@@ -57,7 +71,7 @@ export default function facturaciones() {
               <TableHead>
                 <StyledTableRow>
                   {
-                    ['odontologo', 'fecha', 'hora', 'paciente', 'agenda', 'monto', ''].map((header, index) => (
+                  ['odontologo', 'paciente', 'fecha', 'agenda', 'monto', ''].map((header, index) => (
                       <StyledTableCell key={index}>{header}</StyledTableCell>
                     ))
                   }
@@ -72,8 +86,4 @@ export default function facturaciones() {
       </Grid>
     </Grid>
   )
-}
-
-function GetOdontologoMatricula(Odnt){
-  return Odnt?.matricula;
 }
