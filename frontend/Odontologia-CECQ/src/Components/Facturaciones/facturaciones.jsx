@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
-import './facturaciones.css'
-import Grid from '@mui/material/Grid2'
+import './facturaciones.css';
+import Grid from '@mui/material/Grid2';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
@@ -13,6 +13,7 @@ import { SelectorCalendario } from '../MaterialUI/selectorCalendario.jsx';
 import addDays from 'date-fns/addDays';
 import { SelectorOdontologo } from '../MaterialUI/selectores.jsx';
 import useFetchTurnos from '../../Request/v2/fetchTurnos.js';
+import { format } from 'date-fns';
 
 
 export default function facturaciones() {
@@ -43,7 +44,12 @@ export default function facturaciones() {
   useEffect(() =>{
     if(data){
       setTurnos(data.map( (turno) => {
-        return [odontologo?.nombre+' '+odontologo?.apellido, turno?.paciente.nombre+' '+turno?.paciente.apellido, turno?.fecha, turno?.agenda, turno?.monto]
+        return {
+          odontologo: odontologo?.nombre+' '+odontologo?.apellido,
+          paciente: turno?.paciente.nombre+' '+turno?.paciente.apellido,
+          fecha: turno?.fecha,
+          agenda: turno?.agenda,
+          monto: turno?.monto}
       }))
       console.log(turnos)
     }
@@ -71,14 +77,25 @@ export default function facturaciones() {
               <TableHead>
                 <StyledTableRow>
                   {
-                  ['odontologo', 'paciente', 'fecha', 'agenda', 'monto', ''].map((header, index) => (
+                  ['odontologo', 'paciente', 'fecha', 'agenda', 'monto'].map((header, index) => (
                       <StyledTableCell key={index}>{header}</StyledTableCell>
                     ))
                   }
                 </StyledTableRow>
               </TableHead>
               <TableBody>
-                
+                {turnos.map((turno)=>(
+                  <StyledTableRow key={
+                    turno.id ||
+                    `${turno.paciente}-${turno.agenda}-${turno.fecha}`
+                  }>
+                    <StyledTableCell>{turno.odontologo}</StyledTableCell>
+                    <StyledTableCell>{turno.paciente}</StyledTableCell>
+                    <StyledTableCell>{format(turno.fecha, "MMM dd")}</StyledTableCell>
+                    <StyledTableCell>{turno.agenda}</StyledTableCell>
+                    <StyledTableCell>{turno.monto}</StyledTableCell>
+                  </StyledTableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
