@@ -1,7 +1,7 @@
 import './navbar.css';
 import img from '../../assets/CECQIcon.png';
 import { useAuth } from '../Login/authContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import Box from "@mui/material/Box" 
@@ -23,8 +23,16 @@ import FeedIcon from '@mui/icons-material/Feed';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import DescriptionIcon from '@mui/icons-material/Description';
+import { useFetchUser } from "../../Request/v2/fetchUser.js";
+
 
 export default function Navbar() {
+
+  const { user, loading, error } = useFetchUser(2);
+  useEffect(() => {
+    console.log('User loaded:', user); // Ver el usuario cargado
+  }, [user]);
+
   const { logout } = useAuth(); 
 
   const handleLogout = () => {
@@ -73,8 +81,18 @@ export default function Navbar() {
               <i className="bi bi-person-fill-down fs-3"></i>
             </IconButton>
             <ul className="dropdown-menu dropdown-menu-end">
-              <li><a className="dropdown-item" href="#">Nombre:</a></li>
-              <li><a className="dropdown-item" href="#">Apellido:</a></li>
+            <li>
+            <p className="dropdown-item">
+            {loading ? 'Cargando...' : `Nombre: ${user?.first_name || 'Nombre'} 
+            `}
+             </p>
+            </li>
+            <li>
+            <p className="dropdown-item">
+            {loading ? 'Cargando...' :
+            `Apellido: ${user?.last_name || 'Apellido'}`}
+             </p>
+            </li>
               <li><a className="dropdown-item" href="#">Cambiar contraseña</a></li>
               <li><hr className="dropdown-divider" /></li>
               <li><a className="dropdown-item" href="#" onClick={handleLogout}>Cerrar sesión</a></li>
