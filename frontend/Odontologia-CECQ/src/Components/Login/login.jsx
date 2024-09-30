@@ -6,51 +6,29 @@ import { LockOutlined as LockOutlinedIcon, Visibility, VisibilityOff } from '@mu
 import Avatar from '@mui/material/Avatar';
 import Paper from '@mui/material/Paper';
 import './login.css'; 
+import { fetchLogin } from '../../Request/v2/fetchLogin';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-  const { login } = useAuth();
   const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); 
+  const navigate = useNavigate(); 
+  const { login } = useAuth(); 
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword); 
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(''); 
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault(); 
-  };
+    const errorMessage = await fetchLogin(username, password, login, navigate); 
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError('');
-
-    try {
-      const response = await fetch('http://127.0.0.1:8000/auth/gettoken/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const token = data.token;
-        login(token);
-        navigate('/verAgenda');
-      } else {
-        setError('Error de autenticación');
-      }
-    } catch (error) {
-      setError('Error al realizar la solicitud');
+    if (errorMessage) {
+      setError(errorMessage); 
     }
   };
+
+  const handleClickShowPassword = () => setShowPassword((prev) => !prev); 
+  const handleMouseDownPassword = (event) => event.preventDefault();
 
   return (
     <Box
@@ -66,7 +44,7 @@ const Login = () => {
           elevation={3}
           sx={{
             padding: 4,
-            backgroundColor: 'rgba(255, 255, 255, 0.8)', // Transparencia ajustada
+            backgroundColor: 'rgba(255, 255, 255, 0.8)', 
           }}
         >
           <Box
@@ -98,7 +76,7 @@ const Login = () => {
                 required
                 fullWidth
                 label="Contraseña"
-                type={showPassword ? 'text' : 'password'} // Cambia entre 'text' y 'password'
+                type={showPassword ? 'text' : 'password'} 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
@@ -134,3 +112,6 @@ const Login = () => {
 };
 
 export default Login;
+
+
+

@@ -1,147 +1,151 @@
 import React, { useState } from 'react';
-import { FormControl, TextField, InputLabel, OutlinedInput, InputAdornment, IconButton, Button, Container, Dialog, DialogActions, DialogContent, FormHelperText } from '@mui/material';
+import { fetchContraseña } from '../../../Request/v2/fetchContraseña'; 
+import {
+  FormControl, TextField, InputLabel, OutlinedInput,
+  InputAdornment, IconButton, Button, Container,
+  Dialog, DialogActions, DialogContent, Typography
+} from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import Grid from '@mui/material/Grid2';
 
 export function ModalCambiarContraseña({ open, onClose }) {
   const [formData, setFormData] = useState({
-    currentPassword: '',
+    oldPassword: '',
     newPassword: '',
-    repeatNewPassword: ''
+    repeatPassword: '',
   });
-
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({
+    newPassword: '',
+    repeatPassword: '',
+  });
+  const [successMessage, setSuccessMessage] = useState(''); 
+  const [errorMessage, setErrorMessage] = useState(''); 
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event) => event.preventDefault();
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setSuccessMessage(''); 
+    setErrorMessage(''); 
   };
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value
+  const validatePasswords = () => {
+    const { newPassword, repeatPassword } = formData;
+    let valid = true;
+    let newPasswordError = '';
+    let repeatPasswordError = '';
+
+    if (newPassword.length < 8) {
+      newPasswordError = 'La nueva contraseña debe tener al menos 8 caracteres.';
+      valid = false;
+    }
+
+    if (newPassword !== repeatPassword) {
+      repeatPasswordError = 'Las contraseñas no coinciden.';
+      valid = false;
+    }
+
+    setErrors({
+      newPassword: newPasswordError,
+      repeatPassword: repeatPasswordError,
     });
+
+    return valid;
   };
 
-  const isFormValid = () => {
-    return formData.newPassword.length >= 8 && formData.newPassword === formData.repeatNewPassword;
-  };
+  const handleSubmit = async () => {
+    const { oldPassword, newPassword } = formData;
 
-  const handleSubmit = () => {
+    if (!validatePasswords()) {
+      return;
+    }
 
-    console.log("Formulario enviado", formData);
-    onClose();
+    const result = await fetchContraseña(oldPassword, newPassword);
+
+    if (result.error) {
+      setErrorMessage(result.error); 
+      setSuccessMessage(''); 
+    } else {
+      setSuccessMessage('Contraseña cambiada exitosamente'); 
+      setErrorMessage(''); 
+    }
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      keepMounted
-      aria-describedby="alert-dialog-slide-description"
-    >
+    <Dialog open={open} onClose={onClose}>
       <DialogContent>
         <Container>
+          {successMessage && (
+            <Typography variant="h6" color="success.main" align="center" gutterBottom>
+              {successMessage}
+            </Typography>
+          )}
+          {errorMessage && ( 
+            <Typography variant="h6" color="error.main" align="center" gutterBottom>
+              {errorMessage}
+            </Typography>
+          )}
           <form>
-            <Grid container spacing={2}>
+            <FormControl fullWidth variant="outlined" margin="normal">
+              <TextField
+                label="Contraseña actual"
+                name="oldPassword"
+                value={formData.oldPassword}
+                onChange={handleChange}
+                type={showPassword ? 'text' : 'password'}
+              />
+            </FormControl>
 
-              <Grid item xs={12}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel htmlFor="current-password">Contraseña actual</InputLabel>
-                  <OutlinedInput
-                    id="current-password"
-                    type={showPassword ? 'text' : 'password'}
-                    name="currentPassword"
-                    value={formData.currentPassword}
-                    onChange={handleChange}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label="Contraseña actual"
-                  />
-                </FormControl>
-              </Grid>
+            <FormControl fullWidth variant="outlined" margin="normal">
+              <InputLabel htmlFor="new-password">Contraseña nueva</InputLabel>
+              <OutlinedInput
+                id="new-password"
+                name="newPassword"
+                value={formData.newPassword}
+                onChange={handleChange}
+                type={showPassword ? 'text' : 'password'}
+                error={!!errors.newPassword} 
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              {errors.newPassword && <p style={{ color: 'red' }}>{errors.newPassword}</p>}
+            </FormControl>
 
-              <Grid item xs={12}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel htmlFor="new-password">Contraseña nueva</InputLabel>
-                  <OutlinedInput
-                    id="new-password"
-                    type={showPassword ? 'text' : 'password'}
-                    name="newPassword"
-                    value={formData.newPassword}
-                    onChange={handleChange}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label="Contraseña nueva"
-                  />
-                  <FormHelperText>Mínimo 8 caracteres</FormHelperText>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel htmlFor="repeat-new-password">Repetir contraseña nueva</InputLabel>
-                  <OutlinedInput
-                    id="repeat-new-password"
-                    type={showPassword ? 'text' : 'password'}
-                    name="repeatNewPassword"
-                    value={formData.repeatNewPassword}
-                    onChange={handleChange}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label="Repetir contraseña nueva"
-                  />
-                  <FormHelperText>Mínimo 8 caracteres</FormHelperText>
-                </FormControl>
-              </Grid>
-
-            </Grid>
+            <FormControl fullWidth variant="outlined" margin="normal">
+              <InputLabel htmlFor="repeat-password">Repetir contraseña nueva</InputLabel>
+              <OutlinedInput
+                id="repeat-password"
+                name="repeatPassword"
+                value={formData.repeatPassword}
+                onChange={handleChange}
+                type={showPassword ? 'text' : 'password'}
+                error={!!errors.repeatPassword} 
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              {errors.repeatPassword && <p style={{ color: 'red' }}>{errors.repeatPassword}</p>}
+            </FormControl>
           </form>
         </Container>
       </DialogContent>
-
       <DialogActions>
-        <Button 
-          onClick={handleSubmit}
-          variant="outlined" 
-          disabled={!isFormValid()}
-        >
+        <Button onClick={handleSubmit} variant="outlined">
           Cambiar contraseña
         </Button>
-        <Button onClick={onClose} variant="outlined">Cerrar</Button>
+        <Button onClick={onClose} variant="outlined">
+          Cerrar
+        </Button>
       </DialogActions>
     </Dialog>
   );

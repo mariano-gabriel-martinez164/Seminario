@@ -31,7 +31,6 @@ export default function Navbar() {
 
   const { user, loading } = useFetchUser(2);
   useEffect(() => {
-    console.log('User loaded:', user);
   }, [user]);
 
   const { logout } = useAuth();
