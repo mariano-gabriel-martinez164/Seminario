@@ -6,13 +6,17 @@ import { SelectorOdontologo, SelectorCentro } from '../MaterialUI/selectores'
 import { useState, useEffect } from 'react'
 import { apiUrl, token } from '../../Request/fetch.js';
 import  ModalVerAgenda  from './Modal/modalVerAgenda.jsx';
+import CrearAgenda from './crearAgenda.jsx';
+import { set } from "date-fns";
 
 export default function GestionarAgenda() {
   const [agenda, setAgenda] = useState(null);
   const [centro, setCentro] = useState(null);
   const [ odontologo, setOdontologo ] = useState([]);
   const [modalShow, setModalShow] = useState(false);
+  const [modalShowCrear, setModalShowCrear] = useState(false);
   const [agendaSeleccionado, setAgendaSeleccionado] = useState(null);
+  const [estado, setEstado] = useState(null);
 
   useEffect(() => {
     fetch(`${apiUrl}/agendas/?odontologo=${odontologo?.matricula ?? ''}&CentroOdontologico=${centro?.id ?? ''}`,
@@ -25,8 +29,9 @@ export default function GestionarAgenda() {
       })
       .then(response => response.json())
       .then(data => setAgenda(data),
+      setEstado(null)
     );
-    }, [odontologo, centro]);
+    }, [odontologo, centro, estado]);
 
   return (
     <Container fixed sx={{ mt: 2, width:'50%' }}>
@@ -78,8 +83,7 @@ export default function GestionarAgenda() {
         }}
         color="primary"
         variant="extended"
-        onClick={() => {
-        }}
+        onClick={() => {setModalShowCrear(true)}}
       >
         <AddIcon sx={{ mr: 1 }} />
         Crear agenda
@@ -90,6 +94,13 @@ export default function GestionarAgenda() {
           open={modalShow}
           onClose={() => setModalShow(false)}
           agendaSeleccionado={agendaSeleccionado}
+        />
+      )}
+      {modalShowCrear && (
+        <CrearAgenda
+          open={modalShowCrear}
+          onClose={() => setModalShowCrear(false)}
+          setEstado={setEstado}
         />
       )}
 

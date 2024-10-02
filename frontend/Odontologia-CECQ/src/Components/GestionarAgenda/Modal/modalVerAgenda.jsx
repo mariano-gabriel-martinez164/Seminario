@@ -1,13 +1,13 @@
 import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { Slide, IconButton, Toolbar, AppBar, Dialog, Box, Typography, Paper, TableContainer, Fab } from '@mui/material/';
-import { useFetch, useFetchArray } from '../../../Request/fetch';
-import { addDays } from 'date-fns';
-import { useState } from 'react';
-import Tabla from './tabla';
+import { useFetch } from '../../../Request/fetch';
+import { useState, useEffect } from 'react';
+import Tabla from './Tabla/tabla';
 import AgruparTurnos from './agruparTurnos';
 import AddIcon from '@mui/icons-material/Add';
-import { ModalCrearTemplate } from './modalCrearTemplate';
+import { ModalCrearTemplate } from './TurnoTemplate/modalCrearTemplate';
+import { apiUrl, token } from '../../../Request/fetch';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -17,14 +17,26 @@ export default function ModalVerAgenda({open, onClose, agendaSeleccionado}) {
 
   const [modalShowCrear, setModalShowCrear] = useState(false);
   const dataAgenda = useFetch(`/agendas/${agendaSeleccionado}/`);
+  const [ dataTemplate, setDataTemplate ] = useState(null);
+  const [estado, setEstado] = useState(null);
   
-  const defaultRange = [{
-    startDate: addDays(new Date(), 1 - new Date().getDay()),
-    endDate: addDays(new Date(), 7 - new Date().getDay()),
-    key: "selection",
-  }];
+  useEffect(() => { 
+    if (dataAgenda) {
+      fetch(`${apiUrl}/turnotemplates/?agenda=${agendaSeleccionado}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${token}`
+          }
+        })
+        .then((response) => response.json())
+        .then((data) => setDataTemplate(data));
+        setEstado(null);
+    }
+  }, [dataAgenda, estado]);
 
-  const dataTemplate = useFetchArray(`/turnotemplates/?agenda=${agendaSeleccionado}`);
+    
   const [turnosPorDia, setTurnosPorDia] = useState({
     lunes: [],
     martes: [],
@@ -80,7 +92,7 @@ export default function ModalVerAgenda({open, onClose, agendaSeleccionado}) {
           width: '100%' 
         }}>
         <TableContainer component={Paper} sx={{width:'80%'}}>
-          <Tabla turnosPorDia={turnosPorDia}/>
+          <Tabla turnosPorDia={turnosPorDia} setEstado={setEstado}/>
         </TableContainer>
         </Box>
         <Fab
@@ -102,6 +114,8 @@ export default function ModalVerAgenda({open, onClose, agendaSeleccionado}) {
         <ModalCrearTemplate
           open={modalShowCrear} 
           onClose={() => setModalShowCrear(false)}
+          agendaSeleccionado={agendaSeleccionado}
+          setEstado={setEstado}
         />
       )}
       </Dialog>
