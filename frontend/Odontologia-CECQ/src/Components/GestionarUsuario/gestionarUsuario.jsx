@@ -1,13 +1,4 @@
-import Button from "@mui/material/Button"
-import Container from "@mui/material/Container"
-import Alert from "@mui/material/Alert"
-import TableRow from "@mui/material/TableRow"
-import TableHead from "@mui/material/TableHead"
-import TableContainer from "@mui/material/TableContainer"
-import TableBody from "@mui/material/TableBody"
-import Table from "@mui/material/Table"
-import Paper from "@mui/material/Paper"
-import Fab from "@mui/material/Fab"
+import { Fab, Paper, Table, TableBody, TableContainer, TableHead, TableRow, Alert, Container, Button } from "@mui/material/"
 import AddIcon from "@mui/icons-material/Add"
 
 import { useEffect, useState } from 'react'

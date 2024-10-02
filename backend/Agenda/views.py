@@ -33,9 +33,17 @@ class AgendaDetail(generics.RetrieveUpdateDestroyAPIView):
             return AgendaCreateSerializer
         return AgendaSerializer
 
+class TurnoTemplateFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = TurnoTemplate
+        fields = ['agenda']
+
 class TurnoTemplateList(generics.ListCreateAPIView):
     queryset = TurnoTemplate.objects.all()
     serializer_class = TurnoTemplateSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TurnoTemplateFilter   
 
 class TurnoTemplateDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = TurnoTemplate.objects.all()
