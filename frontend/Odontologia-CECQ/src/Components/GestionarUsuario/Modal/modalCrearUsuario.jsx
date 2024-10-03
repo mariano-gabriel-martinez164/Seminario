@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { handleChange, handleSubmit, isFormValid } from '../../GestionarUsuario/verificarFormulario';
-import { FormControl, TextField, InputLabel, OutlinedInput, Slide, InputAdornment, FormHelperText,
+import { FormControl, TextField, InputLabel, OutlinedInput, InputAdornment, FormHelperText,
   IconButton, Button, Container, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';

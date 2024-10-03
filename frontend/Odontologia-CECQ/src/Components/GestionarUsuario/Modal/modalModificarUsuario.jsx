@@ -1,10 +1,10 @@
 import { deleteData } from '../../../Request/delete';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useFetch } from '../../../Request/fetch';
 import { Estado } from '../../BuscarTurno/CrudTurno/modalAsignado';
 import { handleChange, handleModify } from '../../GestionarUsuario/verificarFormulario';
 
-import { TextField, Container, Button, Dialog, DialogActions, DialogContent, Slide } from '@mui/material';
+import { TextField, Container, Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSeleccionado }) {
