@@ -23,12 +23,29 @@ export default function Tabla({ turnosPorDia, setEstado }) {
   }
 
   const getTurnos = () => {
-    return Object.keys(turnosPorDia).map((dia, index) => (
-      <Box key={index} sx={{ flex: 1, p: 1 }}> 
-        <TurnoBoxv2 turnos={turnosPorDia[dia]} handleDelete={handleDelete} setEstado={setEstado}/> 
-      </Box>
-    ));
+    return Object.keys(turnosPorDia).map((dia, index) => {
+      // Ordenar los turnos por horaInicio
+      const turnosOrdenados = turnosPorDia[dia].sort((a, b) => {
+        // Asegurarse de que `horaInicio` esté en formato 'HH:mm'
+        const [aHoras, aMinutos] = a.horaInicio.split(':').map(Number);
+        const [bHoras, bMinutos] = b.horaInicio.split(':').map(Number);
+  
+        // Comparar las horas primero y luego los minutos
+        if (aHoras !== bHoras) {
+          return aHoras - bHoras;
+        }
+        return aMinutos - bMinutos;
+      });
+  
+      return (
+        <Box key={index} sx={{ flex: 1, p: 1 }}> 
+          <TurnoBoxv2 turnos={turnosOrdenados} handleDelete={handleDelete} setEstado={setEstado}/> 
+        </Box>
+      );
+    });
   };
+  
+  
 
   return (
     <Paper elevation={3} sx={{
