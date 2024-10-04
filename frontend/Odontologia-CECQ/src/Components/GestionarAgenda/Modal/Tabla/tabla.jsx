@@ -1,4 +1,3 @@
-import React from 'react';
 import { Stack, Box, Divider, Paper } from '@mui/material/';
 import TurnoBoxv2 from './turnoBoxv2';
 import { deleteData } from '../../../../Request/delete';

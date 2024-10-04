@@ -1,19 +1,20 @@
 import { deleteData } from '../../../Request/delete';
 import { useState, useEffect } from 'react';
-import { useFetch } from '../../../Request/fetch';
+import { useFetch } from '../../../Request/v2/fetch';
 import { Estado } from '../../BuscarTurno/CrudTurno/modalAsignado';
 import { handleChange, handleModify } from '../../GestionarUsuario/verificarFormulario';
 
-import { TextField, Container, Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import { TextField, Container, Button, Dialog, DialogActions, DialogContent, Alert } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSeleccionado }) {
-  const administrativo = useFetch(usuarioSeleccionado ? `/auth/administrativos/${usuarioSeleccionado}/` : null);
+  const { data: administrativo, loading: isLoading, error } = useFetch(`/auth/administrativos/${usuarioSeleccionado}/`);
+  console.log(administrativo);
   const [formData, setFormData] = useState({
-    nombre: administrativo.first_name || '',
-    apellido: administrativo.last_name || '',
-    email: administrativo.email || '',
-    cuil: administrativo.cuil || '',
+    nombre: administrativo?.first_name,
+    apellido: administrativo?.last_name,
+    email: administrativo?.email,
+    cuil: administrativo?.cuil,
   });
 
   useEffect(() => {
@@ -34,6 +35,10 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
+        {isLoading && <Alert severity="info" sx={{width:'100%'}}>Cargando...</Alert>}
+        {error && <Alert severity="error" sx={{width:'100%'}}>{error}</Alert>}
+        {administrativo && !isLoading && !error &&
+        <>
         <DialogContent>
         <form>
           <Container id='container'>
@@ -105,6 +110,8 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
 
           <Button onClick={() => onClose()} variant="outlined" id='button'>Cerrar</Button>
         </DialogActions>
+        </>
+    }
     </Dialog>
   );
 }

@@ -1,10 +1,10 @@
-import { Fab, Paper, Table, TableBody, TableContainer, TableHead, TableRow, Container, Button, IconButton } from "@mui/material/"
+import { Fab, Paper, Table, TableBody, TableContainer, TableHead, TableRow, Container, IconButton, Alert } from "@mui/material/"
 import Grid from "@mui/material/Grid2"
 import AddIcon from "@mui/icons-material/Add"
 import { StyledTableCell, StyledTableRow } from '../MaterialUI/styledTable.jsx';
 import { SelectorOdontologo, SelectorCentro } from '../MaterialUI/selectores'
 import { useState, useEffect } from 'react'
-import { apiUrl, token } from '../../Request/fetch.js';
+import { useFetchDataOnDemand } from '../../Request//v2/fetch.js';
 import  ModalVerAgenda  from './Modal/modalVerAgenda.jsx';
 import CrearAgenda from './crearAgenda.jsx';
 import EditIcon from '@mui/icons-material/Edit';
@@ -12,28 +12,31 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteData } from "../../Request/delete.js";
 
 export default function GestionarAgenda() {
-  const [agenda, setAgenda] = useState(null);
   const [centro, setCentro] = useState(null);
   const [ odontologo, setOdontologo ] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [modalShowCrear, setModalShowCrear] = useState(false);
   const [agendaSeleccionado, setAgendaSeleccionado] = useState(null);
-  const [estado, setEstado] = useState(null);
+  const [estado, setEstado] = useState('');
+
+  let url = `/agendas/?&`;
+  if (odontologo?.matricula) url += `&odontologo=${odontologo.matricula}`;
+  if (centro?.id) url += `&CentroOdontologico=${centro.id}`;
+  const { data: agenda, loading: isLoading, error, fetchData } = useFetchDataOnDemand(url);
 
   useEffect(() => {
-    fetch(`${apiUrl}/agendas/?odontologo=${odontologo?.matricula ?? ''}&CentroOdontologico=${centro?.id ?? ''}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`
-        }
-      })
-      .then(response => response.json())
-      .then(data => setAgenda(data),
-      setEstado(null)
-    );
-    }, [odontologo, centro, estado]);
+    fetchData();
+    setEstado('');
+  }, [url, estado]);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteData(`/agendas/${id}/`);
+      setEstado('eliminado');
+    } catch (err) {
+      console.error('Error eliminando agenda:', err);
+    }
+  };
 
   return (
     <Container fixed sx={{ mt: 2 }}>
@@ -53,6 +56,9 @@ export default function GestionarAgenda() {
       </Grid>
       
       <TableContainer component={Paper}>
+        {isLoading && <Alert severity="info" sx={{width:'100%'}}>Cargando...</Alert>}
+        {error && <Alert severity="error" sx={{width:'100%'}}>{error}</Alert>}
+        {agenda && !isLoading && !error &&
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -72,13 +78,16 @@ export default function GestionarAgenda() {
                   setAgendaSeleccionado(agenda.id);
                 }} color="warning" variant="contained"> <EditIcon/></IconButton>
                 <IconButton 
-                  onClick={() => deleteData(`/agendas/${agenda.id}/`).then(() => setEstado('delete')
-                )}color="error"><DeleteIcon/></IconButton>
+                onClick={() => handleDelete(agenda.id)}
+                  color="error">
+                  <DeleteIcon/>
+                </IconButton>
               </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
       </Table>
+      }
     </TableContainer>
     <Fab
         sx={{

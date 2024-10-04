@@ -1,13 +1,12 @@
 import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import { Slide, IconButton, Toolbar, AppBar, Dialog, Box, Typography, Paper, TableContainer, Fab } from '@mui/material/';
-import { useFetch } from '../../../Request/fetch';
+import { Slide, IconButton, Toolbar, AppBar, Dialog, Box, Typography, Paper, TableContainer, Fab, Alert } from '@mui/material/';
+import { useFetch, useFetchDataOnDemand } from '../../../Request/v2/fetch';
 import { useState, useEffect } from 'react';
 import Tabla from './Tabla/tabla';
 import AgruparTurnos from './agruparTurnos';
 import AddIcon from '@mui/icons-material/Add';
 import { ModalCrearTemplate } from './TurnoTemplate/modalCrearTemplate';
-import { apiUrl, token } from '../../../Request/fetch';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -16,27 +15,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function ModalVerAgenda({open, onClose, agendaSeleccionado}) {
 
   const [modalShowCrear, setModalShowCrear] = useState(false);
-  const dataAgenda = useFetch(`/agendas/${agendaSeleccionado}/`);
-  const [ dataTemplate, setDataTemplate ] = useState(null);
+  const { data: dataAgenda, loading: isLoading, error } = useFetch(`/agendas/${agendaSeleccionado}/`);
   const [estado, setEstado] = useState(null);
   
-  useEffect(() => { 
-    if (dataAgenda) {
-      fetch(`${apiUrl}/turnotemplates/?agenda=${agendaSeleccionado}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Token ${token}`
-          }
-        })
-        .then((response) => response.json())
-        .then((data) => setDataTemplate(data));
-        setEstado(null);
-    }
-  }, [dataAgenda, estado]);
+  const url = `/turnotemplates/?agenda=${agendaSeleccionado}`;
+  const { data: dataTemplate, loading: isLoading2, error2, fetchData}  = useFetchDataOnDemand(url);
+ 
+  useEffect(() => {
+    fetchData();
+    setEstado('');
+  }, [url, estado]);
 
-    
   const [turnosPorDia, setTurnosPorDia] = useState({
     lunes: [],
     martes: [],
@@ -65,7 +54,10 @@ export default function ModalVerAgenda({open, onClose, agendaSeleccionado}) {
             </IconButton>
           </Toolbar>
         </AppBar>
-
+        {isLoading && <Alert severity="info" sx={{width:'100%'}}>Cargando...</Alert>}
+        {error && <Alert severity="error" sx={{width:'100%'}}>{error}</Alert>}
+        {dataAgenda && !isLoading && !error && 
+        <>
         <Box 
           sx={{ 
             display: 'flex', 
@@ -92,10 +84,15 @@ export default function ModalVerAgenda({open, onClose, agendaSeleccionado}) {
           width: '100%' 
         }}>
         <TableContainer component={Paper} sx={{width:'80%'}}>
-          <Tabla turnosPorDia={turnosPorDia} setEstado={setEstado}/>
-
+          {isLoading2 && <Alert severity="info" sx={{width:'100%'}}>Cargando...</Alert>}
+          {error2 && <Alert severity="error" sx={{width:'100%'}}>{error}</Alert>}
+          {dataTemplate && !isLoading2 && !error2 &&
+            <Tabla turnosPorDia={turnosPorDia} setEstado={setEstado}/>
+          }
         </TableContainer>
         </Box>
+        </>
+    }
         <Fab
         sx={{
           position: "fixed",

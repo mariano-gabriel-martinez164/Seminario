@@ -8,9 +8,6 @@ import { agenda } from './agenda'
 export default function CrearAgenda({open, onClose, setEstado}) {
   const [centro, setCentro] = useState(null);
   const [ odontologo, setOdontologo ] = useState([]);
-  console.log(odontologo.matricula)
-  console.log(centro)
-
 
   return (
     <Dialog
