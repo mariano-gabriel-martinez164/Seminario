@@ -1,46 +1,72 @@
-import { Table, TableBody, TableHead, TableRow } from '@mui/material';
-import { StyledTableCell, StyledTableRow } from '../../../MaterialUI/styledTable';
+import React from 'react';
+import { Stack, Box, Divider, Paper } from '@mui/material/';
+import TurnoBoxv2 from './turnoBoxv2';
 import { deleteData } from '../../../../Request/delete';
-import { ColumnaDia } from './columnaDia'; // Importa el nuevo componente
 
 export default function Tabla({ turnosPorDia, setEstado }) {
-  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-
-  const maxTurnos = Math.max(
-    turnosPorDia.lunes.length,
-    turnosPorDia.martes.length,
-    turnosPorDia.miercoles.length,
-    turnosPorDia.jueves.length,
-    turnosPorDia.viernes.length
-  );
-
+  
+  const getDayHeaders = () => {
+    const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+    return days.map((day, index) => {
+      return (
+        <Box
+          key={index}
+          sx={{flex: 1, pt: 1, display: 'flex', justifyContent: 'center',}}>
+          <h3>{day}</h3>
+        </Box>
+      );
+    });
+  };
+  
   const handleDelete = (turnoId) => {
     deleteData(`/turnotemplates/${turnoId}/`);
   }
 
+  const getTurnos = () => {
+    return Object.keys(turnosPorDia).map((dia, index) => (
+      <Box key={index} sx={{ flex: 1, p: 1 }}> 
+        <TurnoBoxv2 turnos={turnosPorDia[dia]} handleDelete={handleDelete} setEstado={setEstado}/> 
+      </Box>
+    ));
+  };
+
   return (
-    <Table sx={{ minWidth: 700 }} aria-label="customized table">
-      <TableHead>
-        <TableRow>
-          {days.map((day) => (
-            <StyledTableCell key={day} align="center">
-              {day}
-            </StyledTableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {/* Iterar sobre el número máximo de turnos para crear tantas filas como sea necesario */}
-        {[...Array(maxTurnos)].map((_, rowIndex) => (
-          <StyledTableRow key={rowIndex}>
-            <ColumnaDia turnos={turnosPorDia.lunes} rowIndex={rowIndex} handleDelete={handleDelete} setEstado={setEstado}/>
-            <ColumnaDia turnos={turnosPorDia.martes} rowIndex={rowIndex} handleDelete={handleDelete} setEstado={setEstado}/>
-            <ColumnaDia turnos={turnosPorDia.miercoles} rowIndex={rowIndex} handleDelete={handleDelete} setEstado={setEstado}/>
-            <ColumnaDia turnos={turnosPorDia.jueves} rowIndex={rowIndex} handleDelete={handleDelete} setEstado={setEstado}/>
-            <ColumnaDia turnos={turnosPorDia.viernes} rowIndex={rowIndex} handleDelete={handleDelete} setEstado={setEstado}/>
-          </StyledTableRow>
-        ))}
-      </TableBody>
-    </Table>
-  )
+    <Paper elevation={3} sx={{
+      display:'flex',
+      flexDirection:'column',
+      justifyContent:'center',
+      alignItems:'center',
+      width: '100%',
+    }}>
+      <Stack
+      direction="row"
+      divider={<Divider orientation="vertical" flexItem />}
+      spacing={0}
+      sx={{ 
+        width:'100%',
+        justifyContent:'center',
+        alignItems:'center',
+        bgcolor: '#343a40',
+        color: 'white',
+        borderRadius: '5px 5px 0 0',
+      }}
+    >
+      {getDayHeaders()}
+    </Stack>
+
+    <Stack
+    direction="row"
+    divider={<Divider orientation="vertical" flexItem />}
+    spacing={0}
+    sx={{ 
+      width:'100%',
+      justifyContent:'center',
+      textAlign:'center',
+      minHeight:'50vh',
+    }}
+    >
+      {getTurnos()}
+    </Stack>
+  </Paper>
+  );
 }

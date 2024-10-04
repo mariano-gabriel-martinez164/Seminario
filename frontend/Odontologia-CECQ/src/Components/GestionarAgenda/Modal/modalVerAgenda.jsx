@@ -93,6 +93,7 @@ export default function ModalVerAgenda({open, onClose, agendaSeleccionado}) {
         }}>
         <TableContainer component={Paper} sx={{width:'80%'}}>
           <Tabla turnosPorDia={turnosPorDia} setEstado={setEstado}/>
+
         </TableContainer>
         </Box>
         <Fab

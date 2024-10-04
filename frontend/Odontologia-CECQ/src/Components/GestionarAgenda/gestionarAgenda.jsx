@@ -1,4 +1,4 @@
-import { Fab, Paper, Table, TableBody, TableContainer, TableHead, TableRow, Container, Button } from "@mui/material/"
+import { Fab, Paper, Table, TableBody, TableContainer, TableHead, TableRow, Container, Button, IconButton } from "@mui/material/"
 import Grid from "@mui/material/Grid2"
 import AddIcon from "@mui/icons-material/Add"
 import { StyledTableCell, StyledTableRow } from '../MaterialUI/styledTable.jsx';
@@ -7,7 +7,9 @@ import { useState, useEffect } from 'react'
 import { apiUrl, token } from '../../Request/fetch.js';
 import  ModalVerAgenda  from './Modal/modalVerAgenda.jsx';
 import CrearAgenda from './crearAgenda.jsx';
-import { set } from "date-fns";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteData } from "../../Request/delete.js";
 
 export default function GestionarAgenda() {
   const [agenda, setAgenda] = useState(null);
@@ -34,7 +36,7 @@ export default function GestionarAgenda() {
     }, [odontologo, centro, estado]);
 
   return (
-    <Container fixed sx={{ mt: 2, width:'50%' }}>
+    <Container fixed sx={{ mt: 2 }}>
       <Grid container spacing={2} sx={{mb:3}} >
         <Grid size={6}>
           <SelectorOdontologo
@@ -65,10 +67,13 @@ export default function GestionarAgenda() {
               <StyledTableCell align="center">{agenda?.odontologo?.nombre}</StyledTableCell>
               <StyledTableCell align="center">{agenda?.CentroOdontologico?.nombre}</StyledTableCell>
               <StyledTableCell align="center">
-                <Button onClick={() => {
+                <IconButton onClick={() => {
                   setModalShow(true);
                   setAgendaSeleccionado(agenda.id);
-                }} className='w-100' variant="contained"> Opciones</Button>
+                }} color="warning" variant="contained"> <EditIcon/></IconButton>
+                <IconButton 
+                  onClick={() => deleteData(`/agendas/${agenda.id}/`).then(() => setEstado('delete')
+                )}color="error"><DeleteIcon/></IconButton>
               </StyledTableCell>
             </StyledTableRow>
           ))}

@@ -92,7 +92,7 @@ export function ModalCrearTemplate({ open, onClose, agendaSeleccionado, setEstad
             setEstado('creado');
           }} 
           variant="outlined" color='success' id='button'
-          disabled={!formData.diaSemana || !validarHora(formData.horaInicio) || !validarHora(formData.horaFin) || !compararHoras(formData.horaInicio, formData.horaFin)}
+          disabled={formData.diaSemana === '' || !validarHora(formData.horaInicio) || !validarHora(formData.horaFin) || !compararHoras(formData.horaInicio, formData.horaFin)}
           >
             Crear turno 
           </Button>
