@@ -7,4 +7,5 @@ urlpatterns = [
     path('administrativos/<int:pk>/', views.AdministrativoDetail.as_view()),
     path('gettoken/', obtain_auth_token),
     path('changepassword/', views.ChangePasswordView.as_view()),
+    path('administrativos/me/', views.AdministrativoData.as_view()),
 ]
