@@ -74,6 +74,5 @@ export function useFetchSearch(url, delay, getFunc = (x)=>x) {
       setLoading(false);
     }
   }, delay), [url, delay]);
-
   return [data, loading, error, searchData];
 }

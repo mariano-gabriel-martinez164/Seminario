@@ -115,11 +115,8 @@ function SelectorAgenda({selectedValue, setSelectedValue}) {
   );
 }
 
-
-
-const SelectorPacientes = ({ setSelectedValue }) => {
+function SelectorPacientes({ setSelectedValue }){
   const [inputValue, setInputValue] = useState('');
-
   const parseData = (data) => data.results;
   const [data, loading, error, searchData] = useFetchSearch('/pacientes/', 300, parseData);
 
@@ -139,22 +136,22 @@ const SelectorPacientes = ({ setSelectedValue }) => {
       filterOptions={(x) => x}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
+	  }}
 
-      }}
       onChange={(event, newValue) => {
         setSelectedValue(newValue);
       }}
       
       renderInput={(params) => (
         <CustomTextField
-        {...params}
-        label='Buscar paciente'
-        loading={loading}
-      />
+			{...params}
+			label='Buscar paciente'
+       		loading={loading}
+      	/>
       )}
     />
   );
-};
+}
 
 
 function SelectorSobreTurno({ setSelectedValue }) {
