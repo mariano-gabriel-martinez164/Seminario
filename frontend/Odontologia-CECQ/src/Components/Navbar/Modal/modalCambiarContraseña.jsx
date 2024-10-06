@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { fetchContraseña } from '../../../Request/v2/fetchContraseña'; 
 import {
-  FormControl, TextField, InputLabel, OutlinedInput,
-  InputAdornment, IconButton, Button, Container,
+  TextField, InputAdornment, IconButton, Button, Container,
   Dialog, DialogActions, DialogContent, Typography
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -87,55 +86,78 @@ export function ModalCambiarContraseña({ open, onClose }) {
             </Typography>
           )}
           <form>
-            <FormControl fullWidth variant="outlined" margin="normal">
-              <TextField
-                label="Contraseña actual"
-                name="oldPassword"
-                value={formData.oldPassword}
-                onChange={handleChange}
-                type={showPassword ? 'text' : 'password'}
-              />
-            </FormControl>
-
-            <FormControl fullWidth variant="outlined" margin="normal">
-              <InputLabel htmlFor="new-password">Contraseña nueva</InputLabel>
-              <OutlinedInput
-                id="new-password"
-                name="newPassword"
-                value={formData.newPassword}
-                onChange={handleChange}
-                type={showPassword ? 'text' : 'password'}
-                error={!!errors.newPassword} 
-                endAdornment={
+            <TextField
+              fullWidth
+              label="Contraseña actual"
+              name="oldPassword"
+              value={formData.oldPassword}
+              onChange={handleChange}
+              type={showPassword ? 'text' : 'password'}
+              margin="normal"
+              InputProps={{
+                endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
+                    <IconButton
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
-                }
-              />
-              {errors.newPassword && <p style={{ color: 'red' }}>{errors.newPassword}</p>}
-            </FormControl>
+                ),
+              }}
+            />
 
-            <FormControl fullWidth variant="outlined" margin="normal">
-              <InputLabel htmlFor="repeat-password">Repetir contraseña nueva</InputLabel>
-              <OutlinedInput
-                id="repeat-password"
-                name="repeatPassword"
-                value={formData.repeatPassword}
-                onChange={handleChange}
-                type={showPassword ? 'text' : 'password'}
-                error={!!errors.repeatPassword} 
-                endAdornment={
+            <TextField
+              fullWidth
+              label="Contraseña nueva"
+              name="newPassword"
+              value={formData.newPassword}
+              onChange={handleChange}
+              type={showPassword ? 'text' : 'password'}
+              margin="normal"
+              error={!!errors.newPassword}
+              helperText={errors.newPassword}
+              InputProps={{
+                endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
+                    <IconButton
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
-                }
-              />
-              {errors.repeatPassword && <p style={{ color: 'red' }}>{errors.repeatPassword}</p>}
-            </FormControl>
+                ),
+              }}
+            />
+
+            <TextField
+              fullWidth
+              label="Repetir contraseña nueva"
+              name="repeatPassword"
+              value={formData.repeatPassword}
+              onChange={handleChange}
+              type={showPassword ? 'text' : 'password'}
+              margin="normal"
+              error={!!errors.repeatPassword}
+              helperText={errors.repeatPassword}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
           </form>
         </Container>
       </DialogContent>

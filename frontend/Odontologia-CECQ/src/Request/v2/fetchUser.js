@@ -1,8 +1,11 @@
-import { useFetch } from './fetch'; 
+import { useFetch } from './fetch';
 
-export const useFetchUser = (id) => {
-  const { data: user, loading, error } = useFetch(`/auth/administrativos/${id}/`);
+const apiUrl = '/auth/administrativos/me/'; 
 
-  return { user, loading, error };
+export const useFetchUser = () => {
+  const { data, loading, error } = useFetch(apiUrl);
+  const nombre = data?.first_name || '';
+  const apellido = data?.last_name || '';
+
+  return { nombre, apellido, loading, error };
 };
-
