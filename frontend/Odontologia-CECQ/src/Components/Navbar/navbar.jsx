@@ -111,11 +111,11 @@ export default function Navbar() {
                 'aria-labelledby': 'basic-button',
               }}
             >
-              <MenuItem onClick={handleCloseMenu} sx={{ display: 'flex', alignItems: 'center' }}>
+              <MenuItem disabled onClick={handleCloseMenu} sx={{ display: 'flex', alignItems: 'center' }}>
                 <PersonIcon sx={{ marginRight: 1 }} />
                 {loading ? 'Cargando...' : `Nombre: ${nombre}`}
               </MenuItem>
-              <MenuItem onClick={handleCloseMenu} sx={{ display: 'flex', alignItems: 'center' }}>
+              <MenuItem disabled onClick={handleCloseMenu} sx={{ display: 'flex', alignItems: 'center' }}>
                 <PersonIcon sx={{ marginRight: 1 }} />
                 {loading ? 'Cargando...' : `Apellido: ${apellido}`}
               </MenuItem>
