@@ -1,6 +1,8 @@
 from .models import *
 from .serializers import *
-from rest_framework import generics, filters
+from rest_framework import generics, filters, status
+from rest_framework.response import Response
+
 
 # Create your views here.
 class OdontologosList(generics.ListCreateAPIView):
@@ -28,7 +30,7 @@ class PiezaDentalDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PiezaDentalSerializer
 
 class PrestacionesList(generics.ListCreateAPIView):
-    queryset = Prestacion.objects.all()
+    queryset = Prestacion.objects.filter(is_active=True)
     serializer_class = PrestacionSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['codigo', 'nombre']
@@ -36,6 +38,13 @@ class PrestacionesList(generics.ListCreateAPIView):
 class PrestacionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Prestacion.objects.all()
     serializer_class = PrestacionSerializer
+
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.is_active = False 
+        obj.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 

@@ -62,12 +62,12 @@ export default function GestionarUsuario() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {administrativos?.map((administrativo) => (
-            
+        {administrativos && administrativos.map((administrativo) => (
+            administrativo ? (
             <StyledTableRow key={administrativo.id}>
               <StyledTableCell component="th" scope="row">
                 {administrativo.first_name}
-                {administrativo.id === me.id && (
+                {administrativo.id === me?.id && (
                   <Chip label="Tú" color="primary" size="small" sx={{ marginLeft: '8px' }} />
                 )}
               </StyledTableCell>
@@ -76,7 +76,7 @@ export default function GestionarUsuario() {
               <StyledTableCell align="center">{administrativo.cuil}</StyledTableCell>
               <StyledTableCell align="center">{administrativo.centro}</StyledTableCell>
               <StyledTableCell align="center">
-                {administrativo.id !== me.id && (
+                {administrativo.id !== me?.id && (
                   <>
                 <IconButton onClick={() => {
                   setModalShowModificar(true);
@@ -90,6 +90,7 @@ export default function GestionarUsuario() {
               </StyledTableCell>
 
             </StyledTableRow>
+            ) : null
           ))}
         </TableBody>
       </Table>
