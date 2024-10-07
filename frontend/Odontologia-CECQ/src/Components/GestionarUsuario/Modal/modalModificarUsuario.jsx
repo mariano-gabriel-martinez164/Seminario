@@ -1,4 +1,3 @@
-import { deleteData } from '../../../Request/delete';
 import { useState, useEffect } from 'react';
 import { useFetch } from '../../../Request/v2/fetch';
 import { Estado } from '../../BuscarTurno/CrudTurno/modalAsignado';
@@ -102,11 +101,6 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
             Estado(onClose(), setEstadoModal, 'Modificado');
           }} 
           variant="outlined" color='warning' id='button'>Modificar</Button>
-          
-          <Button onClick={() => {
-            deleteData(`/auth/administrativos/${usuarioSeleccionado}/`);
-            Estado(onClose(), setEstadoModal, 'Eliminado');
-          }} variant="outlined" color="error">Eliminar usuario</Button>
 
           <Button onClick={() => onClose()} variant="outlined" id='button'>Cerrar</Button>
         </DialogActions>

@@ -4,16 +4,7 @@ import { useAuth } from '../Login/authContext';
 import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import { Box, Toolbar, List, Typography, Divider, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material/";
 import { Menu as MenuIcon, ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, ArrowDropDown as ArrowDropDownIcon } from '@mui/icons-material';
 import { DrawerHeader, AppBar, Drawer } from './navbarEstilos';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
@@ -29,7 +20,6 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import PersonIcon from '@mui/icons-material/Person';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Menu, MenuItem, Button } from '@mui/material';
 
 export default function Navbar() {
 

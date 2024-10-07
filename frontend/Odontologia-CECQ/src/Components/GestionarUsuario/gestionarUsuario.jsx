@@ -1,11 +1,15 @@
-import { Fab, Paper, Table, TableBody, TableContainer, TableHead, TableRow, Alert, Container, Button } from "@mui/material/"
+import { Fab, Paper, Table, TableBody, TableContainer, TableHead, TableRow, Alert, Container, IconButton, Chip } from "@mui/material/"
 import AddIcon from "@mui/icons-material/Add"
 
 import { useEffect, useState } from 'react'
 import { ModalModificarUsuario } from './Modal/modalModificarUsuario.jsx';
 import { ModalCrearUsuario } from './Modal/modalCrearUsuario.jsx';
 import { StyledTableCell, StyledTableRow } from '../MaterialUI/styledTable.jsx';
-import { useFetchDataOnDemand } from '../../Request/v2/fetch.js';
+import { useFetch, useFetchDataOnDemand } from '../../Request/v2/fetch.js';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteData } from "../../Request/delete.js";
+
 
 
 export default function GestionarUsuario() {
@@ -16,12 +20,27 @@ export default function GestionarUsuario() {
   const [modalShowCrear, setModalShowCrear] = useState(false);
   const url = '/auth/administrativos/';
   const { data: administrativos, loading: isLoading, error, fetchData } = useFetchDataOnDemand(url);
-
+  const { data: me, loading: isLoadingMe, error: errorMe } = useFetch('/auth/administrativos/me/');
   useEffect(() => {
     fetchData();
-    setEstadoModal('');
-  }, [url, estadoModal]);
+  }, []);
 
+  const handleCrearUsuario = async () => {
+    setEstadoModal('Creado');
+    setModalShowCrear(false);
+    setTimeout(async () => {
+      await fetchData();
+    }, 500);
+  };
+
+  const handleEliminarUsuario = async (id) => {
+    await deleteData(`/auth/administrativos/${id}/`);
+    setEstadoModal('Eliminado');
+    setTimeout(async () => {
+      await fetchData();
+    }, 500);
+  };
+  
   return (
     <Container fixed sx={{ mt: 2 }}>
       {estadoModal === 'Eliminado' && <Alert severity="error" onClose={() => {setEstadoModal('')}}>Usuario eliminado</Alert>}
@@ -44,19 +63,30 @@ export default function GestionarUsuario() {
         </TableHead>
         <TableBody>
           {administrativos?.map((administrativo) => (
+            
             <StyledTableRow key={administrativo.id}>
               <StyledTableCell component="th" scope="row">
                 {administrativo.first_name}
+                {administrativo.id === me.id && (
+                  <Chip label="Tú" color="primary" size="small" sx={{ marginLeft: '8px' }} />
+                )}
               </StyledTableCell>
               <StyledTableCell align="center">{administrativo.last_name}</StyledTableCell>
               <StyledTableCell align="center">{administrativo.email}</StyledTableCell>
               <StyledTableCell align="center">{administrativo.cuil}</StyledTableCell>
               <StyledTableCell align="center">{administrativo.centro}</StyledTableCell>
               <StyledTableCell align="center">
-                <Button onClick={() => {
+                {administrativo.id !== me.id && (
+                  <>
+                <IconButton onClick={() => {
                   setModalShowModificar(true);
                   setUsuarioSeleccionado(administrativo.id);
-                }} className='w-100' variant="contained"> Opciones</Button>
+                }}color="warning" variant="contained"> <EditIcon/></IconButton>
+                <IconButton onClick={() => {
+                  handleEliminarUsuario(administrativo.id)
+                }}color="error" variant="contained"> <DeleteIcon/></IconButton>
+                  </>
+              )}
               </StyledTableCell>
 
             </StyledTableRow>
@@ -93,7 +123,7 @@ export default function GestionarUsuario() {
         <ModalCrearUsuario
           open={modalShowCrear} 
           onClose={() => setModalShowCrear(false)}
-          setEstadoModal={setEstadoModal}
+          handleCrearUsuario={handleCrearUsuario}
         />
       )}
     </Container>

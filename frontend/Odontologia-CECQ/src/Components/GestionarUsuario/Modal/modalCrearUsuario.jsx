@@ -4,9 +4,9 @@ import { FormControl, TextField, InputLabel, OutlinedInput, InputAdornment, Form
   IconButton, Button, Container, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
-import { Estado } from '../../BuscarTurno/CrudTurno/modalAsignado';
 
-export function ModalCrearUsuario({ open, onClose, setEstadoModal }) {
+
+export function ModalCrearUsuario({ open, onClose, handleCrearUsuario }) {
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
@@ -144,7 +144,7 @@ export function ModalCrearUsuario({ open, onClose, setEstadoModal }) {
         <Button 
           onClick={() => {
             handleSubmit(formData);
-            Estado(onClose(), setEstadoModal, 'Creado');
+            handleCrearUsuario()
           }}
           variant="outlined" 
           id='button'
