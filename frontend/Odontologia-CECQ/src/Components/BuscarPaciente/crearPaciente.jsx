@@ -1,22 +1,27 @@
 import { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Stack, Button } from '@mui/material';
+import { postData } from '../../Request/v2/post.js'; 
+import { useFetch } from '../../Request/v2/fetch'
 import './buscarPaciente.css';
 
 function CrearPaciente({ abrir, cerrar }) {	
-
+	
 	const [formValor, cambiarForm] = useState({
+		dni: '',
 		nombre: '',
 		apellido: '',
-		dni: '',
-		telefono: '',
 		email: '',
+		fecha_nacimiento: '',
+		telefono: '',
 	});
+
 	const [errores,nuevosErrores] = useState({
 		nombre: '',
 		apellido: '',
 		dni: '',
 		telefono: '',
 		email: '',
+		fecha_nacimiento: '',
 	});
 
 	const cambiosForm = (e) => {
@@ -55,7 +60,27 @@ function CrearPaciente({ abrir, cerrar }) {
 				if(value.length != 10) {
 					mensajeError = 'el telefono debe tener 10 numeros';
 				}
+				break;
+			case 'fecha_nacimiento':
+				const formato = /^\d{4}-\d{2}-\d{2}$/; 
+				const fechaTMP = formato.test(value);
+				const fechaHoy = new Date();
+				if(!fechaTMP) {
+					mensajeError = 'la fecha tiene un formato invalido';
+				}
+				if (value > fechaHoy) {
+					mensajeError = 'la fecha debe ser una fecha pasada';
+				}
+				break;
+			case 'dni':
+				const formatoDNI = /^\d{7,8}$/;
+				const validarDNI = formatoDNI.test(value);
+				if(!validarDNI){
+					mensajeError = 'El formato del dni debe cumplir con 7 o 8 numeros';
+				}
+					break;
 		}
+		return mensajeError;
 	}
 
 	const controlador = (evento) => {
@@ -67,6 +92,7 @@ function CrearPaciente({ abrir, cerrar }) {
     	if (!formValor.telefono) camposVacios.push("Teléfono");
     	if (!formValor.dni) camposVacios.push("DNI");
     	if (!formValor.email) camposVacios.push("Email");
+		if (!formValor.fecha_nacimiento) camposVacios.push("Fecha de nacimiento");
 
     	if (camposVacios.length > 0) {
        		alert(`Se necesitan los siguientes campos: ${camposVacios.join(", ")}`);
@@ -80,9 +106,22 @@ function CrearPaciente({ abrir, cerrar }) {
     	if (erroresPresentes.length > 0) {
         	alert(`Errores en los campos: ${erroresPresentes.join(", ")}`);
 			return;
-   		}
-		alert("Paciente agregado");
+		}
+		else {
+			postData('/pacientes/', formValor);
+			alert('Paciente creado');
+		}
 	};
+	const { data: paciente, loading, error } = useFetch(`/pacientes/${formValor.dni}/`);
+
+	useEffect(() => {
+		if(paciente) {
+			nuevosErrores((prevErrores) => ({
+				...prevErrores,
+				dni: 'el DNI ya esta registrado',
+			}));
+		}
+	}, [paciente]);
 
 	return (
 		<>
@@ -126,7 +165,8 @@ function CrearPaciente({ abrir, cerrar }) {
 					/>
 					<TextField 
 						sx={{ mt: 1 }} 
-						id="standard-basic" 
+						id="standard-number" 
+						type="number"
 						label="DNI"
 						name="dni"
 						variant="standard" 
@@ -156,6 +196,17 @@ function CrearPaciente({ abrir, cerrar }) {
 						value={formValor.email}
 						onChange={cambiosForm}
 						error={!!errores.email}
+					/>
+					<TextField	
+						sx={{ mt: 1 }} 
+						id="standard-basic" 
+						label="fecha de nacimiento (YYYY-MM-DD)"
+						name="fecha_nacimiento"
+						variant="standard" 
+						fullWidth
+						value={formValor.fecha_nacimiento}
+						onChange={cambiosForm}
+						error={!!errores.fecha_nacimiento}
 					/>
 					<Stack direction="row" justifyContent="space-between" sx={{ mt: 5 }}>
 						<Button onClick={cerrar} variant="outlined" color="error">
