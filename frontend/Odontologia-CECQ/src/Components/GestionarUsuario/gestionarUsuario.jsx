@@ -9,6 +9,7 @@ import { useFetch, useFetchDataOnDemand } from '../../Request/v2/fetch.js';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteData } from "../../Request/delete.js";
+import ModalEliminar from '../ModalEliminar/modalEliminar.jsx';
 
 
 
@@ -18,12 +19,18 @@ export default function GestionarUsuario() {
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
   const [modalShowModificar, setModalShowModificar] = useState(false);
   const [modalShowCrear, setModalShowCrear] = useState(false);
+  const [modalShowEliminar, setModalShowEliminar] = useState(false);
   const url = '/auth/administrativos/';
   const { data: administrativos, loading: isLoading, error, fetchData } = useFetchDataOnDemand(url);
   const { data: me, loading: isLoadingMe, error: errorMe } = useFetch('/auth/administrativos/me/');
   useEffect(() => {
     fetchData();
   }, []);
+  useEffect(() => {
+    setTimeout(async () => {
+      await fetchData();
+    }, 500);
+  }, [modalShowEliminar]);
 
   const handleCrearUsuario = async () => {
     setEstadoModal('Creado');
@@ -33,14 +40,6 @@ export default function GestionarUsuario() {
     }, 500);
   };
 
-  const handleEliminarUsuario = async (id) => {
-    await deleteData(`/auth/administrativos/${id}/`);
-    setEstadoModal('Eliminado');
-    setTimeout(async () => {
-      await fetchData();
-    }, 500);
-  };
-  
   return (
     <Container fixed sx={{ mt: 2 }}>
       {estadoModal === 'Eliminado' && <Alert severity="error" onClose={() => {setEstadoModal('')}}>Usuario eliminado</Alert>}
@@ -83,7 +82,8 @@ export default function GestionarUsuario() {
                   setUsuarioSeleccionado(administrativo.id);
                 }}color="warning" variant="contained"> <EditIcon/></IconButton>
                 <IconButton onClick={() => {
-                  handleEliminarUsuario(administrativo.id)
+                  setModalShowEliminar(true);
+                  setUsuarioSeleccionado(administrativo.id);
                 }}color="error" variant="contained"> <DeleteIcon/></IconButton>
                   </>
               )}
@@ -125,6 +125,16 @@ export default function GestionarUsuario() {
           open={modalShowCrear} 
           onClose={() => setModalShowCrear(false)}
           handleCrearUsuario={handleCrearUsuario}
+        />
+      )}
+      {modalShowEliminar && (
+        <ModalEliminar
+          open={modalShowEliminar} 
+          onClose={() => setModalShowEliminar(false)}
+          seleccionado={usuarioSeleccionado}
+          este={"este usuario"}
+          setEstadoModal={setEstadoModal}
+          url={'/auth/administrativos/'}
         />
       )}
     </Container>

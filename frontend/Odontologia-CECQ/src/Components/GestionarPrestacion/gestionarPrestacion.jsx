@@ -1,5 +1,4 @@
 import { Fab, Paper, Table, TableBody, TableContainer, TableHead, TableRow, Container, IconButton, Alert, OutlinedInput, InputAdornment, FormControl, FormHelperText } from "@mui/material/"
-import Grid from "@mui/material/Grid2"
 import AddIcon from "@mui/icons-material/Add"
 import { StyledTableCell, StyledTableRow } from '../MaterialUI/styledTable.jsx';
 import { useState, useEffect } from 'react'
@@ -8,11 +7,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteData } from "../../Request/delete.js";
 import SearchIcon from '@mui/icons-material/Search';
 import CrearPrestacion from "./crearPrestacion.jsx";
+import ModalEliminar from '../ModalEliminar/modalEliminar.jsx';
 
 export default function GestionarPrestacion() {
   const [modalShowCrear, setModalShowCrear] = useState(false);
   const [estado, setEstado] = useState('');
-  const [prestacion, setPrestacion] = useState(''); 
+  const [prestacion, setPrestacion] = useState('');
+  const [modalShowEliminar, setModalShowEliminar] = useState(false);
+  const [prestacionSeleccionado, setPrestacionSeleccionado] = useState(null); 
   const parseData = (data) => data;
   const [ data, loading, error, searchData ] = useFetchSearch('/prestaciones/', 300, parseData);
 
@@ -20,14 +22,15 @@ export default function GestionarPrestacion() {
       searchData(prestacion);
   }, [prestacion, estado]);
 
-  const handleDelete = async (id) => {
-    try {
-      await deleteData(`/prestaciones/${id}/`);
-      setEstado('eliminado');
-    } catch (err) {
-      console.error('Error eliminando prestacion:', err);
+  useEffect(() => {
+    if (estado === 'Eliminado' || estado === 'Creado') {
+      const timer = setTimeout(() => {
+        setEstado('');
+      }, 3000); // 3000ms = 3 segundos
+
+      return () => clearTimeout(timer); // Limpieza en caso de que el componente se desmonte
     }
-  };
+  } , [estado]);
 
   return (
     <Container fixed sx={{ mt: 2 }}>
@@ -41,6 +44,8 @@ export default function GestionarPrestacion() {
         </FormControl>
       
       <TableContainer component={Paper}>
+        {estado === 'Eliminado' && <Alert severity="error" onClose={() => {setEstado('')}} >Prestacion eliminado</Alert>}
+        {estado === 'Creado' && <Alert severity="success" onClose={() => {setEstado('')}} >Prestacion creado</Alert>}
         {loading && <Alert severity="info" sx={{width:'100%'}}>Cargando...</Alert>}
         {error && <Alert severity="error" sx={{width:'100%'}}>{error}</Alert>}
         {data && !loading && !error &&
@@ -59,7 +64,10 @@ export default function GestionarPrestacion() {
               <StyledTableCell align="center">{prestacion.precio}</StyledTableCell>
               <StyledTableCell align="center">
                 <IconButton 
-                onClick={() => handleDelete(prestacion.codigo)}
+                onClick={() => {
+                  setPrestacionSeleccionado(prestacion.codigo);
+                  setModalShowEliminar(true);
+                }}
                   color="error">
                   <DeleteIcon/>
                 </IconButton>
@@ -89,6 +97,16 @@ export default function GestionarPrestacion() {
           open={modalShowCrear}
           onClose={() => setModalShowCrear(false)}
           setEstado={setEstado}
+        />
+      )}
+      {modalShowEliminar && (
+        <ModalEliminar
+          open={modalShowEliminar} 
+          onClose={() => setModalShowEliminar(false)}
+          seleccionado={prestacionSeleccionado}
+          este={"esta prestacion"}
+          setEstadoModal={setEstado}
+          url={'/prestaciones/'}
         />
       )}
     </Container>

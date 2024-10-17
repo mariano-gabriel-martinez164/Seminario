@@ -10,12 +10,14 @@ import CrearAgenda from './crearAgenda.jsx';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteData } from "../../Request/delete.js";
+import ModalEliminar from '../ModalEliminar/modalEliminar.jsx';
 
 export default function GestionarAgenda() {
   const [centro, setCentro] = useState(null);
   const [ odontologo, setOdontologo ] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [modalShowCrear, setModalShowCrear] = useState(false);
+  const [modalShowEliminar, setModalShowEliminar] = useState(false);
   const [agendaSeleccionado, setAgendaSeleccionado] = useState(null);
   const [estado, setEstado] = useState('');
 
@@ -26,17 +28,7 @@ export default function GestionarAgenda() {
 
   useEffect(() => {
     fetchData();
-    setEstado('');
-  }, [url, estado]);
-
-  const handleDelete = async (id) => {
-    try {
-      await deleteData(`/agendas/${id}/`);
-      setEstado('eliminado');
-    } catch (err) {
-      console.error('Error eliminando agenda:', err);
-    }
-  };
+  }, [url, estado, modalShowEliminar]);
 
   return (
     <Container fixed sx={{ mt: 2 }}>
@@ -45,20 +37,21 @@ export default function GestionarAgenda() {
           <SelectorOdontologo
             selectedValue={odontologo}
             setSelectedValue={setOdontologo}
-          /> 
+            /> 
         </Grid>
         <Grid size={6}>
           <SelectorCentro
             selectedValue={centro}
             setSelectedValue={setCentro} 
-          />
+            />
         </Grid>
       </Grid>
-      
+      {estado === 'Eliminado' && <Alert severity="error" onClose={() => {setEstado('')}}>Agenda eliminada</Alert>}
+      {estado === 'Creado' && <Alert severity="success" onClose={() => {setEstado('')}}>Agenda creada</Alert>}
+      {isLoading && <Alert severity="info" sx={{width:'100%'}}>Cargando...</Alert>}
+      {error && <Alert severity="error" sx={{width:'100%'}}>{error}</Alert>}
+      {agenda && !isLoading && !error &&
       <TableContainer component={Paper}>
-        {isLoading && <Alert severity="info" sx={{width:'100%'}}>Cargando...</Alert>}
-        {error && <Alert severity="error" sx={{width:'100%'}}>{error}</Alert>}
-        {agenda && !isLoading && !error &&
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -78,7 +71,10 @@ export default function GestionarAgenda() {
                   setAgendaSeleccionado(agenda.id);
                 }} color="warning" variant="contained"> <EditIcon/></IconButton>
                 <IconButton 
-                onClick={() => handleDelete(agenda.id)}
+                onClick={() => {
+                  setModalShowEliminar(true);
+                  setAgendaSeleccionado(agenda.id);
+                }}
                   color="error">
                   <DeleteIcon/>
                 </IconButton>
@@ -87,8 +83,8 @@ export default function GestionarAgenda() {
           ))}
         </TableBody>
       </Table>
-      }
     </TableContainer>
+      }
     <Fab
         sx={{
           position: "fixed",
@@ -115,6 +111,16 @@ export default function GestionarAgenda() {
           open={modalShowCrear}
           onClose={() => setModalShowCrear(false)}
           setEstado={setEstado}
+        />
+      )}
+      {modalShowEliminar && (
+        <ModalEliminar
+          open={modalShowEliminar} 
+          onClose={() => setModalShowEliminar(false)}
+          seleccionado={agendaSeleccionado}
+          este={"esta agenda"}
+          setEstadoModal={setEstado}
+          url={'/agendas/'}
         />
       )}
 
