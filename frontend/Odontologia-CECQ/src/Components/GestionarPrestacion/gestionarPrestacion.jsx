@@ -20,17 +20,7 @@ export default function GestionarPrestacion() {
 
   useEffect(() => {
       searchData(prestacion);
-  }, [prestacion, estado]);
-
-  useEffect(() => {
-    if (estado === 'Eliminado' || estado === 'Creado') {
-      const timer = setTimeout(() => {
-        setEstado('');
-      }, 3000); // 3000ms = 3 segundos
-
-      return () => clearTimeout(timer); // Limpieza en caso de que el componente se desmonte
-    }
-  } , [estado]);
+  }, [prestacion, modalShowEliminar, estado]);
 
   return (
     <Container fixed sx={{ mt: 2 }}>
