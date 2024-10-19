@@ -15,6 +15,17 @@ import { SelectorOdontologo } from '../MaterialUI/selectores.jsx';
 import useFetchTurnos from '../../Request/v2/fetchTurnos.js';
 import { format } from 'date-fns';
 
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import Divider from '@mui/material/Divider';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+
 
 export default function facturaciones() {
   const defaultRange = [
@@ -27,11 +38,11 @@ export default function facturaciones() {
   const [odontologo, setOdontologo] = useState('')
   const [range, setRange] = useState(defaultRange);
   const [turnos, setTurnos] = useState([]);
-
+  
   const { data, loading, error } = useFetchTurnos(
     range[0].startDate,
     range[0].endDate,
-
+    
     '',
     odontologo?.id,
     '',
@@ -54,14 +65,15 @@ export default function facturaciones() {
       console.log(turnos)
     }
   }, [odontologo, range])
-
+  
   return (
+    <>
     <Grid container spacing={2} sx={{my:4, alignItems:'center', display:'flex', justifyContent:'center'}}>
       <Grid size={3}>
         <SelectorOdontologo
           selectedValue={odontologo}
           setSelectedValue={setOdontologo}
-        />
+          />
       </Grid>
 
       <Grid size={3}>
@@ -69,7 +81,7 @@ export default function facturaciones() {
           range={range}
           setRange={setRange}
           defaultRange={defaultRange}
-        /> 
+          /> 
       </Grid>
       <Grid size={8}>
         <TableContainer component={Paper}>
@@ -77,7 +89,7 @@ export default function facturaciones() {
               <TableHead>
                 <StyledTableRow>
                   {
-                  ['odontologo', 'paciente', 'fecha', 'agenda', 'monto'].map((header, index) => (
+                    ['odontologo', 'paciente', 'fecha', 'agenda', 'monto'].map((header, index) => (
                       <StyledTableCell key={index}>{header}</StyledTableCell>
                     ))
                   }
@@ -99,8 +111,68 @@ export default function facturaciones() {
               </TableBody>
             </Table>
           </TableContainer>
-
       </Grid>
     </Grid>
+      <Recivo origin='motomami' destination='mister xd' reference='donRandom' dateTime='9/11' amount='123'/>
+    </>
   )
+}
+
+
+function Recivo (
+  {origin,
+  destination,
+  reference,
+  dateTime,
+  amount}
+) {
+  return (
+      <Card elevation={3} sx={{ maxWidth: 400, width: '80%' }}>
+      <CardContent>
+          <Typography variant="h5" component="h2" gutterBottom align="center" fontWeight="bold">
+          Comprobante de Venta
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="subtitle1" fontWeight="medium">Origen:</Typography>
+                <Typography variant="body1">{origin}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <ArrowDownwardIcon/>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="subtitle1" fontWeight="medium">Destino:</Typography>
+                <Typography variant="body1">{destination}</Typography>
+            </Box>
+            <Divider sx={{ my: 2, borderBottomWidth: 2, bgcolor: 'rgba(0, 0, 0, 0.3)' }} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="subtitle1" fontWeight="medium">Tratamiento:</Typography>
+                <Typography variant="body1">{reference}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="subtitle1" fontWeight="medium">Monto:</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <AttachMoneyIcon fontSize="small" color="action" />
+                <Typography variant="body1">{amount}</Typography>
+              </Box>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="subtitle1" fontWeight="medium">Fecha:</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <CalendarTodayIcon fontSize="small" color="action" />
+                  <Typography variant="body1">{dateTime}</Typography>
+                </Box>
+            </Box>
+          </Box>
+          <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}>
+            <Button
+                variant="contained"
+                startIcon={<PictureAsPdfIcon />}
+            >
+                Descargar PDF
+            </Button>
+          </Box>
+      </CardContent>
+      </Card>
+  );
 }
