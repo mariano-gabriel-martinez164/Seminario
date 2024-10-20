@@ -115,7 +115,7 @@ function SelectorAgenda({selectedValue, setSelectedValue}) {
   );
 }
 
-function SelectorPacientes({ setSelectedValue }){
+function SelectorPacientes({ setSelectedValue, sx }){
   const [inputValue, setInputValue] = useState('');
   const parseData = (data) => data.results;
   const [data, loading, error, searchData] = useFetchSearch('/pacientes/', 300, parseData);
@@ -129,7 +129,8 @@ function SelectorPacientes({ setSelectedValue }){
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <Autocomplete
+	  <Autocomplete
+	  sx={{ ...sx }}
       options={data}
       getOptionLabel={(option) => option.apellido +' '+option.nombre || ''}
       getOptionKey={(option) => option.dni}
