@@ -9,8 +9,8 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import Divider from "@mui/material/Divider";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import RecivoPDF from './recivoPDF';
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import RecivoPDF from "./recivoPDF";
 
 export function Recivo({ origin, destination, reference, dateTime, amount }) {
   return (
@@ -100,18 +100,23 @@ export function Recivo({ origin, destination, reference, dateTime, amount }) {
           </Box>
         </Box>
         <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
-          <PDFDownloadLink 
-            document={<RecivoPDF 
-            origin={origin}
-            destination={destination}
-            reference={reference}
-            amount={amount}
-            dateTime={dateTime}
-            />}
+          <PDFDownloadLink
+            document={
+              <RecivoPDF
+                origin={origin}
+                destination={destination}
+                reference={reference}
+                amount={amount}
+                dateTime={dateTime}
+              />
+            }
             fileName="recivo.pdf"
-            style={{ textDecoration: 'none' }}
+            style={{ textDecoration: "none" }}
           >
-            <Button> <PictureAsPdfIcon /> Descargar PDF  </Button>
+            <Button>
+              {" "}
+              <PictureAsPdfIcon /> Descargar PDF{" "}
+            </Button>
           </PDFDownloadLink>
         </Box>
       </CardContent>
