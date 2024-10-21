@@ -6,7 +6,7 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import {StyledTableCell, StyledTableRow} from '../MaterialUI/styledTable.jsx';
+import { StyledTableCell, StyledTableRow } from '../MaterialUI/styledTable.jsx';
 import Paper from '@mui/material/Paper';
 import { SelectorCalendario } from '../MaterialUI/selectorCalendario.jsx';
 import addDays from 'date-fns/addDays';
@@ -14,7 +14,7 @@ import { SelectorOdontologo } from '../MaterialUI/selectores.jsx';
 import useFetchTurnos from '../../Request/v2/fetchTurnos.js';
 import { format } from 'date-fns';
 import { Button } from '@mui/material';
-import { Recivo, RecivoPDF } from './Recivo/recivo.jsx'
+import { Recivo } from './Recivo/recivo.jsx'
 import { Modal } from '@mui/material';
 import { Box, Typography } from '@mui/material';
 
@@ -31,11 +31,11 @@ export default function facturaciones() {
   const [turnos, setTurnos] = useState([]);
   const [selectedTurno, setSelectedTurno] = useState(null);
   const [open, setOpen] = useState(false);
-  
+
   const { data, loading, error } = useFetchTurnos(
     range[0].startDate,
     range[0].endDate,
-    
+
     '',
     odontologo?.id,
     '',
@@ -44,16 +44,17 @@ export default function facturaciones() {
     null,
     ['Realizado'],
   );
-  
-  useEffect(() =>{
-    if(data){
-      setTurnos(data.map( (turno) => {
+
+  useEffect(() => {
+    if (data) {
+      setTurnos(data.map((turno) => {
         return {
-          odontologo: odontologo?.nombre+' '+odontologo?.apellido,
-          paciente: turno?.paciente.nombre+' '+turno?.paciente.apellido,
+          odontologo: odontologo?.nombre + ' ' + odontologo?.apellido,
+          paciente: turno?.paciente.nombre + ' ' + turno?.paciente.apellido,
           fecha: turno?.fecha,
           agenda: turno?.agenda,
-          monto: turno?.monto}
+          monto: turno?.monto
+        }
       }))
       console.log(turnos)
     }
@@ -69,26 +70,26 @@ export default function facturaciones() {
     setOpen(false);
     setSelectedTurno(null);
   };
-  
+
   return (
     <>
-    <Grid container spacing={2} sx={{my:4, alignItems:'center', display:'flex', justifyContent:'center'}}>
-      <Grid size={3}>
-        <SelectorOdontologo
-          selectedValue={odontologo}
-          setSelectedValue={setOdontologo}
+      <Grid container spacing={2} sx={{ my: 4, alignItems: 'center', display: 'flex', justifyContent: 'center' }}>
+        <Grid size={3}>
+          <SelectorOdontologo
+            selectedValue={odontologo}
+            setSelectedValue={setOdontologo}
           />
-      </Grid>
+        </Grid>
 
-      <Grid size={3}>
-        <SelectorCalendario
-          range={range}
-          setRange={setRange}
-          defaultRange={defaultRange}
-          /> 
-      </Grid>
-      <Grid size={8}>
-        <TableContainer component={Paper}>
+        <Grid size={3}>
+          <SelectorCalendario
+            range={range}
+            setRange={setRange}
+            defaultRange={defaultRange}
+          />
+        </Grid>
+        <Grid size={8}>
+          <TableContainer component={Paper}>
             <Table>
               <TableHead>
                 <StyledTableRow>
@@ -100,7 +101,7 @@ export default function facturaciones() {
                 </StyledTableRow>
               </TableHead>
               <TableBody>
-                {turnos.map((turno)=>(
+                {turnos.map((turno) => (
                   <StyledTableRow key={
                     turno.id ||
                     `${turno.paciente}-${turno.agenda}-${turno.fecha}`
@@ -118,27 +119,27 @@ export default function facturaciones() {
               </TableBody>
             </Table>
           </TableContainer>
+        </Grid>
       </Grid>
-    </Grid>
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-      sx={{
-        p: 4,
-        borderRadius: 2,
-        mx: 'auto',
-        mt: 0,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 400,
-      }}
-    >
-        {selectedTurno==null ? (
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{
+          p: 4,
+          borderRadius: 2,
+          mx: 'auto',
+          mt: 0,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 400,
+        }}
+      >
+        {selectedTurno == null ? (
           <></>
-        ):(
+        ) : (
           <Recivo
             origin={selectedTurno.paciente}
             destination={selectedTurno.odontologo}
@@ -147,7 +148,7 @@ export default function facturaciones() {
             amount={selectedTurno.monto}>
           </Recivo>
         )}
-    </Modal>
+      </Modal>
     </>
   )
 }
