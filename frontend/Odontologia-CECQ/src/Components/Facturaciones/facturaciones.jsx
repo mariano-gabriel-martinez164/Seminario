@@ -16,7 +16,7 @@ import { format } from "date-fns";
 import { Button } from "@mui/material";
 import { Recivo } from "./Recivo/recivo.jsx";
 import { Modal } from "@mui/material";
-import { Box, Typography } from "@mui/material";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
 export default function facturaciones() {
   const defaultRange = [
@@ -31,6 +31,7 @@ export default function facturaciones() {
   const [turnos, setTurnos] = useState([]);
   const [selectedTurno, setSelectedTurno] = useState(null);
   const [open, setOpen] = useState(false);
+  const [monto, setMonto] = useState(0);
 
   const { data, loading, error } = useFetchTurnos(
     range[0].startDate,
@@ -58,7 +59,16 @@ export default function facturaciones() {
           };
         })
       );
-      console.log(turnos);
+      setMonto(() => {
+        var total = 0;
+        var indice = 0;
+        while (data[indice] != null) {
+          total += data[indice]?.monto;
+          indice++;
+        }
+        return total;
+      });
+      console.log(monto);
     }
   }, [odontologo, range, data]);
 
@@ -101,7 +111,11 @@ export default function facturaciones() {
         </Grid>
         <Grid size={8}>
           <TableContainer component={Paper}>
-            <Table>
+            <Table aria-label="caption table">
+              <caption>
+                Monto total: <AttachMoneyIcon fontSize="small" color="action" />{" "}
+                {monto}
+              </caption>
               <TableHead>
                 <StyledTableRow>
                   {[
@@ -130,7 +144,10 @@ export default function facturaciones() {
                       {format(turno.fecha, "MMM dd")}
                     </StyledTableCell>
                     <StyledTableCell>{turno.agenda}</StyledTableCell>
-                    <StyledTableCell>{turno.monto}</StyledTableCell>
+                    <StyledTableCell>
+                      <AttachMoneyIcon fontSize="small" color="action" />
+                      {turno.monto}
+                    </StyledTableCell>
                     <StyledTableCell>
                       <Button variant="text" onClick={() => handleOpen(turno)}>
                         {" "}

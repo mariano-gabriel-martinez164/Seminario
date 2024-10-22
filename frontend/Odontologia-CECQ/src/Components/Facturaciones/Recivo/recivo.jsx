@@ -4,7 +4,6 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import Divider from "@mui/material/Divider";
@@ -12,7 +11,7 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import RecivoPDF from "./recivoPDF";
 
-export function Recivo({ origin, destination, reference, dateTime, amount }) {
+export function Recivo({ origin, destination, dateTime, amount }) {
   return (
     <Card elevation={3} sx={{ maxWidth: 400, width: "80%" }}>
       <CardContent>
@@ -34,12 +33,9 @@ export function Recivo({ origin, destination, reference, dateTime, amount }) {
             }}
           >
             <Typography variant="subtitle1" fontWeight="medium">
-              Origen:
+              Paciente:
             </Typography>
             <Typography variant="body1">{origin}</Typography>
-          </Box>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <ArrowDownwardIcon />
           </Box>
           <Box
             sx={{
@@ -49,25 +45,13 @@ export function Recivo({ origin, destination, reference, dateTime, amount }) {
             }}
           >
             <Typography variant="subtitle1" fontWeight="medium">
-              Destino:
+              Odontologo:
             </Typography>
             <Typography variant="body1">{destination}</Typography>
           </Box>
           <Divider
             sx={{ my: 2, borderBottomWidth: 2, bgcolor: "rgba(0, 0, 0, 0.3)" }}
           />
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="subtitle1" fontWeight="medium">
-              Tratamiento:
-            </Typography>
-            <Typography variant="body1">{reference}</Typography>
-          </Box>
           <Box
             sx={{
               display: "flex",
@@ -105,7 +89,6 @@ export function Recivo({ origin, destination, reference, dateTime, amount }) {
               <RecivoPDF
                 origin={origin}
                 destination={destination}
-                reference={reference}
                 amount={amount}
                 dateTime={dateTime}
               />

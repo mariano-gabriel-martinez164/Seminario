@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 10,
     fontWeight: "bold",
   },
   subHeader: {
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const RecivoPDF = ({ origin, destination, reference, amount, dateTime }) => {
+const RecivoPDF = ({ origin, destination, amount, dateTime }) => {
   return (
     <Document>
       <Page size="A6" style={styles.page}>
@@ -75,23 +75,18 @@ const RecivoPDF = ({ origin, destination, reference, amount, dateTime }) => {
           <Text style={styles.subHeader}>Comprobante de Venta</Text>
 
           <View style={styles.row}>
-            <Text style={styles.label}>Origen:</Text>
+            <Text style={styles.label}>Paciente:</Text>
             <Text style={styles.value}>{origin}</Text>
           </View>
 
           <View style={{ alignItems: "center", margin: 10 }}></View>
 
           <View style={styles.row}>
-            <Text style={styles.label}>Destino:</Text>
+            <Text style={styles.label}>Odontologo:</Text>
             <Text style={styles.value}>{destination}</Text>
           </View>
 
           <View style={styles.divider} />
-
-          <View style={styles.row}>
-            <Text style={styles.label}>Tratamiento:</Text>
-            <Text style={styles.value}>{reference}</Text>
-          </View>
 
           <View style={styles.row}>
             <Text style={styles.label}>Monto:</Text>
