@@ -68,7 +68,6 @@ export default function facturaciones() {
         }
         return total;
       });
-      console.log(monto);
     }
   }, [odontologo, range, data]);
 
