@@ -13,9 +13,6 @@ import addDays from "date-fns/addDays";
 import { SelectorOdontologo } from "../MaterialUI/selectores.jsx";
 import useFetchTurnos from "../../Request/v2/fetchTurnos.js";
 import { format } from "date-fns";
-import { Button } from "@mui/material";
-import { Recivo } from "./Recivo/recivo.jsx";
-import { Modal } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
 export default function facturaciones() {
@@ -71,17 +68,6 @@ export default function facturaciones() {
     }
   }, [odontologo, range, data]);
 
-  const handleOpen = (turno) => {
-    setSelectedTurno(turno);
-    setOpen(true);
-  };
-
-  // Función para cerrar el modal
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedTurno(null);
-  };
-
   return (
     <>
       <Grid
@@ -111,19 +97,13 @@ export default function facturaciones() {
         <Grid size={8}>
           <TableContainer component={Paper}>
             <Table aria-label="caption table">
-              <caption>
-                Monto total: <AttachMoneyIcon fontSize="small" color="action" />{" "}
-                {monto}
-              </caption>
               <TableHead>
                 <StyledTableRow>
                   {[
-                    "odontologo",
                     "paciente",
                     "fecha",
                     "agenda",
                     "monto",
-                    "        ",
                   ].map((header, index) => (
                     <StyledTableCell key={index}>{header}</StyledTableCell>
                   ))}
@@ -137,7 +117,6 @@ export default function facturaciones() {
                       `${turno.paciente}-${turno.agenda}-${turno.fecha}`
                     }
                   >
-                    <StyledTableCell>{turno.odontologo}</StyledTableCell>
                     <StyledTableCell>{turno.paciente}</StyledTableCell>
                     <StyledTableCell>
                       {format(turno.fecha, "MMM dd")}
@@ -147,47 +126,23 @@ export default function facturaciones() {
                       <AttachMoneyIcon fontSize="small" color="action" />
                       {turno.monto}
                     </StyledTableCell>
-                    <StyledTableCell>
-                      <Button variant="text" onClick={() => handleOpen(turno)}>
-                        {" "}
-                        Ver mas...{" "}
-                      </Button>
-                    </StyledTableCell>
                   </StyledTableRow>
                 ))}
+                <StyledTableRow>
+                  <StyledTableCell>Total</StyledTableCell>
+                  <StyledTableCell>
+                  {format(range[0].startDate,"MMM-dd") + " - " + format(range[0].endDate,"MMM-dd")}
+                  </StyledTableCell>
+                  <StyledTableCell></StyledTableCell>
+                  <StyledTableCell>
+                    <AttachMoneyIcon fontSize="small" color="action" />{monto.toFixed(2)}
+                  </StyledTableCell>
+                </StyledTableRow>
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
       </Grid>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        sx={{
-          p: 4,
-          borderRadius: 2,
-          mx: "auto",
-          mt: 0,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: 400,
-        }}
-      >
-        {selectedTurno == null ? (
-          <></>
-        ) : (
-          <Recivo
-            origin={selectedTurno.paciente}
-            destination={selectedTurno.odontologo}
-            dateTime={format(selectedTurno.fecha, "MMM dd, yyyy")}
-            reference={"lol"}
-            amount={selectedTurno.monto}
-          ></Recivo>
-        )}
-      </Modal>
     </>
   );
 }
