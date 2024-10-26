@@ -14,6 +14,10 @@ import { SelectorOdontologo } from "../MaterialUI/selectores.jsx";
 import useFetchTurnos from "../../Request/v2/fetchTurnos.js";
 import { format } from "date-fns";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import { Button, Box } from "@mui/material";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import RecivoPDF from "./RecivoV2/RecivoPDF.jsx";
 
 export default function facturaciones() {
   const defaultRange = [
@@ -26,14 +30,11 @@ export default function facturaciones() {
   const [odontologo, setOdontologo] = useState("");
   const [range, setRange] = useState(defaultRange);
   const [turnos, setTurnos] = useState([]);
-  const [selectedTurno, setSelectedTurno] = useState(null);
-  const [open, setOpen] = useState(false);
   const [monto, setMonto] = useState(0);
 
   const { data, loading, error } = useFetchTurnos(
     range[0].startDate,
     range[0].endDate,
-
     "",
     odontologo?.id,
     "",
@@ -99,14 +100,11 @@ export default function facturaciones() {
             <Table aria-label="caption table">
               <TableHead>
                 <StyledTableRow>
-                  {[
-                    "paciente",
-                    "fecha",
-                    "agenda",
-                    "monto",
-                  ].map((header, index) => (
-                    <StyledTableCell key={index}>{header}</StyledTableCell>
-                  ))}
+                  {["paciente", "fecha", "agenda", "monto"].map(
+                    (header, index) => (
+                      <StyledTableCell key={index}>{header}</StyledTableCell>
+                    )
+                  )}
                 </StyledTableRow>
               </TableHead>
               <TableBody>
@@ -131,16 +129,30 @@ export default function facturaciones() {
                 <StyledTableRow>
                   <StyledTableCell>Total</StyledTableCell>
                   <StyledTableCell>
-                  {format(range[0].startDate,"MMM-dd") + " - " + format(range[0].endDate,"MMM-dd")}
+                    {format(range[0].startDate, "MMM-dd") +
+                      " - " +
+                      format(range[0].endDate, "MMM-dd")}
                   </StyledTableCell>
                   <StyledTableCell></StyledTableCell>
                   <StyledTableCell>
-                    <AttachMoneyIcon fontSize="small" color="action" />{monto.toFixed(2)}
+                    <AttachMoneyIcon fontSize="small" color="action" />
+                    {monto.toFixed(2)}
                   </StyledTableCell>
                 </StyledTableRow>
               </TableBody>
             </Table>
           </TableContainer>
+        </Grid>
+        <Grid size={8} sx={{ textAlign: "center" }}>
+          <PDFDownloadLink
+            document={<RecivoPDF />}
+            fileName="recivo.pdf"
+            style={{ textDecoration: "none" }}
+          >
+            <Button variant="contained">
+              <PictureAsPdfIcon /> Descargar Recivo
+            </Button>
+          </PDFDownloadLink>
         </Grid>
       </Grid>
     </>
