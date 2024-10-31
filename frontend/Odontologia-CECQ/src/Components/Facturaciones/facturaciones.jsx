@@ -36,7 +36,7 @@ export default function facturaciones() {
     range[0].startDate,
     range[0].endDate,
     "",
-    odontologo?.id,
+    odontologo?.matricula,
     "",
     "",
     "",
