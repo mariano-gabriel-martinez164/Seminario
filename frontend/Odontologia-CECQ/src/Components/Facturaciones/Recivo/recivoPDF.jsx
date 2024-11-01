@@ -7,6 +7,8 @@ import {
   StyleSheet,
   Image,
 } from "@react-pdf/renderer";
+import React, { useEffect } from "react";
+import { format } from "date-fns";
 
 const styles = StyleSheet.create({
   page: {
@@ -56,53 +58,62 @@ const styles = StyleSheet.create({
   },
 });
 
-const RecivoPDF = ({ origin, destination, amount, dateTime }) => {
+const RecivoPDF = ({ range, agendas, odontologo }) => {
   return (
     <Document>
-      <Page size="A6" style={styles.page}>
-        <View style={styles.section}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: 10,
-            }}
-          >
-            <Image src={img} style={{ width: 50, height: 50 }} />
-            <Text style={styles.header}>CECQ</Text>
-          </View>
-          <Text style={styles.subHeader}>Comprobante de Venta</Text>
+      {agendas.map((agenda) => (
+        <Page size="A6" style={styles.page}>
+          <View style={styles.section}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 10,
+              }}
+            >
+              <Image src={img} style={{ width: 50, height: 50 }} />
+              <Text style={styles.header}>CECQ</Text>
+            </View>
+            <Text style={styles.subHeader}>Recivo</Text>
 
-          <View style={styles.row}>
-            <Text style={styles.label}>Paciente:</Text>
-            <Text style={styles.value}>{origin}</Text>
-          </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>Odontologo: </Text>
+              <Text style={styles.value}>{odontologo?.nombre}</Text>
+            </View>
 
-          <View style={{ alignItems: "center", margin: 10 }}></View>
+            <View style={styles.row}>
+              <Text style={styles.label}>Fecha: </Text>
+              <Text style={styles.value}>
+                {format(range[0].startDate, "MMM-dd") +
+                  " / " +
+                  format(range[0].endDate, "MMM-dd")}
+              </Text>
+            </View>
 
-          <View style={styles.row}>
-            <Text style={styles.label}>Odontologo:</Text>
-            <Text style={styles.value}>{destination}</Text>
-          </View>
+            <View style={styles.divider} />
 
-          <View style={styles.divider} />
+            <View style={styles.row}>
+              <Text style={styles.label}>Centro: </Text>
+              <Text style={styles.value}>{agenda.centro.nombre}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>Direccion: </Text>
+              <Text style={styles.value}>{agenda.centro.direccion}</Text>
+            </View>
 
-          <View style={styles.row}>
-            <Text style={styles.label}>Monto:</Text>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={styles.value}>{amount}</Text>
+            <View style={styles.row}>
+              <Text style={styles.label}>Agenda: </Text>
+              <Text style={styles.value}>#{agenda.id}</Text>
+            </View>
+
+            <View style={styles.row}>
+              <Text style={styles.label}>Monto: </Text>
+              <Text style={styles.value}>${agenda.monto}</Text>
             </View>
           </View>
-
-          <View style={styles.row}>
-            <Text style={styles.label}>Fecha:</Text>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={styles.value}>{dateTime}</Text>
-            </View>
-          </View>
-        </View>
-      </Page>
+        </Page>
+      ))}
     </Document>
   );
 };

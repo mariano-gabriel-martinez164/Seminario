@@ -17,7 +17,8 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { Button, Box } from "@mui/material";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import RecivoPDF from "./RecivoV2/RecivoPDF.jsx";
+import RecivoPDF from "./Recivo/recivoPDF.jsx";
+import { useFetch } from "../../Request/v2/fetch";
 
 export default function facturaciones() {
   const defaultRange = [
@@ -31,6 +32,14 @@ export default function facturaciones() {
   const [range, setRange] = useState(defaultRange);
   const [turnos, setTurnos] = useState([]);
   const [monto, setMonto] = useState(0);
+  const [agendas, setAgendas] = useState([]);
+
+  let agendaURL = "/agendas/"
+  if (odontologo){
+    agendaURL+=`?odontologo=${odontologo?.matricula}`
+  }
+
+  const dataAgenda = useFetch(agendaURL);
 
   const { data, loading, error } = useFetchTurnos(
     range[0].startDate,
@@ -57,17 +66,36 @@ export default function facturaciones() {
           };
         })
       );
-      setMonto(() => {
-        var total = 0;
-        var indice = 0;
-        while (data[indice] != null) {
-          total += data[indice]?.monto;
-          indice++;
-        }
-        return total;
-      });
+
+      setMonto(
+        data.reduce((montoTotal, turno) => {
+          return montoTotal + turno?.monto;
+        }, 0)
+      );
     }
-  }, [odontologo, range, data]);
+
+    if (dataAgenda.data) {
+      setAgendas( dataAgenda.data.map((agenda) => {
+
+        const montoAgenda = data.reduce((montoTotal, turno) => {
+          if (turno?.agenda == agenda.id) {
+            return montoTotal + turno?.monto;
+          } else {
+            return montoTotal;
+          }
+        }, 0);
+
+        return {
+          id: agenda?.id,
+          monto: montoAgenda,
+          centro: {
+            nombre: agenda?.CentroOdontologico.nombre,
+            direccion: agenda?.CentroOdontologico.direccion
+          }
+        }
+      }));
+    }
+  }, [data]);
 
   return (
     <>
@@ -145,7 +173,13 @@ export default function facturaciones() {
         </Grid>
         <Grid size={8} sx={{ textAlign: "center" }}>
           <PDFDownloadLink
-            document={<RecivoPDF />}
+            document={
+              <RecivoPDF
+                range={range}
+                agendas={agendas}
+                odontologo={odontologo}
+              />
+            }
             fileName="recivo.pdf"
             style={{ textDecoration: "none" }}
           >
