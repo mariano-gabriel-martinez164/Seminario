@@ -85,9 +85,23 @@ export default function facturaciones() {
           }
         }, 0);
 
+        const agendaTurnos = data.map( (turno) => {
+          if (turno?.agenda == agenda.id){
+            return {
+              paciente: turno?.paciente.nombre + " " + turno?.paciente.apellido,
+              fecha: turno?.fecha,
+              monto: turno?.monto,
+              id: turno?.id
+            };
+          } else {
+            return null;
+          }
+        }).filter((turno) => turno != null)
+
         return {
           id: agenda?.id,
           monto: montoAgenda,
+          turnos: agendaTurnos,
           centro: {
             nombre: agenda?.CentroOdontologico.nombre,
             direccion: agenda?.CentroOdontologico.direccion
