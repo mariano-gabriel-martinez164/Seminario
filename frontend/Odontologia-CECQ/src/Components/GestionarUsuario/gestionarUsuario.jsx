@@ -32,8 +32,8 @@ export default function GestionarUsuario() {
     }, 500);
   }, [modalShowEliminar]);
 
-  const handleCrearUsuario = async () => {
-    setEstadoModal('Creado');
+  const handleCrearUsuario = async (estado) => {
+    setEstadoModal(estado);
     setModalShowCrear(false);
     setTimeout(async () => {
       await fetchData();
@@ -118,6 +118,7 @@ export default function GestionarUsuario() {
           onClose={() => setModalShowModificar(false)}
           setEstadoModal={setEstadoModal}
           usuarioSeleccionado={usuarioSeleccionado}
+          handleCrearUsuario={handleCrearUsuario}
         />
       )}
       {modalShowCrear && (

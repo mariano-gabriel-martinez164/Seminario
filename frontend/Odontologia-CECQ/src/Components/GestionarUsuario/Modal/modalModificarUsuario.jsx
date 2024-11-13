@@ -6,7 +6,7 @@ import { handleChange, handleModify } from '../../GestionarUsuario/verificarForm
 import { TextField, Container, Button, Dialog, DialogActions, DialogContent, Alert } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
-export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSeleccionado }) {
+export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSeleccionado, handleCrearUsuario }) {
   const { data: administrativo, loading: isLoading, error } = useFetch(`/auth/administrativos/${usuarioSeleccionado}/`);
   console.log(administrativo);
   const [formData, setFormData] = useState({
@@ -99,6 +99,7 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
           <Button onClick={() => {
             handleModify(formData, usuarioSeleccionado);
             Estado(onClose(), setEstadoModal, 'Modificado');
+            handleCrearUsuario('Modificado');
           }} 
           variant="outlined" color='warning' id='button'>Modificar</Button>
 

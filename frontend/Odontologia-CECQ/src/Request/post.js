@@ -1,7 +1,8 @@
-import { token } from './fetch.js';
+
 const apiUrl = import.meta.env.VITE_BASE_URL;
 
 export function postData(url, data) {
+  const token = localStorage.getItem('token');
   if (url) {
     console.log('post url:', url);
     console.log('post data:', data);

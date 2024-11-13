@@ -144,7 +144,7 @@ export function ModalCrearUsuario({ open, onClose, handleCrearUsuario }) {
         <Button 
           onClick={() => {
             handleSubmit(formData);
-            handleCrearUsuario()
+            handleCrearUsuario('Creado');
           }}
           variant="outlined" 
           id='button'
