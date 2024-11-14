@@ -10,7 +10,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { Alert } from 'react-bootstrap';
 import MapaPiezas from './mapaPiezas';
 import { mostrarFiltrosArray } from '../MostrarFiltros/mostrarFiltros';
-import { postData } from '../../../Request/post';
+import { usePostData } from '../../../Request/v2/post.js';
 import { deleteData } from '../../../Request/delete';
 import { putData } from '../../../Request/put';
 import { useFetch } from '../../../Request/fetch.js';
