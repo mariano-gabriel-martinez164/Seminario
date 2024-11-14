@@ -1,4 +1,4 @@
-import { Dialog, Button, DialogActions, TextField } from '@mui/material'
+import { Dialog, Button, DialogActions, TextField, DialogContent, Container } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { postData } from '../../Request/post'
 import { useState } from 'react'
@@ -22,28 +22,34 @@ export default function CrearPrestacion({open, onClose, setEstado}) {
     open={open}
     onClose={onClose}
   > 
-    <TextField 
-        id="outlined-basic" 
-        label="Nombre" 
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-        sx={{m:2}} 
-        variant="outlined" />
-    <Grid container spacing={2} sx={{minWidth:'600px', mb:3 , justifyContent: 'center' }}>
-      <Grid size={5}>
+  <DialogContent>
+  <Container id='container' >
+    <Grid container spacing={2} sx={{ mt:3, mb:3 , justifyContent: 'center' }}>
+      <Grid size={12}>
+        <TextField 
+          id="outlined-basic" 
+          label="Nombre" 
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+          fullWidth
+          variant="outlined" />
+      </Grid>
+      <Grid size={12}>
         <TextField 
         id="outlined-basic" 
         label="Codigo" 
         value={codigo}
         onChange={(e) => setCodigo(e.target.value)} 
+        fullWidth
         variant="outlined" />
       </Grid>
-      <Grid size={5}>
+      <Grid size={12}>
         <TextField 
         id="outlined-basic" 
         label="Precio" 
         value={precio} 
         onChange={(e) => setPrecio(e.target.value)}
+        fullWidth
         error={!!precio && !isValidPrice(precio)} 
         helperText={!!precio && !isValidPrice(precio) ? "Formato inválido. Ejemplo: 100 o 100.99" : ""}
         variant="outlined" />
@@ -65,6 +71,8 @@ export default function CrearPrestacion({open, onClose, setEstado}) {
 
           <Button onClick={() => onClose()} variant="outlined" id='button'>Cerrar</Button>
         </DialogActions>
+        </Container>
+      </DialogContent>
   </Dialog>
   )
 }

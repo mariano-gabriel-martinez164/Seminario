@@ -1,4 +1,4 @@
-import { Dialog, Button, DialogActions } from '@mui/material'
+import { Dialog, Button, DialogActions, DialogContent, Container } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { SelectorOdontologo, SelectorCentro } from '../MaterialUI/selectores'
 import { useState } from 'react'
@@ -14,14 +14,16 @@ export default function CrearAgenda({open, onClose, setEstado}) {
     open={open}
     onClose={onClose}
   >
-    <Grid container spacing={2} sx={{minWidth:'600px', mt:3, mb:3 , justifyContent: 'center' }}>
-      <Grid size={5}>
+    <DialogContent>
+    <Container id='container'>
+    <Grid container spacing={2} sx={{ mt:3, mb:3 , justifyContent: 'center' }}>
+      <Grid size={12}>
         <SelectorOdontologo
           selectedValue={odontologo}
           setSelectedValue={setOdontologo}
         /> 
       </Grid>
-      <Grid size={5}>
+      <Grid size={12}>
         <SelectorCentro
           selectedValue={centro}
           setSelectedValue={setCentro} 
@@ -44,6 +46,8 @@ export default function CrearAgenda({open, onClose, setEstado}) {
 
           <Button onClick={() => onClose()} variant="outlined" id='button'>Cerrar</Button>
         </DialogActions>
+        </Container>
+        </DialogContent>
   </Dialog>
   )
 }
