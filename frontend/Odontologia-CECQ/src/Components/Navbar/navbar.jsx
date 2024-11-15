@@ -24,7 +24,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 export default function Navbar() {
 
   const { logout } = useAuth();
-  const { nombre, apellido, loading } = useFetchUser(); 
+  const { nombre, apellido, admin, loading } = useFetchUser(); 
 
   const handleLogout = () => {
     logout();
@@ -59,7 +59,7 @@ export default function Navbar() {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
-
+  
   return (
     <>
       <AppBar position="fixed" open={open} sx={{ backgroundColor: '#343a40' }}>
@@ -158,26 +158,28 @@ export default function Navbar() {
           />
         </List>
         <Divider />
-        <List>
-          <DrawerItem
-            icon={<ManageAccountsIcon />}
-            text='Gestionar usuarios'
-            link='/gestionarUsuario'
-            setOpen={setOpen}
-          />
-          <DrawerItem
-            icon={<AssignmentTurnedInIcon />}
-            text='Gestionar agendas'
-            link='/gestionarAgenda'
-            setOpen={setOpen}
-          />
-          <DrawerItem
-            icon={<DescriptionIcon />}
-            text='Gestionar Prestaciones'
-            link='/gestionarPrestacion'
-            setOpen={setOpen}
-          />
-        </List>
+        {admin && (
+          <List>
+            <DrawerItem
+              icon={<ManageAccountsIcon />}
+              text='Gestionar usuarios'
+              link='/gestionarUsuario'
+              setOpen={setOpen}
+            />
+            <DrawerItem
+              icon={<AssignmentTurnedInIcon />}
+              text='Gestionar agendas'
+              link='/gestionarAgenda'
+              setOpen={setOpen}
+            />
+            <DrawerItem
+              icon={<DescriptionIcon />}
+              text='Gestionar Prestaciones'
+              link='/gestionarPrestacion'
+              setOpen={setOpen}
+            />
+          </List>
+        )}
       </Drawer>
 
       <ModalCambiarContraseña open={openModal} onClose={handleCloseModal} />
