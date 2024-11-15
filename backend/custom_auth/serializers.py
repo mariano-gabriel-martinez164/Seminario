@@ -17,7 +17,7 @@ class ChangePasswordSerializer(serializers.Serializer):
 class AdministrativoIdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Administrativo
-        fields = ['id', 'first_name', 'last_name']
+        fields = ['id', 'first_name', 'last_name', 'is_staff']
 
 class ShortAdministrativoSerializer(serializers.ModelSerializer):
     class Meta:
