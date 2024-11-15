@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { postData } from '../../Request/v2/post.js';
 import './buscarPaciente.css';
 
 export default function Validar() {	

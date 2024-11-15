@@ -100,10 +100,10 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
             </form>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleButtonClick} variant="outlined" color="warning" id="button">
+            <Button onClick={handleButtonClick} variant="contained" color="warning" id="button">
               Modificar
             </Button>
-            <Button onClick={onClose} variant="outlined" id="button">Cerrar</Button>
+            <Button onClick={onClose} variant="contained" id="button">Cerrar</Button>
           </DialogActions>
         </>
       )}

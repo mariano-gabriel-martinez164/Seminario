@@ -1,6 +1,6 @@
-import { Dialog, Button, DialogActions, TextField, DialogContent, Container } from '@mui/material'
+import { Dialog, Alert, Button, DialogActions, TextField, DialogContent, Container } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import { postData } from '../../Request/post'
+import { usePostData } from '../../Request/v2/post'
 import { useState } from 'react'
 
 const prestacion = (codigo, nombre, precio) => ({
@@ -17,12 +17,27 @@ export default function CrearPrestacion({open, onClose, setEstado}) {
   const isValidPrice = (precio) => {
     return /^\d+(\.\d{1,2})?$/.test(precio);
   };
+
+  const { postData, errorPost, loading } = usePostData();
+
+  const handleSubmit = async (formData) => {
+      postData(`/prestaciones/`,prestacion(codigo, nombre, precio))
+      .then(() => {
+        setEstado('Creado');
+        onClose();
+      })
+      .catch((error) => {
+        console.error('Error al crear la agenda:', errorPost);
+    });
+  }
+
   return (
     <Dialog
     open={open}
     onClose={onClose}
   > 
   <DialogContent>
+  {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}
   <Container id='container' >
     <Grid container spacing={2} sx={{ mt:3, mb:3 , justifyContent: 'center' }}>
       <Grid size={12}>
@@ -59,17 +74,15 @@ export default function CrearPrestacion({open, onClose, setEstado}) {
     <DialogActions>
           <Button 
           onClick={() => {
-            postData(`/prestaciones/`,prestacion(codigo, nombre, precio));
-            onClose();
-            setEstado('Creado');
+            handleSubmit();
           }} 
-          variant="outlined" color='success' id='button'
+          variant="contained" color='success' id='button'
         disabled={!nombre || !precio || !codigo || !isValidPrice(precio)}
           >
             Crear agenda 
           </Button>
 
-          <Button onClick={() => onClose()} variant="outlined" id='button'>Cerrar</Button>
+          <Button onClick={() => onClose()} variant="contained" id='button'>Cerrar</Button>
         </DialogActions>
         </Container>
       </DialogContent>

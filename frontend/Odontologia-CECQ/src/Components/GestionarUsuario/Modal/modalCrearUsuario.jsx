@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { handleChange, handleSubmit, isFormValid } from '../../GestionarUsuario/verificarFormulario';
-import { FormControl, TextField, InputLabel, OutlinedInput, InputAdornment, FormHelperText,
+import { handleChange, isFormValid } from '../../GestionarUsuario/verificarFormulario';
+import { FormControl, Alert,TextField, InputLabel, OutlinedInput, InputAdornment, FormHelperText,
   IconButton, Button, Container, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
+import { usePostData } from '../../../Request/v2/post';
+import { usuarioFormato } from '../usuario';
 
 
 export function ModalCrearUsuario({ open, onClose, handleCrearUsuario }) {
@@ -22,6 +24,19 @@ export function ModalCrearUsuario({ open, onClose, handleCrearUsuario }) {
     event.preventDefault();
   };
 
+  const { postData, errorPost, loading } = usePostData();
+
+  const handleSubmit = async (formData) => {
+    if (!isFormValid(formData)) return; // Validación del formulario
+      postData('/auth/administrativos/', usuarioFormato(formData))
+      .then(() => {
+        handleCrearUsuario('Creado');
+      })
+      .catch((error) => {
+      console.error('Error al crear el usuario:', errorPost);
+    });
+  }
+
   return (
     <Dialog
       open={open}
@@ -30,6 +45,7 @@ export function ModalCrearUsuario({ open, onClose, handleCrearUsuario }) {
       aria-describedby="alert-dialog-slide-description"
     >
       <DialogContent>
+        {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}
         <Container id='container'>
           <form>
             <Grid container spacing={2}>
@@ -144,15 +160,15 @@ export function ModalCrearUsuario({ open, onClose, handleCrearUsuario }) {
         <Button 
           onClick={() => {
             handleSubmit(formData);
-            handleCrearUsuario('Creado');
           }}
-          variant="outlined" 
+          variant="contained"
+          color='success'
           id='button'
           disabled={!isFormValid(formData)}
         >
           Crear usuario
         </Button>
-        <Button onClick={() => onClose()} variant="outlined" id='button'>Cerrar</Button>
+        <Button onClick={() => onClose()} variant="contained" id='button'>Cerrar</Button>
       </DialogActions>
     </Dialog>
   );

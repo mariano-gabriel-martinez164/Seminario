@@ -28,7 +28,7 @@ export default function GestionarAgenda() {
 
   useEffect(() => {
     fetchData();
-  }, [url, estado, modalShowEliminar]);
+  }, [url, estado, modalShowEliminar, modalShowCrear]);
 
   return (
     <Container fixed sx={{ mt: 2 }}>

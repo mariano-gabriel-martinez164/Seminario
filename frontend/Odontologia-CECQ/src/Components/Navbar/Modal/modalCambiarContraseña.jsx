@@ -162,10 +162,10 @@ export function ModalCambiarContraseña({ open, onClose }) {
         </Container>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSubmit} variant="outlined">
+        <Button onClick={handleSubmit} variant="contained">
           Cambiar contraseña
         </Button>
-        <Button onClick={onClose} variant="outlined">
+        <Button onClick={onClose} variant="contained">
           Cerrar
         </Button>
       </DialogActions>

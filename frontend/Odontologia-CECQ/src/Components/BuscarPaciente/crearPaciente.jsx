@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Stack, Button } from '@mui/material';
 import Validar from './validaciones.jsx';
-import { postData } from '../../Request/v2/post.js';
+import { postData } from '../../Request/post.js';
 import { useFetch } from '../../Request/v2/fetch';
 import './buscarPaciente.css';
 

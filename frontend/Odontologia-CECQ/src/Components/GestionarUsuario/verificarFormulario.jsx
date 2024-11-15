@@ -1,5 +1,3 @@
-import { postData } from "../../Request/post";
-import { usuarioChange, usuarioFormato } from "./usuario";
 
 export const handleChange = (event, setFormData) => {
   const { name, value } = event.target;
@@ -7,10 +5,6 @@ export const handleChange = (event, setFormData) => {
     ...prevState,
     [name]: value
   }));
-};
-
-export const handleSubmit = (formData) => {
-  postData('/auth/administrativos/', usuarioFormato(formData));
 };
 
 export const isFormValid = (formData) => {
