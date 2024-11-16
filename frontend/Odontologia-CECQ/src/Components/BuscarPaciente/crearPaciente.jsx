@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Stack, Button } from '@mui/material';
 import Validar from './validaciones.jsx';
-import { postData } from '../../Request/post.js';
+import { usePostData } from '../../Request/v2/post';
 import { useFetch } from '../../Request/v2/fetch';
 import './buscarPaciente.css';
 
 function CrearPaciente({ abrir, cerrar }) {	
 	const { formValor, errores, cambiosForm, controlador, nuevosErrores } = Validar();
 	const { data: paciente, loading, error } = useFetch(`/pacientes/${formValor.dni}/`);
+	const { postData, errorPost, loadingPost } = usePostData();
 
 	useEffect(() => {
 		if(Object.keys(errores).every((key) => !errores[key])){
