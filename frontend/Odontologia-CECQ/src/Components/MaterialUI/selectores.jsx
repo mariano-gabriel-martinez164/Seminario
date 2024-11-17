@@ -4,7 +4,7 @@ import { useFetchDataOnDemand, useFetchSearch } from '../../Request/v2/fetch';
 import { SelectorCalendario } from './selectorCalendario';
 import Chip from '@mui/material/Chip';
 
-const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placeholder, getOptionKey=null}) => {
+const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placeholder, getOptionKey=null, textFieldProps={}}) => {
   const [open, setOpen] = useState(false);
   const [fetched, setFetched] = useState(false);
 
@@ -34,8 +34,8 @@ const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placehold
         renderInput={(params) => (
           <CustomTextField
             {...params}
-            label={placeholder}
             loading={loading}
+            {...{label: placeholder, ...textFieldProps}}
           />
 
         )}
@@ -46,9 +46,9 @@ const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placehold
 function CustomTextField({ label, loading = false, ...params }) {
   return (
     <TextField
-      {...params}
-      label={label}
-      variant="standard"
+    label={label}
+    variant="standard"
+    {...params}
       slotProps={{ input: {
         ...params.InputProps,
         endAdornment: (
@@ -62,7 +62,7 @@ function CustomTextField({ label, loading = false, ...params }) {
   );
 }
 
-function SelectorOdontologo({selectedValue, setSelectedValue}) {
+function SelectorOdontologo({selectedValue, setSelectedValue, textFieldProps={}}) {
   const odontologoFormat = (odontologo) => `${odontologo.nombre} ${odontologo.apellido} - ${odontologo.matricula}`;
   return (
     <AutocompleteAPIComponent
@@ -71,11 +71,12 @@ function SelectorOdontologo({selectedValue, setSelectedValue}) {
       api_url={"/odontologos/"}
       format={odontologoFormat}
       placeholder={"Seleccionar odontólogo"}
+      textFieldProps={textFieldProps}
     />
   );
 }
 
-function SelectorCentro({selectedValue, setSelectedValue}) {
+function SelectorCentro({selectedValue, setSelectedValue, textFieldProps={}}) {
   const centroFormat = (centro) => `${centro.nombre}`;
   return (
     <AutocompleteAPIComponent
@@ -84,11 +85,12 @@ function SelectorCentro({selectedValue, setSelectedValue}) {
       api_url={"/centros/"}
       format={centroFormat}
       placeholder={"Seleccionar centro"}
+      textFieldProps={textFieldProps}
     />
   );
 }
 
-function SelectorAdministrativo({selectedValue, setSelectedValue}) {
+function SelectorAdministrativo({selectedValue, setSelectedValue, textFieldProps={}}) {
   const administrativoFormat = (administrativo) => `${administrativo.nombre} ${administrativo.apellido}`;
   return (
     <AutocompleteAPIComponent
@@ -98,11 +100,12 @@ function SelectorAdministrativo({selectedValue, setSelectedValue}) {
       api_url={"/auth/administrativos/"}
       format={administrativoFormat}
       placeholder={"Seleccionar administrativo"}
+      textFieldProps={textFieldProps}
     />
   );
 }
 
-function SelectorAgenda({selectedValue, setSelectedValue}) {
+function SelectorAgenda({selectedValue, setSelectedValue, textFieldProps={}}) {
   const agendaFormat = (agenda) => `${agenda.id}`;
   return (
     <AutocompleteAPIComponent
@@ -111,13 +114,28 @@ function SelectorAgenda({selectedValue, setSelectedValue}) {
       api_url={"/agendas/"}
       format={agendaFormat}
       placeholder={"Seleccionar agenda"}
+      textFieldProps={textFieldProps}
+    />
+  );
+}
+
+function SelectorPrestaciones({selectedValue, setSelectedValue, textFieldProps={}}) {
+  const prestacionFormat = (prestacion) => `${prestacion.nombre}`;
+  return (
+    <AutocompleteAPIComponent
+      selectedValue={selectedValue}
+      setSelectedValue={setSelectedValue}
+      api_url={"/prestaciones/"}
+      format={prestacionFormat}
+      placeholder={"Seleccionar práctica"}
+      textFieldProps={textFieldProps}
     />
   );
 }
 
 
 
-const SelectorPacientes = ({ setSelectedValue }) => {
+const SelectorPacientes = ({ setSelectedValue, textFieldProps={} }) => {
   const [inputValue, setInputValue] = useState('');
 
   const parseData = (data) => data.results;
@@ -148,8 +166,8 @@ const SelectorPacientes = ({ setSelectedValue }) => {
       renderInput={(params) => (
         <CustomTextField
         {...params}
-        label='Buscar paciente'
         loading={loading}
+        {...{label: 'Buscar paciente', ...textFieldProps}}
       />
       )}
     />
@@ -260,6 +278,6 @@ export {
   SelectorAgenda,
   SelectorPacientes,
   SelectorSobreTurno,
-  SelectorEstados
-  
+  SelectorEstados,
+  SelectorPrestaciones
 };

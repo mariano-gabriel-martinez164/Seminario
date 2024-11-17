@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 
 import estadosChips from '../CommonTurno/estadosChips.js';
 
-export function TablaTurnos({ turnos, handleClickTurno, loading }) {
+export function TablaTurnos({ turnos, handleClickTurno, loading, error }) {
   const formatHour = (hour) => {
     const [hourString, minuteString] = hour.split(':');
     return `${hourString.padStart(2, '0')}:${minuteString.padStart(2, '0')}`;
@@ -32,6 +32,14 @@ export function TablaTurnos({ turnos, handleClickTurno, loading }) {
         </StyledTableRow>
       </TableHead>
       <TableBody>
+        {error && ( 
+          <StyledTableRow>
+            <StyledTableCell colSpan={6}>
+              Error al cargar los turnos
+            </StyledTableCell>
+          </StyledTableRow>
+        )}
+        
         {turnos.map((turno) => (
           <StyledTableRow
             key={
@@ -39,7 +47,7 @@ export function TablaTurnos({ turnos, handleClickTurno, loading }) {
               `${turno.paciente}-${turno.agenda}-${turno.fecha}`
             }
           >
-            <StyledTableCell>{format(turno.fecha, "MMM dd")}</StyledTableCell>
+            <StyledTableCell>{format(parseISO(turno.fecha), "MMM dd")}</StyledTableCell> 
             <StyledTableCell>
               {formatHour(turno.horaInicio)} -{" "}
               {formatHour(turno.horaFin)}
@@ -63,6 +71,7 @@ export function TablaTurnos({ turnos, handleClickTurno, loading }) {
               <Button
                 color="primary"
                 onClick={handleClickTurno.bind(this, turno)}
+                aria-hidden="false"
               >Ver más...</Button>
             </StyledTableCell>
 

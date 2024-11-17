@@ -16,3 +16,19 @@ export function postData(url, data) {
     });
   }
 }
+
+export async function postDataWithResponse(url, data) {
+  if (url) {
+    console.log('post url:', url);
+    console.log('post data:', data);
+    const response = await fetch(apiUrl+url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  }
+}

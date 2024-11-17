@@ -15,3 +15,15 @@ export function putData(url, data) {
         })
   )
 }
+
+export async function putDataWithResponse(url, data) {
+  const response = await fetch(apiUrl+url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `token ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  return response.json();
+}

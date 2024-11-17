@@ -40,11 +40,11 @@ export function construirUrlTurnos(
     const fecha_fin = format(range[0].endDate, 'yyyy-MM-dd');
     let url = `/turnos/?fecha_inicio=${fecha_inicio}&fecha_fin=${fecha_fin}`;
     if (agenda) url += `&id_agenda=${agenda.id}`;
-    if (odontologo) url += `&id_odontologo=${odontologo.id}`;
+    if (odontologo) url += `&id_odontologo=${odontologo.matricula}`;
     if (centro) url += `&id_centro=${centro.id}`;
     if (administrativo) url += `&id_administrativo=${administrativo.id}`;
     if (paciente) url += `&id_paciente=${paciente.dni}`;
     if (sobreTurno != null) url += `&sobreturno=${sobreTurno}`;
-    if (estados.length) url += `&estado=` + estados.join('&estado=');
+    if (estados.length) url += `&estado=` + estados.map(x=>x.value).join('&estado=');
     return url;
 }

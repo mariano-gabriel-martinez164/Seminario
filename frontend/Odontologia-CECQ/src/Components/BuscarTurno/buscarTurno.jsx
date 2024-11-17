@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-import { VerSobreturno }  from './Sobreturno/sobreturno';
-import { ModalRealizado } from './CrudTurno/modalRealizado';
-import { ModalDisponible } from './CrudTurno/modalDisponible';
-import { ModalCancelado } from './CrudTurno/modalCancelado';
-import { ModalAsignado } from './CrudTurno/modalAsignado';
+// import { VerSobreturno }  from './Sobreturno/sobreturno';
 
 import {
   SelectorOdontologo,
@@ -18,51 +14,35 @@ import { SelectorCalendario } from '../MaterialUI/selectorCalendario.jsx';
 import { construirUrlTurnos } from "../../Request/v2/fetchTurnos.js";
 import { addDays } from 'date-fns';
 import Grid from '@mui/material/Grid2';
-import { FabSobreturno } from '../CommonTurno/fabSobreturno.jsx';
-import { TurnoAlerts } from '../CommonTurno/turnoAlerts.jsx';
 import { TablaTurnos } from './tablaTurnos.jsx';
 import { useMultipleFetch } from '../../Request/v2/fetch.js';
 
+import { ModalTurnoFeatures } from '../CommonTurno/modals/modalTurnoFeatures.jsx';
+import { useTurnoModal } from '../CommonTurno/modals/useTurnoModal.js';
 
-export default function BuscarTurno() {
 
-    const [modalShow, setModalShow] = useState(false);
-    const [selectedTurno, setSelectedTurno] = useState('');
-    const [estadoModal, setEstadoModal] = useState('');
-    const [selectedTurnoTemplate, setSelectedTurnoTemplate] = useState({});
-    const [modalSobreturnoShow, setModalSobreturnoShow] = useState(false);
-    const [estado, setEstado] = useState('');
-    const [url, setUrl] = useState('');
-    const [data, loading, error, fetchData] = useMultipleFetch();
+  
+  export default function BuscarTurno() {
+  const [url, setUrl] = useState('');
+  const [data, loading, error, fetchData] = useMultipleFetch();
 
+  const {modalTurnoFeatures, handleClickTurno} = useTurnoModal(()=>fetchData(url));
+
+  useEffect(() => {
+    if (url) fetchData(url);
+  }, [url, fetchData]); 
     
-    const handleClickTurno = (turno) => {
-        setModalShow(true);
-        if (turno.id !== null) {
-          setSelectedTurno(turno.id);
-          setSelectedTurnoTemplate({});
-          setEstado(turno.estado);
-        } else {
-          setSelectedTurnoTemplate(turno);
-          setSelectedTurno("");
-          setEstado(turno.estado);
-        }
-      }
 
-      useEffect(() => {
-        fetchData(url);
-      }, [url, fetchData]); 
+
       
-      const modalOnHide = () => {
-        setModalShow(false);
-        setModalSobreturnoShow(false);
-        // fetchData(url);
-      }
       
 
   return (
     <>
-      <TurnoAlerts estadoModal={estadoModal}/>
+      <ModalTurnoFeatures
+        modalTurnoFeatures={modalTurnoFeatures}
+        handleClickTurno={handleClickTurno}
+      />
       
       <Grid container gap={4} mt={4}>
         <MenuFiltros
@@ -73,54 +53,12 @@ export default function BuscarTurno() {
             turnos={data} 
             handleClickTurno={handleClickTurno} 
             loading={loading}
+            error={error}
           />
         </Grid>
       </Grid>
 
-      {estado === "Disponible" && modalShow ? (
-        <ModalDisponible
-          show={modalShow}
-          onHide={modalOnHide}
-          turnoTemplate={selectedTurnoTemplate}
-          setEstadoModal={setEstadoModal}
-        />
-      ) : null}
 
-      {estado === "Realizado" && modalShow ? (
-        <ModalRealizado
-          show={modalShow}
-          onHide={modalOnHide}
-          turnoClick={selectedTurno}
-        />
-      ) : null}
-
-      {estado === "Cancelado" && modalShow ? (
-        <ModalCancelado
-          show={modalShow}
-          onHide={modalOnHide}
-          turnoClick={selectedTurno}
-          turnoTemplate={selectedTurnoTemplate}
-          setEstadoModal={setEstadoModal}
-        />
-      ) : null}
-
-      {estado === "Asignado" && modalShow ? (
-        <ModalAsignado
-          show={modalShow}
-          onHide={modalOnHide}
-          turnoClick={selectedTurno}
-          setEstadoModal={setEstadoModal}
-        />
-      ) : null}
-
-      <FabSobreturno onClick={() => setModalSobreturnoShow(true)} />
-      {modalSobreturnoShow && (
-        <VerSobreturno
-          show={modalSobreturnoShow}
-          onHide={modalOnHide}
-          setEstadoModal={setEstadoModal}
-        />
-      )}
     </>
   );
 }

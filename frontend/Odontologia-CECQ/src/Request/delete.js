@@ -12,3 +12,14 @@ export function deleteData(url) {
         })
   )
 }
+
+export async function deleteDataWithResponse(url) {
+  const response = await fetch(apiUrl+url, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `token ${token}`,
+    },
+  });
+  return response.json();
+}
