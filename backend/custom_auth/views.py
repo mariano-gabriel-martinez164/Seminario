@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import AdministrativoSerializer, ChangePasswordSerializer, UpdateAdministrativoSerializer
+from .serializers import AdministrativoSerializer, ChangePasswordSerializer, UpdateAdministrativoSerializer, AdministrativoIdSerializer
 from .models import Administrativo
 # Create your views here.
 from rest_framework import generics
@@ -18,6 +18,16 @@ class AdministrativoDetail(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method == 'PUT':
             return UpdateAdministrativoSerializer
         return AdministrativoSerializer
+
+class AdministrativoData(generics.RetrieveAPIView):
+    queryset = Administrativo.objects.all()
+    serializer_class = AdministrativoIdSerializer
+    permission_classes = (IsAuthenticated,)
+    
+    def get_object(self, queryset=None):
+    # Retrieve the authenticated user from the request
+        return self.request.user
+    
 
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer

@@ -135,9 +135,8 @@ function SelectorPrestaciones({selectedValue, setSelectedValue, textFieldProps={
 
 
 
-const SelectorPacientes = ({ setSelectedValue, textFieldProps={} }) => {
+const SelectorPacientes = ({ setSelectedValue, sx={}, textFieldProps={} }) => {
   const [inputValue, setInputValue] = useState('');
-
   const parseData = (data) => data.results;
   const [data, loading, error, searchData] = useFetchSearch('/pacientes/', 300, parseData);
 
@@ -150,15 +149,16 @@ const SelectorPacientes = ({ setSelectedValue, textFieldProps={} }) => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <Autocomplete
+	  <Autocomplete
+	  sx={{ ...sx }}
       options={data}
       getOptionLabel={(option) => option.apellido +' '+option.nombre || ''}
       getOptionKey={(option) => option.dni}
       filterOptions={(x) => x}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
+	  }}
 
-      }}
       onChange={(event, newValue) => {
         setSelectedValue(newValue);
       }}
@@ -172,7 +172,7 @@ const SelectorPacientes = ({ setSelectedValue, textFieldProps={} }) => {
       )}
     />
   );
-};
+}
 
 
 function SelectorSobreTurno({ setSelectedValue }) {

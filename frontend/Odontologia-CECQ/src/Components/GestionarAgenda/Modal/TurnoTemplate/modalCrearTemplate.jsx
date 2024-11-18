@@ -1,8 +1,8 @@
-import { TextField, Container, Button, Dialog, DialogActions, DialogContent, Typography, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { TextField,Alert, Container, Button, Dialog, DialogActions, DialogContent, Typography, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useState } from 'react';
 import { turnoTemplate } from './turnoTemplate';
-import { postData } from '../../../../Request/post';
+import { usePostData } from '../../../../Request/v2/post';
 
 export function ModalCrearTemplate({ open, onClose, agendaSeleccionado, setEstado }) {
 
@@ -20,6 +20,19 @@ export function ModalCrearTemplate({ open, onClose, agendaSeleccionado, setEstad
     return formato.test(hora);
   };
 
+  const { postData, errorPost, loading } = usePostData();
+
+  const handleSubmit = async (formData) => {
+    postData(`/turnotemplates/`, turnoTemplate(formData, agendaSeleccionado))
+    .then(() => {
+      setEstado('Creado');
+      onClose();
+    })
+    .catch((error) => {
+      console.error('Error al crear la agenda:', errorPost);
+  });
+}
+
   return (
     <Dialog
       open={open}
@@ -28,6 +41,7 @@ export function ModalCrearTemplate({ open, onClose, agendaSeleccionado, setEstad
       aria-describedby="alert-dialog-slide-description"
     >
         <DialogContent>
+        {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}
         <form>
           <Container id='container'>
               <Grid container spacing={2}>
@@ -87,17 +101,15 @@ export function ModalCrearTemplate({ open, onClose, agendaSeleccionado, setEstad
 
         <DialogActions>
           <Button onClick={() => {
-            postData(`/turnotemplates/`, turnoTemplate(formData, agendaSeleccionado));
-            onClose();
-            setEstado('creado');
+            handleSubmit(formData);
           }} 
-          variant="outlined" color='success' id='button'
-          disabled={!formData.diaSemana || !validarHora(formData.horaInicio) || !validarHora(formData.horaFin) || !compararHoras(formData.horaInicio, formData.horaFin)}
+          variant="contained" color='success' id='button'
+          disabled={formData.diaSemana === '' || !validarHora(formData.horaInicio) || !validarHora(formData.horaFin) || !compararHoras(formData.horaInicio, formData.horaFin)}
           >
             Crear turno 
           </Button>
 
-          <Button onClick={() => onClose()} variant="outlined" id='button'>Cerrar</Button>
+          <Button onClick={() => onClose()} variant="contained" id='button'>Cerrar</Button>
         </DialogActions>
     </Dialog>
   );

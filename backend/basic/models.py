@@ -12,6 +12,7 @@ class Prestacion(models.Model):
     codigo = models.CharField(max_length=3, primary_key=True)
     nombre = models.CharField(max_length=15)
     precio = models.DecimalField(max_digits=11,decimal_places=2)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.codigo} - {self.nombre} - ${self.precio}'
