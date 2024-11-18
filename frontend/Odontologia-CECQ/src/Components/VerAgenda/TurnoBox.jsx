@@ -3,7 +3,7 @@ import { parse, differenceInMinutes } from "date-fns";
 import "./TurnoBox.css";
 
 function TurnoBox(turno) {
-  const { horaInicio, horaFin } = turno;
+  const { horaInicio, horaFin, onClick } = turno;
   const horario = `${horaInicio.slice(0, 5)} - ${horaFin.slice(0, 5)}`;
   const horaInicioDate = parse(horaInicio, "HH:mm:ss", new Date());
   const horaFinDate = parse(horaFin, "HH:mm:ss", new Date());
@@ -18,10 +18,11 @@ function TurnoBox(turno) {
     Cancelado: "error",
     Realizado: "success",
   };
-  console.log(turno.estado);
-  console.log(coloresEstado[turno.estado]);
+  // console.log(turno.estado);
+  // console.log(coloresEstado[turno.estado]);
 
   const handleClick = () => {
+    onClick(turno);
     if (turno.id === null) {
       console.log("TurnoTemplate - Abrir creación de turno");
     } else {
@@ -36,6 +37,7 @@ function TurnoBox(turno) {
       spacing={5}
       sx={{
         height: duracion*2,
+        m: 1,
         bgcolor: `${coloresEstado[turno.estado]}.light`,
         borderRadius: 2,
         // ":hover": {

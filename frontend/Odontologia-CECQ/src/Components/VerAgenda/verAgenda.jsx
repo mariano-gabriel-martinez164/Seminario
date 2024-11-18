@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './verAgenda.css'
 import { SelectorCalendario } from '../MaterialUI/selectorCalendario'
 import { SelectorAgenda } from '../MaterialUI/selectores'
@@ -10,8 +10,14 @@ import Divider from '@mui/material/Divider';
 import TurnoBox from './TurnoBox';
 import Alert from '@mui/material/Alert';
 
-import { addDays, differenceInDays, getDay, format, eachDayOfInterval } from 'date-fns';
-import useFetchTurnos from '../../Request/v2/fetchTurnos';
+import { addDays, format, eachDayOfInterval } from 'date-fns';
+// import { differenceInDays, getDay } from 'date-fns';
+
+import { useMultipleFetch } from '../../Request/v2/fetch';
+import { construirUrlTurnos } from "../../Request/v2/fetchTurnos.js";
+import { ModalTurnoFeatures } from '../CommonTurno/modals/modalTurnoFeatures.jsx';
+import { useTurnoModal } from '../CommonTurno/modals/useTurnoModal.js';
+
 
 
 export default function VerAgenda() {
@@ -22,20 +28,26 @@ export default function VerAgenda() {
     }];
   const [range, setRange] = useState(defaultRange);
   const [agenda, setAgenda] = useState(null);
+  const [url, setUrl] = useState('');
   
-  const isDateRangeValid = () => {
-    const startsInMonday = getDay(range[0].startDate) === 1;
-    const endInSunday = getDay(range[0].endDate) === 0;
-    const is7Days = differenceInDays(range[0].endDate, range[0].startDate) === 6;
-    return is7Days && startsInMonday && endInSunday;
-  }
-  
-  const { data, error, isLoading } = useFetchTurnos(
-    agenda? range[0].startDate : defaultRange[0].startDate,
-    agenda? range[0].endDate : defaultRange[0].endDate,
-    agenda? agenda.id : ''
-  );
-  // console.log(agenda)
+
+  // const isDateRangeValid = () => {
+  //   const startsInMonday = getDay(range[0].startDate) === 1;
+  //   const endInSunday = getDay(range[0].endDate) === 0;
+  //   const is7Days = differenceInDays(range[0].endDate, range[0].startDate) === 6;
+  //   return is7Days && startsInMonday && endInSunday;
+  // }
+
+  const [data, isLoading, error, fetchData] = useMultipleFetch();
+  const {modalTurnoFeatures, handleClickTurno} = useTurnoModal(()=>fetchData(url));
+
+  useEffect(() => {
+    if (agenda) {
+      setUrl(construirUrlTurnos(range,agenda));
+      if (url)fetchData(url);
+    }
+  }, [agenda, range, fetchData, url]);
+
 
 
   return (
@@ -46,13 +58,21 @@ export default function VerAgenda() {
       agenda={agenda}
       setAgenda={setAgenda}
     >
+      <ModalTurnoFeatures
+        modalTurnoFeatures={modalTurnoFeatures}
+        handleClickTurno={handleClickTurno}
+      />
       {agenda 
         ? <h3>{agenda.CentroOdontologico?.nombre} - {agenda.odontologo?.apellido}, {agenda.odontologo?.nombre}</h3>
         : <Alert severity="error" sx={{width:'70%'}}>Selecciona una agenda</Alert>
       }
       {isLoading && <Alert severity="info" sx={{width:'70%'}}>Cargando...</Alert>}
       {error && <Alert severity="error" sx={{width:'70%'}}>{error}</Alert>}
-      {data && !isLoading && !error && agenda && <AgendaSemanal data={data} range={range}/>}
+      {data && !isLoading && !error && agenda && <AgendaSemanal 
+        data={data} 
+        range={range}
+        turnoBoxOnClick={handleClickTurno}  
+      />}
 
     </MenuVerAgenda>
   )
@@ -101,7 +121,7 @@ export function MenuVerAgenda({children, defaultRange, range, setRange, agenda, 
 }
 
 
-function AgendaSemanal({data, range}) {
+function AgendaSemanal({data, range, turnoBoxOnClick}) {
   //console.log(data);
 
   const getDayHeaders = () => {
@@ -176,7 +196,7 @@ function AgendaSemanal({data, range}) {
             <Box key={index} sx={{ flex: 1, pt:1 }}>
               {turnosDia.map((turno, index) => {
                 return (
-                  <TurnoBox key={index} {...turno} />
+                  <TurnoBox key={index} {...turno} onClick={turnoBoxOnClick}/>
                 )
               })}
             </Box>
