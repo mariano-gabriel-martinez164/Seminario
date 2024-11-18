@@ -68,47 +68,35 @@ const styles = StyleSheet.create({
   },
 });
 
-const Centro = () => (
-  <View style={styles.section}>
-    <View style={styles.header}>
-      <View style={styles.leftContent}>
-        <Text style={styles.title}>
-          Centro de Empleados de Comercio de Quilmes
-        </Text>
-        <Text style={styles.subtitle}>
-          Delegaciones Fcio. Varela - Berazategui - Solano
-        </Text>
-        <Text style={styles.address}>
-          San Martín 515 - Quilmes (1878) - Tel./Fax: 4257-7310/11 /
-          2055-5508/09/11/12
-        </Text>
-        <Text style={styles.address}>
-          Calle 11 N° 4832 (1884) Berazategui - Tel.: 4256-4856
-        </Text>
-        <Text style={styles.address}>
-          Alte. Brown N° 41 - Fcio. Varela - Tel.: 4255-5657
-        </Text>
-        <Text style={styles.address}>
-          Calle 843 N° 2445 - S. F. Solano - Tel.: 2081-2136
-        </Text>
-      </View>
-      <View style={styles.rightContent}>
-        <Image style={styles.logo} src={img} />
-        <Text style={styles.turnText}>TURNO ODONTOLÓGICO</Text>
-      </View>
-    </View>
-    <View style={styles.footer}>
-      <Text style={styles.footerText}>
-        TRAER CARNET DE SINDICATO Y OSECAC - RECIBO DE SUELDO
-      </Text>
-    </View>
-  </View>
-)
-
-const RecivoPDF = () => (
+const RecivoPDF = ({ centro, turno, odontologo }) => (
   <Document>
     <Page size="A4" style={styles.page}>
-      <Centro/>
+      <View style={styles.section}>
+        <View style={styles.header}>
+          <View style={styles.leftContent}>
+            <Text style={styles.title}>
+              Centro de Empleados de Comercio de Quilmes
+            </Text>
+            <Text style={styles.subtitle}>
+              {centro.nombre}, {centro.direccion}
+            </Text>
+            <Text style={styles.subtitle}>
+              doctor {odontologo.nombre} {odontologo.apellido}
+            </Text>
+            <Text style={styles.address}>
+              {turno.paciente.nombre} {turno.paciente.apellido}
+            </Text>
+            <Text style={styles.address}>{turno.fecha} {turno.horaInicio}</Text>
+          </View>
+          <View style={styles.rightContent}>
+            <Image style={styles.logo} src={img} />
+            <Text style={styles.turnText}>TURNO ODONTOLÓGICO</Text>
+          </View>
+        </View>
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>TRAER CARNET DE SINDICATO Y OSECAC - CONSTANCIA DE TURNO</Text>
+        </View>
+      </View>
     </Page>
   </Document>
 );
