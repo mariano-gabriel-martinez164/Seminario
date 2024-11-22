@@ -16,6 +16,8 @@ import { useEffect } from 'react';
 import GestionarUsuario from './Components/GestionarUsuario/gestionarUsuario';
 import GestionarAgenda from './Components/GestionarAgenda/gestionarAgenda';
 import GestionarPrestacion from './Components/GestionarPrestacion/gestionarPrestacion';
+import { useNavigate } from 'react-router-dom';
+
 
 function App() {
   return (
@@ -28,15 +30,17 @@ function App() {
 }
 
 function RouteHandler() {
+  const navigate = useNavigate();
   const location = useLocation();
   const isLoginPage = location.pathname === '/';
   const { isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     if (isLoginPage && isAuthenticated) {
-      logout(); 
+      navigate('/verAgenda');
     }
-  }, [isLoginPage, isAuthenticated, logout]);
+  }, [isLoginPage, isAuthenticated, navigate]);
+  
 
 
   const protectedRoutes = [
@@ -44,10 +48,11 @@ function RouteHandler() {
     { path: '/buscarPaciente', Component: <BuscarPaciente /> },
     { path: '/buscarTurno', Component: <BuscarTurno /> },
     { path: '/facturaciones', Component: <Facturaciones /> },
-    { path: '/gestionarUsuario', Component: <GestionarUsuario /> },
-    { path: '/gestionarAgenda', Component: <GestionarAgenda /> },
-    { path: '/gestionarPrestacion', Component: <GestionarPrestacion /> }
+    { path: '/gestionarUsuario', Component: <GestionarUsuario />, adminOnly: true },
+    { path: '/gestionarAgenda', Component: <GestionarAgenda />, adminOnly: true },
+    { path: '/gestionarPrestacion', Component: <GestionarPrestacion />, adminOnly: true }
   ];
+  
 
   return (
     <div style={{ marginTop: 64, marginLeft: 70 }}>
