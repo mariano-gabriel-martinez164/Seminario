@@ -2,7 +2,7 @@ import { Fab, Paper, Table, TableBody, TableContainer, TableHead, TableRow, Cont
 import AddIcon from "@mui/icons-material/Add"
 import { StyledTableCell, StyledTableRow } from '../MaterialUI/styledTable.jsx';
 import { useState, useEffect } from 'react'
-import { useFetchSearch } from '../../Request//v2/fetch.js';
+import { useFetchSearch } from '../../Request/v2/fetch.js';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteData } from "../../Request/delete.js";
 import SearchIcon from '@mui/icons-material/Search';
