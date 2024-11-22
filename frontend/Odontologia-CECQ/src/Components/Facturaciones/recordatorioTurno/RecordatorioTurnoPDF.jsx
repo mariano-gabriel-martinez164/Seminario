@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const RecivoPDF = ({ centro, turno, odontologo }) => (
+const RecordatorioTurnoPDF = ({ centro, turno, odontologo }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
@@ -101,4 +101,4 @@ const RecivoPDF = ({ centro, turno, odontologo }) => (
   </Document>
 );
 
-export default RecivoPDF;
+export default RecordatorioTurnoPDF;

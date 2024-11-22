@@ -7,8 +7,8 @@ import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 import  MostrarHistorias  from './historias.jsx';
 import { SelectorPacientes } from '../MaterialUI/selectores.jsx';
-import CrearPaciente from './crearPaciente.jsx';
-import EditarPaciente from './editarPaciente.jsx';
+import CrearPaciente from './Modal/crearPaciente.jsx';
+import EditarPaciente from './Modal/editarPaciente.jsx';
 
 export default function buscarPaciente() {
 	const [ paciente, cambiarPaciente ] = useState('');

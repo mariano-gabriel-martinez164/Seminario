@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Stack, Button } from '@mui/material';
-import Validar from './validaciones.jsx';
-import { usePostData } from '../../Request/v2/post';
-import { useFetch } from '../../Request/v2/fetch';
-import './buscarPaciente.css';
+import Validar from '../validaciones.jsx';
+import { usePostData } from '../../../Request/v2/post';
+import { useFetch } from '../../../Request/v2/fetch';
+import '../buscarPaciente.css';
 
 function CrearPaciente({ abrir, cerrar }) {	
 	const { formValor, errores, cambiosForm, controlador, nuevosErrores } = Validar();
@@ -37,7 +37,7 @@ function CrearPaciente({ abrir, cerrar }) {
 					p: 4,
 					borderRadius: 4,
 					boxShadow: 20,
-					width: 700
+					width: 400
 				}}>
 				<form style={{ marginTop: 0 }} onSubmit={controlador}>
 					<Typography variant="h4" gutterBottom sx={{ mb: 2, textAlign: 'left' }}>
