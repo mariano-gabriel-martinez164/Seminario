@@ -75,7 +75,7 @@ export function Recibo({ range, turnos, odontologo }) {
         agendas={agendas}
         odontologo={odontologo}
       />}
-      fileName="recordatorio-de-turno.pdf"
+      fileName="recibo.pdf"
       style={{ textDecoration: "none" }}
     >
       <Button variant="contained">
