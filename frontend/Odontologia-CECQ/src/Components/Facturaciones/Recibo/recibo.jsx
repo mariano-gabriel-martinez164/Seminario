@@ -67,7 +67,7 @@ export function Recibo({ range, turnos, odontologo }) {
         <PictureAsPdfIcon /> Cargando..
       </Button>);
   }
-
+  console.log(agendas);
   return (
     <PDFDownloadLink
       document={<ReciboPDF 

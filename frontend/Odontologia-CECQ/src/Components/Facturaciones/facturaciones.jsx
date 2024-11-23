@@ -15,11 +15,8 @@ import useFetchTurnos from "../../Request/v2/fetchTurnos.js";
 import { format } from "date-fns";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { Recibo } from "./Recibo/recibo.jsx";
-import { useFetch } from "../../Request/v2/fetch";
 import Typography from "@mui/material/Typography";
 
-// ocultar total
-// ocultar descarga
 
 export default function Facturaciones() {
   const defaultRange = [
@@ -59,6 +56,7 @@ export default function Facturaciones() {
               nombre: turno?.paciente.nombre,
               apellido: turno?.paciente.apellido
             },
+            id: turno?.id,
             fecha: turno?.fecha,
             agenda: turno?.agenda,
             monto: turno?.monto,
@@ -122,7 +120,7 @@ export default function Facturaciones() {
                   <StyledTableRow
                     key={
                       turno.id ||
-                      `${turno.paciente.nombre}-${turno.agenda}-${turno.fecha}`
+                      `${turno.paciente.nombre} ${turno.paciente.apellido}-${turno.agenda}-${turno.fecha}`
                     }
                   >
                     <StyledTableCell>
