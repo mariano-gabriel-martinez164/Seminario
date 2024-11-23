@@ -85,7 +85,7 @@ export function ModalCrearOdontologo({ open, onClose, setEstadoModal }) {
 
             <Grid size={12}>
               <TextField
-                label='matricula'
+                label='Matrícula'
                 multiline
                 maxRows={4}
                 name="matricula"
@@ -110,7 +110,7 @@ export function ModalCrearOdontologo({ open, onClose, setEstadoModal }) {
         id='button'
         disabled={!isFormValid}
       >
-        Agregar odontologo
+        Agregar odontólogo
       </Button>
       <Button onClick={() => onClose()} variant="contained" id='button'>Cerrar</Button>
     </DialogActions>

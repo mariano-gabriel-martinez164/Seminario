@@ -81,7 +81,7 @@ export default function GestionaOdontologo() {
         }}
       >
         <AddIcon sx={{ mr: 1 }} />
-        Agregar odontologo
+        Agregar odontólogo
       </Fab>
       {modalShowCrear && (
         <ModalCrearOdontologo

@@ -46,7 +46,7 @@ export default function GestionarPrestacion() {
           <TableRow>
             <StyledTableCell align="center">Nombre</StyledTableCell>
             <StyledTableCell align="center">Precio</StyledTableCell>
-            <StyledTableCell align="center">Opcion</StyledTableCell>
+            <StyledTableCell align="center">Opción</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -81,7 +81,7 @@ export default function GestionarPrestacion() {
         onClick={() => {setModalShowCrear(true)}}
       >
         <AddIcon sx={{ mr: 1 }} />
-        Crear prestacion
+        Crear prestación
       </Fab>
 
       {modalShowCrear && (

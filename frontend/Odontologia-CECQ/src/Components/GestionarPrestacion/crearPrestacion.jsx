@@ -52,7 +52,7 @@ export default function CrearPrestacion({open, onClose, setEstado}) {
       <Grid size={12}>
         <TextField 
         id="outlined-basic" 
-        label="Codigo" 
+        label="Código" 
         value={codigo}
         onChange={(e) => setCodigo(e.target.value)} 
         fullWidth
