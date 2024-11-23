@@ -19,6 +19,11 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import ReciboPDF from "./Recibo/reciboPDF.jsx";
 import { useFetch } from "../../Request/v2/fetch";
+import Typography from "@mui/material/Typography";
+
+// ocultar total
+// ocultar descarga
+// hacer componente para recibo
 
 export default function Facturaciones() {
   const defaultRange = [
@@ -123,6 +128,11 @@ export default function Facturaciones() {
           justifyContent: "center",
         }}
       >
+        <Grid size={12} xs={12} sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h4" component="h1" color="primary">
+            Facturaciones
+          </Typography>
+        </Grid>
         <Grid size={3}>
           <SelectorOdontologo
             selectedValue={odontologo}
