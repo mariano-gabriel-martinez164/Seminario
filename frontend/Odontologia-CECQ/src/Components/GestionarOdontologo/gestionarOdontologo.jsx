@@ -17,16 +17,18 @@ export default function GestionaOdontologo() {
   const [modalShowCrear, setModalShowCrear] = useState(false);
   const [modalShowEliminar, setModalShowEliminar] = useState(false);
   const [estadoEliminar, setEstadoEliminar] = useState('');
+  const [estadoCrear, setEstadoCrear] = useState('');
 
   const url = '/odontologos/';
   const { data: odontologos, loading: isLoading, error, fetchData } = useFetchDataOnDemand(url);
 
   useEffect(() => {
+    setEstadoEliminar('');
+    setEstadoCrear('');
     setTimeout(async () => {
       await fetchData();
     }, 500);
-    setEstadoEliminar('');
-  }, [estadoEliminar, estadoModal]);
+  }, [estadoEliminar, estadoModal, estadoCrear]);
 
   return (
     <Container fixed sx={{ mt: 2 }}>
@@ -88,6 +90,7 @@ export default function GestionaOdontologo() {
           open={modalShowCrear} 
           onClose={() => setModalShowCrear(false)}
           setEstadoModal={setEstadoModal}
+          setEstadoCrear={setEstadoCrear}
         />
       )}
       {modalShowEliminar && (

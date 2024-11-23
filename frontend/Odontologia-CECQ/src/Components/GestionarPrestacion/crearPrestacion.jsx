@@ -10,7 +10,7 @@ const prestacion = (codigo, nombre, precio) => ({
   "is_active": true
 });
 
-export default function CrearPrestacion({open, onClose, setEstado}) {
+export default function CrearPrestacion({open, onClose, setEstado, setEstadoCrear}) {
   const [ nombre, setNombre ] = useState('');
   const [ precio, setPrecio ] = useState('');
   const [ codigo, setCodigo ] = useState('');
@@ -24,6 +24,7 @@ export default function CrearPrestacion({open, onClose, setEstado}) {
       postData(`/prestaciones/`,prestacion(codigo, nombre, precio))
       .then(() => {
         setEstado('Creado');
+        setEstadoCrear('Creado');
         onClose();
       })
       .catch((error) => {

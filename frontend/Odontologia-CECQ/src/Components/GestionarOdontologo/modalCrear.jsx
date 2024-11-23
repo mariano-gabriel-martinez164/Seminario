@@ -12,7 +12,7 @@ const odontologo = (matricula, nombre, apellido, cuil) => ({
 });
 
 
-export function ModalCrearOdontologo({ open, onClose, setEstadoModal }) {
+export function ModalCrearOdontologo({ open, onClose, setEstadoModal, setEstadoCrear }) {
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
@@ -27,6 +27,7 @@ export function ModalCrearOdontologo({ open, onClose, setEstadoModal }) {
     postData('/odontologos/', odontologo(formData.matricula, formData.nombre, formData.apellido, formData.cuil))
     .then(() => {
       setEstadoModal('Creado');
+      setEstadoCrear('Creado');
       onClose();
     })
     .catch((error) => {

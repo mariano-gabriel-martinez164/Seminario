@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { usePostData } from '../../Request/v2/post'
 import { agenda } from './agenda'
 
-export default function CrearAgenda({open, onClose, setEstado}) {
+export default function CrearAgenda({open, onClose, setEstado, setEstadoCrear}) {
   const [centro, setCentro] = useState(null);
   const [ odontologo, setOdontologo ] = useState([]);
 
@@ -15,6 +15,7 @@ export default function CrearAgenda({open, onClose, setEstado}) {
       postData('/agendas/', agenda(odontologo.matricula, centro.id))
       .then(() => {
         setEstado('Creado');
+        setEstadoCrear('Creado');
         onClose();
       })
       .catch((error) => {

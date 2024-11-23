@@ -19,6 +19,7 @@ export default function GestionarAgenda() {
   const [modalShowCrear, setModalShowCrear] = useState(false);
   const [modalShowEliminar, setModalShowEliminar] = useState(false);
   const [estadoEliminar, setEstadoEliminar ] = useState('');
+  const [estadoCrear, setEstadoCrear] = useState('');
   const [agendaSeleccionado, setAgendaSeleccionado] = useState(null);
   const [estado, setEstado] = useState('');
 
@@ -30,7 +31,8 @@ export default function GestionarAgenda() {
   useEffect(() => {
     fetchData();
     setEstadoEliminar('');
-  }, [url, estado, estadoEliminar, modalShowCrear]);
+    setEstadoCrear(''); 
+  }, [url, estado, estadoEliminar, estadoCrear]);
 
   return (
     <Container fixed sx={{ mt: 2 }}>
@@ -113,6 +115,7 @@ export default function GestionarAgenda() {
           open={modalShowCrear}
           onClose={() => setModalShowCrear(false)}
           setEstado={setEstado}
+          setEstadoCrear={setEstadoCrear}
         />
       )}
       {modalShowEliminar && (

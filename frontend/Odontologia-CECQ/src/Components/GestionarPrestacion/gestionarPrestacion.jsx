@@ -8,10 +8,12 @@ import { deleteData } from "../../Request/delete.js";
 import SearchIcon from '@mui/icons-material/Search';
 import CrearPrestacion from "./crearPrestacion.jsx";
 import ModalEliminar from '../ModalEliminar/modalEliminar.jsx';
+import { set } from "date-fns";
 
 export default function GestionarPrestacion() {
   const [modalShowCrear, setModalShowCrear] = useState(false);
   const [estado, setEstado] = useState('');
+  const [estadoCrear, setEstadoCrear] = useState('');
   const [prestacion, setPrestacion] = useState('');
   const [modalShowEliminar, setModalShowEliminar] = useState(false);
   const [ estadoEliminar, setEstadoEliminar ] = useState('');
@@ -22,7 +24,8 @@ export default function GestionarPrestacion() {
   useEffect(() => {
       searchData(prestacion);
       setEstadoEliminar('');
-  }, [prestacion, estadoEliminar, estado]);
+      setEstadoCrear('');
+  }, [prestacion, estadoEliminar, estado, estadoCrear]);
 
   return (
     <Container fixed sx={{ mt: 2 }}>
@@ -89,6 +92,7 @@ export default function GestionarPrestacion() {
           open={modalShowCrear}
           onClose={() => setModalShowCrear(false)}
           setEstado={setEstado}
+          setEstadoCrear={setEstadoCrear}
         />
       )}
       {modalShowEliminar && (
