@@ -20,6 +20,7 @@ export default function GestionarUsuario() {
   const [modalShowModificar, setModalShowModificar] = useState(false);
   const [modalShowCrear, setModalShowCrear] = useState(false);
   const [modalShowEliminar, setModalShowEliminar] = useState(false);
+  const [estadoEliminar, setEstadoEliminar] = useState('');
   const url = '/auth/administrativos/';
   const { data: administrativos, loading: isLoading, error, fetchData } = useFetchDataOnDemand(url);
   const { data: me, loading: isLoadingMe, error: errorMe } = useFetch('/auth/administrativos/me/');
@@ -30,9 +31,9 @@ export default function GestionarUsuario() {
     setTimeout(async () => {
       await fetchData();
     }, 500);
-  }, [modalShowEliminar]);
+  }, [estadoEliminar]);
 
-  const handleCrearUsuario = async (estado) => {
+  const handleManejarUsuario = async (estado) => {
     setEstadoModal(estado);
     setModalShowCrear(false);
     setTimeout(async () => {
@@ -118,14 +119,14 @@ export default function GestionarUsuario() {
           onClose={() => setModalShowModificar(false)}
           setEstadoModal={setEstadoModal}
           usuarioSeleccionado={usuarioSeleccionado}
-          handleCrearUsuario={handleCrearUsuario}
+          handleManejarUsuario={handleManejarUsuario}
         />
       )}
       {modalShowCrear && (
         <ModalCrearUsuario
           open={modalShowCrear} 
           onClose={() => setModalShowCrear(false)}
-          handleCrearUsuario={handleCrearUsuario}
+          handleManejarUsuario={handleManejarUsuario}
         />
       )}
       {modalShowEliminar && (
@@ -136,6 +137,7 @@ export default function GestionarUsuario() {
           este={"este usuario"}
           setEstadoModal={setEstadoModal}
           url={'/auth/administrativos/'}
+          setEstadoEliminar={setEstadoEliminar}
         />
       )}
     </Container>

@@ -18,6 +18,7 @@ export default function GestionarAgenda() {
   const [modalShow, setModalShow] = useState(false);
   const [modalShowCrear, setModalShowCrear] = useState(false);
   const [modalShowEliminar, setModalShowEliminar] = useState(false);
+  const [estadoEliminar, setEstadoEliminar ] = useState('');
   const [agendaSeleccionado, setAgendaSeleccionado] = useState(null);
   const [estado, setEstado] = useState('');
 
@@ -28,7 +29,7 @@ export default function GestionarAgenda() {
 
   useEffect(() => {
     fetchData();
-  }, [url, estado, modalShowEliminar, modalShowCrear]);
+  }, [url, estado, estadoEliminar, modalShowCrear]);
 
   return (
     <Container fixed sx={{ mt: 2 }}>
@@ -121,6 +122,7 @@ export default function GestionarAgenda() {
           este={"esta agenda"}
           setEstadoModal={setEstado}
           url={'/agendas/'}
+          setEstadoEliminar={setEstadoEliminar}
         />
       )}
 

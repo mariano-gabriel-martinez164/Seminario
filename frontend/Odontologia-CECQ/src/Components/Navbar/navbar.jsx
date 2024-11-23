@@ -9,6 +9,7 @@ import { Menu as MenuIcon, ChevronLeft as ChevronLeftIcon, ChevronRight as Chevr
 import { DrawerHeader, AppBar, Drawer } from './navbarEstilos';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import PersonSearch from '@mui/icons-material/PersonSearch';
+import EngineeringIcon from '@mui/icons-material/Engineering';
 import ManageSearch from '@mui/icons-material/ManageSearch';
 import FeedIcon from '@mui/icons-material/Feed';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -167,12 +168,19 @@ export default function Navbar() {
               setOpen={setOpen}
             />
             <DrawerItem
+              icon={<EngineeringIcon />}
+              text='Gestionar Odontologos'
+              link='/gestionarOdontologo'
+              setOpen={setOpen}
+            />
+            <DrawerItem
               icon={<AssignmentTurnedInIcon />}
               text='Gestionar agendas'
               link='/gestionarAgenda'
               setOpen={setOpen}
             />
             <DrawerItem
+              
               icon={<DescriptionIcon />}
               text='Gestionar Prestaciones'
               link='/gestionarPrestacion'

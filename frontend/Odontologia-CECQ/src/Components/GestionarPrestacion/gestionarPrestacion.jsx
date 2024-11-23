@@ -14,13 +14,14 @@ export default function GestionarPrestacion() {
   const [estado, setEstado] = useState('');
   const [prestacion, setPrestacion] = useState('');
   const [modalShowEliminar, setModalShowEliminar] = useState(false);
+  const [ estadoEliminar, setEstadoEliminar ] = useState('');
   const [prestacionSeleccionado, setPrestacionSeleccionado] = useState(null); 
   const parseData = (data) => data;
   const [ data, loading, error, searchData ] = useFetchSearch('/prestaciones/', 300, parseData);
 
   useEffect(() => {
       searchData(prestacion);
-  }, [prestacion, modalShowEliminar, estado]);
+  }, [prestacion, estadoEliminar, estado]);
 
   return (
     <Container fixed sx={{ mt: 2 }}>
@@ -97,6 +98,7 @@ export default function GestionarPrestacion() {
           este={"esta prestacion"}
           setEstadoModal={setEstado}
           url={'/prestaciones/'}
+          setEstadoEliminar={setEstadoEliminar}
         />
       )}
     </Container>

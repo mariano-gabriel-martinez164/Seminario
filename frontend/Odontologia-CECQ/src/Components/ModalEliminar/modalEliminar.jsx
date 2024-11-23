@@ -2,11 +2,12 @@ import { Dialog, Typography, DialogActions, DialogContent, Button, Box } from '@
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { deleteData } from "../../Request/delete.js";
 
-export default function ModalEliminar({ open, onClose, seleccionado, este, setEstadoModal, url }) {
+export default function ModalEliminar({ open, onClose, seleccionado, este, setEstadoModal, url, setEstadoEliminar }) {
   const handleEliminar = async (id) => {
+    setEstadoModal('Eliminado');
+    setEstadoEliminar('Eliminado');
     await deleteData(url + `${id}/`);
     onClose();
-    setEstadoModal('Eliminado');
   };
 
   return (

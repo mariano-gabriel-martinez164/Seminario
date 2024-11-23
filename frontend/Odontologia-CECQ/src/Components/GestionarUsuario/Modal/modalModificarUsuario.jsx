@@ -7,7 +7,7 @@ import { usePutData } from '../../../Request/v2/put2';
 import { TextField, Container, Button, Dialog, DialogActions, DialogContent, Alert } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
-export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSeleccionado, handleCrearUsuario }) {
+export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSeleccionado, handleManejarUsuario }) {
   const { data: administrativo, loading: isLoading, error } = useFetch(`/auth/administrativos/${usuarioSeleccionado}/`);
   const [formData, setFormData] = useState({
     first_name: administrativo?.first_name,
@@ -33,7 +33,7 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
     putData(`/auth/administrativos/${usuarioSeleccionado}/`, formData)
       .then(() => {
         Estado(onClose(), setEstadoModal, 'Modificado');
-        handleCrearUsuario('Modificado');
+        handleManejarUsuario('Modificado');
       })
       .catch((err) => {
         console.error('Error modificando el usuario:', err);

@@ -8,7 +8,7 @@ import { usePostData } from '../../../Request/v2/post';
 import { usuarioFormato } from '../usuario';
 
 
-export function ModalCrearUsuario({ open, onClose, handleCrearUsuario }) {
+export function ModalCrearUsuario({ open, onClose, handleManejarUsuario }) {
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
@@ -30,7 +30,7 @@ export function ModalCrearUsuario({ open, onClose, handleCrearUsuario }) {
     if (!isFormValid(formData)) return; // Validación del formulario
       postData('/auth/administrativos/', usuarioFormato(formData))
       .then(() => {
-        handleCrearUsuario('Creado');
+        handleManejarUsuario('Creado');
       })
       .catch((error) => {
       console.error('Error al crear el usuario:', errorPost);
