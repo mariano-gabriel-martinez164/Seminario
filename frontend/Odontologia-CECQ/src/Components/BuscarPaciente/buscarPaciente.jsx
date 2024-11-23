@@ -8,7 +8,8 @@ import { styled } from '@mui/material/styles';
 import  MostrarHistorias  from './historias.jsx';
 import { SelectorPacientes } from '../MaterialUI/selectores.jsx';
 import CrearPaciente from './Modal/crearPaciente.jsx';
-import EditarPaciente from './Modal/editarPaciente.jsx';
+//import EditarPaciente from './Modal/editarPaciente.jsx';
+import Editar from './Modal/nuevoEditar.jsx'
 import { useMultipleFetch } from '../../Request/v2/fetch';
 
 
@@ -89,7 +90,8 @@ export default function buscarPaciente() {
 							<Button sx={{ position: 'absolute', left: 0, mt: '43vh', mr: 5 }} variant="contained" color="warning" onClick={abrirEditor}>
 									Editar paciente
 								</Button>					
-								<EditarPaciente abrir={abiertoE} cerrar={cerrarEditor} paciente={paciente}/>
+								{/* <EditarPaciente abrir={abiertoE} cerrar={cerrarEditor} paciente={paciente}/> */}
+								<Editar abrir={abiertoE} cerrar={cerrarEditor} paciente={paciente} />
 							</Grid>
 							<Box sx={{ flexGrow: 1}}>
 								<MostrarHistorias paciente={paciente} />
