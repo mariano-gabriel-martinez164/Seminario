@@ -27,6 +27,7 @@ export default function GestionaOdontologo() {
     setTimeout(async () => {
       await fetchData();
     }, 500);
+    setEstadoEliminar('');
   }, [estadoEliminar, estadoModal]);
 
   return (

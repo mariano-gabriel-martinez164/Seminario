@@ -29,6 +29,7 @@ export default function GestionarAgenda() {
 
   useEffect(() => {
     fetchData();
+    setEstadoEliminar('');
   }, [url, estado, estadoEliminar, modalShowCrear]);
 
   return (

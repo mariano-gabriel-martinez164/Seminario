@@ -21,6 +21,7 @@ export default function GestionarPrestacion() {
 
   useEffect(() => {
       searchData(prestacion);
+      setEstadoEliminar('');
   }, [prestacion, estadoEliminar, estado]);
 
   return (

@@ -31,6 +31,7 @@ export default function GestionarUsuario() {
     setTimeout(async () => {
       await fetchData();
     }, 500);
+    setEstadoEliminar('');
   }, [estadoEliminar]);
 
   const handleManejarUsuario = async (estado) => {
