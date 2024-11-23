@@ -1,4 +1,4 @@
-import { Dialog, Alert, Button, DialogActions, DialogContent, Container } from '@mui/material'
+import { Dialog, Alert, Button, DialogActions, DialogContent, Container, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { SelectorOdontologo, SelectorCentro } from '../MaterialUI/selectores'
 import { useState } from 'react'
@@ -30,8 +30,11 @@ export default function CrearAgenda({open, onClose, setEstado, setEstadoCrear}) 
   >
     <DialogContent>
     {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}
-    <Container id='container'>
-    <Grid container spacing={2} sx={{ mt:3, mb:3 , justifyContent: 'center' }}>
+	<Container id='container' sx={{ width: 600 }}>
+		<Typography variant="h6" gutterBottom sx={{ pb: 1, borderBottom: '2px solid grey', mb:2, textAlign: 'left'}}>
+			Nueva agenda
+		</Typography>
+    <Grid container spacing={2} sx={{ m:3 , justifyContent: 'center' }}>
       <Grid size={12}>
         <SelectorOdontologo
           selectedValue={odontologo}

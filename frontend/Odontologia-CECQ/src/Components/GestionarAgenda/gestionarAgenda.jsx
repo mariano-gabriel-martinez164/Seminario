@@ -50,7 +50,8 @@ export default function GestionarAgenda() {
             />
         </Grid>
       </Grid>
-      {estado === 'Eliminado' && <Alert severity="error" onClose={() => {setEstado('')}}>Agenda eliminada</Alert>}
+	  {estado === 'Eliminado' && <Alert severity="error" onClose={() => {setEstado('')}}>Agenda eliminada</Alert>}
+	  {estado === 'Modificado' && <Alert severity="warning" onClose={() => {setEstado('')}}>Agenda modificada</Alert>}	
       {estado === 'Creado' && <Alert severity="success" onClose={() => {setEstado('')}}>Agenda creada</Alert>}
       {isLoading && <Alert severity="info" sx={{width:'100%'}}>Cargando...</Alert>}
       {error && <Alert severity="error" sx={{width:'100%'}}>{error}</Alert>}
@@ -106,7 +107,11 @@ export default function GestionarAgenda() {
       {modalShow && (
         <ModalVerAgenda
           open={modalShow}
-          onClose={() => setModalShow(false)}
+		onClose={() => {
+			setModalShow(false);
+			setEstado('Modificado');
+			}
+		}
           agendaSeleccionado={agendaSeleccionado}
         />
       )}
