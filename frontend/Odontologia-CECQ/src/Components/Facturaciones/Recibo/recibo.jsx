@@ -1,108 +1,86 @@
-import React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import Divider from "@mui/material/Divider";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 import ReciboPDF from "./reciboPDF";
+import React, { useEffect } from "react";
+import { useState } from "react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { Button } from "@mui/material";
+import { useFetch } from "../../../Request/v2/fetch";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 
-export function Recibo({ origin, destination, dateTime, amount }) {
+export function Recibo({ range, turnos, odontologo }) {
+
+  const [agendas, setAgendas] = useState([]);
+
+  let agendaURL = "/agendas/"
+  if (odontologo)
+    agendaURL+=`?odontologo=${odontologo?.matricula}`
+  const dataAgendas = useFetch(agendaURL);
+
+  useEffect(() => {
+    if (dataAgendas.data) {
+      setAgendas( dataAgendas.data.map((agenda) => {
+
+        const montoAgenda = turnos.reduce((montoTotal, turno) => {
+          if (turno?.agenda == agenda.id) {
+            return montoTotal + turno?.monto;
+          } else {
+            return montoTotal;
+          }
+        }, 0);
+
+        const agendaTurnos = turnos.map( (turno) => {
+          if (turno?.agenda == agenda.id){
+            return {
+              paciente: {
+                nombre: turno?.paciente.nombre,
+                apellido: turno?.paciente.apellido
+              },
+              fecha: turno?.fecha,
+              monto: turno?.monto,
+              id: turno?.id
+            };
+          } else {
+            return null;
+          }
+        }).filter((turno) => turno != null)
+
+        return {
+          id: agenda?.id,
+          monto: montoAgenda,
+          turnos: agendaTurnos,
+          centro: {
+            nombre: agenda?.CentroOdontologico.nombre,
+            direccion: agenda?.CentroOdontologico.direccion
+          }
+        }
+      }));
+    }
+  },[dataAgendas.data, turnos]);
+  
+  if (turnos.length < 1 | odontologo == ""){
+    return (
+    <>
+    </>);
+  }
+  if (turnos.length < 1){
+    return (
+      <Button variant="contained">
+        <PictureAsPdfIcon /> Cargando..
+      </Button>);
+  }
+
   return (
-    <Card elevation={3} sx={{ maxWidth: 400, width: "80%" }}>
-      <CardContent>
-        <Typography
-          variant="h5"
-          component="h2"
-          gutterBottom
-          align="center"
-          fontWeight="bold"
-        >
-          Comprobante de Venta
-        </Typography>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="subtitle1" fontWeight="medium">
-              Paciente:
-            </Typography>
-            <Typography variant="body1">{origin}</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="subtitle1" fontWeight="medium">
-              Odontologo:
-            </Typography>
-            <Typography variant="body1">{destination}</Typography>
-          </Box>
-          <Divider
-            sx={{ my: 2, borderBottomWidth: 2, bgcolor: "rgba(0, 0, 0, 0.3)" }}
-          />
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="subtitle1" fontWeight="medium">
-              Monto:
-            </Typography>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <AttachMoneyIcon fontSize="small" color="action" />
-              <Typography variant="body1">{amount}</Typography>
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="subtitle1" fontWeight="medium">
-              Fecha:
-            </Typography>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <CalendarTodayIcon fontSize="small" color="action" />
-              <Typography variant="body1">{dateTime}</Typography>
-            </Box>
-          </Box>
-        </Box>
-        <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
-          <PDFDownloadLink
-            document={
-              <ReciboPDF
-                origin={origin}
-                destination={destination}
-                amount={amount}
-                dateTime={dateTime}
-              />
-            }
-            fileName="recibo.pdf"
-            style={{ textDecoration: "none" }}
-          >
-            <Button>
-              {" "}
-              <PictureAsPdfIcon /> Descargar PDF{" "}
-            </Button>
-          </PDFDownloadLink>
-        </Box>
-      </CardContent>
-    </Card>
+    <PDFDownloadLink
+      document={<ReciboPDF 
+        range={range}
+        agendas={agendas}
+        odontologo={odontologo}
+      />}
+      fileName="recordatorio-de-turno.pdf"
+      style={{ textDecoration: "none" }}
+    >
+      <Button variant="contained">
+        <PictureAsPdfIcon /> Descargar Recibo
+      </Button>
+    </PDFDownloadLink>
   );
 }

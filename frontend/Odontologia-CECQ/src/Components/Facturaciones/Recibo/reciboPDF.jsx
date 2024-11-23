@@ -142,14 +142,11 @@ const ReciboPDF = ({ range, agendas, odontologo }) => {
           <View style={styles.infoSection}>
             <Text style={styles.infoText}>Agenda: #{agenda.id}</Text>
             <Text style={styles.infoText}>
-              Odontólogo: {odontologo?.nombre}
+              Odontólogo: {odontologo?.nombre} {odontologo.apellido}
             </Text>
             <Text style={styles.infoText}>Centro: {agenda.centro.nombre}</Text>
             <Text style={styles.infoText}>
               Dirección: {agenda.centro.direccion}
-            </Text>
-            <Text style={styles.infoText}>
-              Teléfono: {agenda.centro.telefono}
             </Text>
           </View>
 
@@ -161,7 +158,7 @@ const ReciboPDF = ({ range, agendas, odontologo }) => {
             </View>
             {agenda.turnos.map((turno) => (
               <View style={styles.tableRow} key={turno?.id}>
-                <Text style={styles.tableCell}>{turno?.paciente}</Text>
+                <Text style={styles.tableCell}>{turno?.paciente.nombre} {turno?.paciente.apellido}</Text>
                 <Text style={styles.tableCell}>{turno?.fecha}</Text>
                 <Text style={styles.tableCell}>${turno?.monto}</Text>
               </View>
