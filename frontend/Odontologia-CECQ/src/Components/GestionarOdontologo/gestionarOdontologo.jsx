@@ -20,9 +20,7 @@ export default function GestionaOdontologo() {
 
   const url = '/odontologos/';
   const { data: odontologos, loading: isLoading, error, fetchData } = useFetchDataOnDemand(url);
-  useEffect(() => {
-    fetchData();
-  }, []);
+
   useEffect(() => {
     setTimeout(async () => {
       await fetchData();

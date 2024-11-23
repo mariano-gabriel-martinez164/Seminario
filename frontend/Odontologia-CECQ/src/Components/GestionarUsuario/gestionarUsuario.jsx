@@ -24,9 +24,7 @@ export default function GestionarUsuario() {
   const url = '/auth/administrativos/';
   const { data: administrativos, loading: isLoading, error, fetchData } = useFetchDataOnDemand(url);
   const { data: me, loading: isLoadingMe, error: errorMe } = useFetch('/auth/administrativos/me/');
-  useEffect(() => {
-    fetchData();
-  }, []);
+
   useEffect(() => {
     setTimeout(async () => {
       await fetchData();
