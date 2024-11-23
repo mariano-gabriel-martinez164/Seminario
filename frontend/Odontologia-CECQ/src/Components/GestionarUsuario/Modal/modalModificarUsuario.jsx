@@ -10,8 +10,8 @@ import Grid from '@mui/material/Grid2';
 export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSeleccionado, handleCrearUsuario }) {
   const { data: administrativo, loading: isLoading, error } = useFetch(`/auth/administrativos/${usuarioSeleccionado}/`);
   const [formData, setFormData] = useState({
-    nombre: administrativo?.first_name,
-    apellido: administrativo?.last_name,
+    first_name: administrativo?.first_name,
+    last_name: administrativo?.last_name,
     email: administrativo?.email,
     cuil: administrativo?.cuil,
   });
@@ -19,8 +19,8 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
   useEffect(() => {
     if (administrativo) {
       setFormData({
-        nombre: administrativo.first_name || '',
-        apellido: administrativo.last_name || '',
+        first_name: administrativo.first_name || '',
+        last_name: administrativo.last_name || '',
         email: administrativo.email || '',
         cuil: administrativo.cuil || '',
       });
@@ -53,22 +53,22 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
                 <Grid container spacing={2}>
                   <Grid size={6}>
                     <TextField
-                      label='Nombre'
+                      label='nombre'
                       multiline
                       maxRows={4}
-                      name="nombre"
-                      value={formData.nombre}
+                      name="first_name"
+                      value={formData.first_name}
                       onChange={(event) => handleChange(event, setFormData)}
                       fullWidth
                     />
                   </Grid>
                   <Grid size={6}>
                     <TextField
-                      label='Apellido'
+                      label='apellido'
                       multiline
                       maxRows={4}
-                      name="apellido"
-                      value={formData.apellido}
+                      name="last_name"
+                      value={formData.last_name}
                       onChange={(event) => handleChange(event, setFormData)}
                       fullWidth
                     />
