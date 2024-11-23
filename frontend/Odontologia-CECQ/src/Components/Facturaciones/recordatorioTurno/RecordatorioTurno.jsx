@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import RecivoPDF from "./RecordatorioTurnoPDF.jsx";
+import ReciboPDF from "./RecordatorioTurnoPDF.jsx";
 import { Button } from "@mui/material";
 import { useFetch, useFetchDataOnDemand } from "../../../Request/v2/fetch";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
@@ -24,7 +24,7 @@ function RecordatorioTurno({turno}){
   console.log(agenda[0].CentroOdontologico)
   return (
     <PDFDownloadLink
-      document={<RecivoPDF 
+      document={<ReciboPDF 
         centro = {agenda[0].CentroOdontologico}
         turno = {turno}
         odontologo = {agenda[0].odontologo}
@@ -33,7 +33,7 @@ function RecordatorioTurno({turno}){
       style={{ textDecoration: "none" }}
     >
       <Button variant="contained">
-        <PictureAsPdfIcon /> Descargar Recivo
+        <PictureAsPdfIcon /> Descargar Recibo
       </Button>
     </PDFDownloadLink>
   );

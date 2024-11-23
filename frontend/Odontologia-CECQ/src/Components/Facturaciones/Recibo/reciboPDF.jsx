@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const RecivoPDF = ({ range, agendas, odontologo }) => {
+const ReciboPDF = ({ range, agendas, odontologo }) => {
   return (
     <Document>
       {agendas.map((agenda) => (
@@ -182,4 +182,4 @@ const RecivoPDF = ({ range, agendas, odontologo }) => {
   );
 };
 
-export default RecivoPDF;
+export default ReciboPDF;

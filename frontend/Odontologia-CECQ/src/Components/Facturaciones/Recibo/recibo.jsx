@@ -9,9 +9,9 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import Divider from "@mui/material/Divider";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import RecivoPDF from "./recivoPDF";
+import ReciboPDF from "./reciboPDF";
 
-export function Recivo({ origin, destination, dateTime, amount }) {
+export function Recibo({ origin, destination, dateTime, amount }) {
   return (
     <Card elevation={3} sx={{ maxWidth: 400, width: "80%" }}>
       <CardContent>
@@ -86,14 +86,14 @@ export function Recivo({ origin, destination, dateTime, amount }) {
         <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
           <PDFDownloadLink
             document={
-              <RecivoPDF
+              <ReciboPDF
                 origin={origin}
                 destination={destination}
                 amount={amount}
                 dateTime={dateTime}
               />
             }
-            fileName="recivo.pdf"
+            fileName="recibo.pdf"
             style={{ textDecoration: "none" }}
           >
             <Button>

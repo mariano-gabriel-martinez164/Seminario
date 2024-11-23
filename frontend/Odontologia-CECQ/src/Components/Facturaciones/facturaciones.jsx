@@ -17,10 +17,10 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { Button, Box } from "@mui/material";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import RecivoPDF from "./Recivo/recivoPDF.jsx";
+import ReciboPDF from "./Recibo/reciboPDF.jsx";
 import { useFetch } from "../../Request/v2/fetch";
 
-export default function facturaciones() {
+export default function Facturaciones() {
   const defaultRange = [
     {
       startDate: addDays(new Date(), 1 - new Date().getDay()),
@@ -188,17 +188,17 @@ export default function facturaciones() {
         <Grid size={8} sx={{ textAlign: "center" }}>
           <PDFDownloadLink
             document={
-              <RecivoPDF
+              <ReciboPDF
                 range={range}
                 agendas={agendas}
                 odontologo={odontologo}
               />
             }
-            fileName="recivo.pdf"
+            fileName="recibo.pdf"
             style={{ textDecoration: "none" }}
           >
             <Button variant="contained">
-              <PictureAsPdfIcon /> Descargar Recivo
+              <PictureAsPdfIcon /> Descargar Recibo
             </Button>
           </PDFDownloadLink>
         </Grid>
