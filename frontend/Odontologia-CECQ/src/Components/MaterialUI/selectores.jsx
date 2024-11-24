@@ -181,11 +181,16 @@ function SelectorSobreTurno({ setSelectedValue }) {
     {key: "No", value:false}
   ];
 
+  const setNew = (event, newValue) => {
+    if (newValue) setSelectedValue(newValue.value);
+    else setSelectedValue(null);
+  }
+
   return (
     <Autocomplete
       options={options}
       getOptionLabel={(option) => option.key}
-      onChange={(event, newValue) => setSelectedValue(newValue)}
+      onChange={setNew}
       renderInput={(params) => (
         <CustomTextField
           {...params}
@@ -217,7 +222,7 @@ function SelectorEstados({ setSelectedValue }) {
             size="small"
             color={option.color}
             label={option.key}
-            {...getTagProps({ index })}
+            // {...getTagProps({ index })}
           />
         ))
       }
