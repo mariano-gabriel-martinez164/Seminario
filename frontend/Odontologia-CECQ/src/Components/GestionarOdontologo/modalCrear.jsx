@@ -45,7 +45,7 @@ export function ModalCrearOdontologo({ open, onClose, setEstadoModal, setEstadoC
     <DialogContent>
 		{errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}	 
 	  <Typography variant="h6" sx={{ backgroundColor: '#343a40', color: 'white', p: 2, mb: 2, borderRadius: '8px' }}>
-			Crear odontólogo
+			Agregar odontólogo
 	  </Typography>
       <Container id='container'>
         <form>
@@ -114,7 +114,7 @@ export function ModalCrearOdontologo({ open, onClose, setEstadoModal, setEstadoC
         id='button'
         disabled={!isFormValid}
       >
-        Agregar odontólogo
+        Agregar
       </Button>
       <Button onClick={() => onClose()} variant="contained" id='button'>Cerrar</Button>
     </DialogActions>

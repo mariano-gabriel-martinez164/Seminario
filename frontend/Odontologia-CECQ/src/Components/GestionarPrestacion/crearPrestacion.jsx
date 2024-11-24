@@ -84,7 +84,7 @@ export default function CrearPrestacion({open, onClose, setEstado, setEstadoCrea
           variant="contained" color='success' id='button'
         disabled={!nombre || !precio || !codigo || !isValidPrice(precio)}
           >
-            Crear prestacion 
+            Crear 
           </Button>
 
           <Button onClick={() => onClose()} variant="contained" id='button'>Cerrar</Button>

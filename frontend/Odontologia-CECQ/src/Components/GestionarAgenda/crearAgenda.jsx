@@ -31,7 +31,7 @@ export default function CrearAgenda({open, onClose, setEstado, setEstadoCrear}) 
     <DialogContent>
 		{errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}	 
 	  <Typography variant="h6" sx={{ backgroundColor: '#343a40', color: 'white', p: 2, mb: 2, borderRadius: '8px' }}>
-			Crear Usuario
+			Crear agenda
 	  </Typography>
 	<Container id='container'>
     <Grid container spacing={2} sx={{mb: 3,  justifyContent: 'center' }}>
@@ -57,7 +57,7 @@ export default function CrearAgenda({open, onClose, setEstado, setEstadoCrear}) 
           variant="contained" color='success' id='button'
           disabled={!centro || !odontologo }
           >
-            Crear agenda 
+            Crear  
           </Button>
 
           <Button onClick={() => onClose()} variant="contained" id='button'>Cerrar</Button>

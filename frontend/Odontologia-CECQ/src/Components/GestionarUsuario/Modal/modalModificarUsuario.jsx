@@ -50,7 +50,7 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
           <DialogContent>
 			  <form>
 			    <Typography variant="h6" sx={{ backgroundColor: '#343a40', color: 'white', p: 2, mb: 3, borderRadius: '8px' }}>
-					Editar Usuario
+					Modificar Usuario
 	  			</Typography>
                 <Container id='container'>
                 <Grid container spacing={2}>

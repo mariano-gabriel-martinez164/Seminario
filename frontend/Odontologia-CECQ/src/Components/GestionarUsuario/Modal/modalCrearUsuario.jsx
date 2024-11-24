@@ -171,7 +171,7 @@ export function ModalCrearUsuario({ open, onClose, handleManejarUsuario }) {
           id='button'
           disabled={!isFormValid(formData)}
         >
-          Crear usuario
+          Crear
         </Button>
         <Button onClick={() => onClose()} variant="contained" id='button'>Cerrar</Button>
       </DialogActions>

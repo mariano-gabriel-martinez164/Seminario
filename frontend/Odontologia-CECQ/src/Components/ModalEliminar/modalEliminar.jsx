@@ -28,10 +28,10 @@ export default function ModalEliminar({ open, onClose, seleccionado, este, setEs
         </Box>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'center' }}>
-        <Button variant="contained" onClick={onClose}>Cancelar</Button>
         <Button variant="contained" 
         onClick={() => (handleEliminar(seleccionado))} 
         color="error">Eliminar</Button>
+        <Button variant="contained" onClick={onClose}>Cancelar</Button>
       </DialogActions>
     </Dialog>
   );
