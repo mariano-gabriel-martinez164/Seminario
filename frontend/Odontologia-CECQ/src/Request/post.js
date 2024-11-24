@@ -18,6 +18,7 @@ export function postData(url, data) {
 }
 
 export async function postDataWithResponse(url, data) {
+  const token = localStorage.getItem('token');
   if (url) {
     console.log('post url:', url);
     console.log('post data:', data);

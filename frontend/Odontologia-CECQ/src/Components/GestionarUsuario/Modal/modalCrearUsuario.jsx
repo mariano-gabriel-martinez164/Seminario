@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { handleChange, isFormValid } from '../../GestionarUsuario/verificarFormulario';
 import { FormControl, Alert,TextField, InputLabel, OutlinedInput, InputAdornment, FormHelperText,
-  IconButton, Button, Container, Dialog, DialogActions, DialogContent } from '@mui/material';
+  IconButton, Button, Container, Dialog, DialogActions, DialogContent, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
 import { usePostData } from '../../../Request/v2/post';
 import { usuarioFormato } from '../usuario';
 
 
-export function ModalCrearUsuario({ open, onClose, handleCrearUsuario }) {
+export function ModalCrearUsuario({ open, onClose, handleManejarUsuario }) {
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
@@ -30,7 +30,7 @@ export function ModalCrearUsuario({ open, onClose, handleCrearUsuario }) {
     if (!isFormValid(formData)) return; // Validación del formulario
       postData('/auth/administrativos/', usuarioFormato(formData))
       .then(() => {
-        handleCrearUsuario('Creado');
+        handleManejarUsuario('Creado');
       })
       .catch((error) => {
       console.error('Error al crear el usuario:', errorPost);
@@ -45,10 +45,15 @@ export function ModalCrearUsuario({ open, onClose, handleCrearUsuario }) {
       aria-describedby="alert-dialog-slide-description"
     >
       <DialogContent>
-        {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}
-        <Container id='container'>
-          <form>
-            <Grid container spacing={2}>
+		  {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}	
+		  
+	  <Typography variant="h6" sx={{ backgroundColor: '#343a40', color: 'white', p: 2, mb: 2, borderRadius: '8px' }}>
+			Crear Usuario
+	  </Typography>
+
+		<Container id='container'>
+			<form>		
+	              <Grid container spacing={2}>
               
               <Grid size={6}>
                 <TextField
@@ -166,7 +171,7 @@ export function ModalCrearUsuario({ open, onClose, handleCrearUsuario }) {
           id='button'
           disabled={!isFormValid(formData)}
         >
-          Crear usuario
+          Crear
         </Button>
         <Button onClick={() => onClose()} variant="contained" id='button'>Cerrar</Button>
       </DialogActions>

@@ -4,14 +4,14 @@ import { Estado } from '../../BuscarTurno/CrudTurno/modalAsignado';
 import { handleChange } from '../../GestionarUsuario/verificarFormulario';
 import { usePutData } from '../../../Request/v2/put2';
 
-import { TextField, Container, Button, Dialog, DialogActions, DialogContent, Alert } from '@mui/material';
+import { TextField, Container, Button, Dialog, DialogActions, DialogContent, Alert, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
-export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSeleccionado, handleCrearUsuario }) {
+export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSeleccionado, handleManejarUsuario }) {
   const { data: administrativo, loading: isLoading, error } = useFetch(`/auth/administrativos/${usuarioSeleccionado}/`);
   const [formData, setFormData] = useState({
-    nombre: administrativo?.first_name,
-    apellido: administrativo?.last_name,
+    first_name: administrativo?.first_name,
+    last_name: administrativo?.last_name,
     email: administrativo?.email,
     cuil: administrativo?.cuil,
   });
@@ -19,8 +19,8 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
   useEffect(() => {
     if (administrativo) {
       setFormData({
-        nombre: administrativo.first_name || '',
-        apellido: administrativo.last_name || '',
+        first_name: administrativo.first_name || '',
+        last_name: administrativo.last_name || '',
         email: administrativo.email || '',
         cuil: administrativo.cuil || '',
       });
@@ -33,7 +33,7 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
     putData(`/auth/administrativos/${usuarioSeleccionado}/`, formData)
       .then(() => {
         Estado(onClose(), setEstadoModal, 'Modificado');
-        handleCrearUsuario('Modificado');
+        handleManejarUsuario('Modificado');
       })
       .catch((err) => {
         console.error('Error modificando el usuario:', err);
@@ -48,27 +48,30 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
       {administrativo && !isLoading && !error && (
         <>
           <DialogContent>
-            <form>
-              <Container id='container'>
+			  <form>
+			    <Typography variant="h6" sx={{ backgroundColor: '#343a40', color: 'white', p: 2, mb: 3, borderRadius: '8px' }}>
+					Modificar Usuario
+	  			</Typography>
+                <Container id='container'>
                 <Grid container spacing={2}>
                   <Grid size={6}>
                     <TextField
-                      label='Nombre'
+                      label='nombre'
                       multiline
                       maxRows={4}
-                      name="nombre"
-                      value={formData.nombre}
+                      name="first_name"
+                      value={formData.first_name}
                       onChange={(event) => handleChange(event, setFormData)}
                       fullWidth
                     />
                   </Grid>
                   <Grid size={6}>
                     <TextField
-                      label='Apellido'
+                      label='apellido'
                       multiline
                       maxRows={4}
-                      name="apellido"
-                      value={formData.apellido}
+                      name="last_name"
+                      value={formData.last_name}
                       onChange={(event) => handleChange(event, setFormData)}
                       fullWidth
                     />

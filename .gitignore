@@ -3,4 +3,6 @@ abrirFront.sh
 node_modules
 package.json
 package-lock.json
+icono1.png
+node_modules/
 

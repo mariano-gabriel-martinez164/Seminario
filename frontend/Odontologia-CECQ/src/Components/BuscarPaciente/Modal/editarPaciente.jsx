@@ -23,17 +23,17 @@ export default function EditarPaciente({ abrir, cerrar, paciente }) {
 				fecha_nacimiento: paciente.fecha_nacimiento || '',
 				telefono: paciente.telefono || '',
 			});
-		console.log(formValor.dni);
 		}
 	}, [paciente]);
 
 	const { putData, errorPut, loading } = usePutData();
 
 	const controlador = () => {
-		putData(`/pacientes/${paciente.dni}/`,formValor)
+		console.log(formValor);
+		putData(`/pacientes/${formValor.dni}/` , formValor)
 			.catch((err) => {
 				console.error('error en ',err);
-			})}
+		})}
 
 	const cambios = (event, dato ) => {
 		const {name, value } = event.target;

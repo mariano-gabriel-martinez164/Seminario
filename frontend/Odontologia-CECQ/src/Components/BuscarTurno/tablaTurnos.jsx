@@ -65,6 +65,9 @@ export function TablaTurnos({ turnos, handleClickTurno, loading, error }) {
                 label={turno.estado}
                 color={estadosChips[turno.estado]}
               />
+              {turno.esSobreturno === true && (
+                <Chip label="ST" color="primary" size="small" sx={{ marginLeft: '8px' }} />
+              )}
             </StyledTableCell>
 
             <StyledTableCell>

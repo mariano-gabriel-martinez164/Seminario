@@ -1,4 +1,4 @@
-import { Dialog, Alert, Button, DialogActions, TextField, DialogContent, Container } from '@mui/material'
+import { Dialog, Alert, Button, DialogActions, TextField, DialogContent, Container, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { usePostData } from '../../Request/v2/post'
 import { useState } from 'react'
@@ -10,7 +10,7 @@ const prestacion = (codigo, nombre, precio) => ({
   "is_active": true
 });
 
-export default function CrearPrestacion({open, onClose, setEstado}) {
+export default function CrearPrestacion({open, onClose, setEstado, setEstadoCrear}) {
   const [ nombre, setNombre ] = useState('');
   const [ precio, setPrecio ] = useState('');
   const [ codigo, setCodigo ] = useState('');
@@ -24,6 +24,7 @@ export default function CrearPrestacion({open, onClose, setEstado}) {
       postData(`/prestaciones/`,prestacion(codigo, nombre, precio))
       .then(() => {
         setEstado('Creado');
+        setEstadoCrear('Creado');
         onClose();
       })
       .catch((error) => {
@@ -37,8 +38,11 @@ export default function CrearPrestacion({open, onClose, setEstado}) {
     onClose={onClose}
   > 
   <DialogContent>
-  {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}
-  <Container id='container' >
+	  {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}	 
+	  <Typography variant="h6" sx={{ backgroundColor: '#343a40', color: 'white', p: 2, mb: 2, borderRadius: '8px' }}>
+			Crear prestacion
+	  </Typography>
+  <Container id='container'>
     <Grid container spacing={2} sx={{ mt:3, mb:3 , justifyContent: 'center' }}>
       <Grid size={12}>
         <TextField 
@@ -51,8 +55,9 @@ export default function CrearPrestacion({open, onClose, setEstado}) {
       </Grid>
       <Grid size={12}>
         <TextField 
-        id="outlined-basic" 
-        label="Codigo" 
+		id="outlined-basic"
+		type="number"
+        label="Código" 
         value={codigo}
         onChange={(e) => setCodigo(e.target.value)} 
         fullWidth
@@ -77,9 +82,9 @@ export default function CrearPrestacion({open, onClose, setEstado}) {
             handleSubmit();
           }} 
           variant="contained" color='success' id='button'
-        disabled={!nombre || !precio || !codigo || !isValidPrice(precio)}
+        disabled={!nombre || !precio || !codigo || !isValidPrice(precio) || codigo.startsWith('0')}
           >
-            Crear agenda 
+            Crear 
           </Button>
 
           <Button onClick={() => onClose()} variant="contained" id='button'>Cerrar</Button>

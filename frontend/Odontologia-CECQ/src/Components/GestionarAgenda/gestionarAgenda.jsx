@@ -18,6 +18,8 @@ export default function GestionarAgenda() {
   const [modalShow, setModalShow] = useState(false);
   const [modalShowCrear, setModalShowCrear] = useState(false);
   const [modalShowEliminar, setModalShowEliminar] = useState(false);
+  const [estadoEliminar, setEstadoEliminar ] = useState('');
+  const [estadoCrear, setEstadoCrear] = useState('');
   const [agendaSeleccionado, setAgendaSeleccionado] = useState(null);
   const [estado, setEstado] = useState('');
 
@@ -28,7 +30,9 @@ export default function GestionarAgenda() {
 
   useEffect(() => {
     fetchData();
-  }, [url, estado, modalShowEliminar, modalShowCrear]);
+    setEstadoEliminar('');
+    setEstadoCrear(''); 
+  }, [url, estado, estadoEliminar, estadoCrear]);
 
   return (
     <Container fixed sx={{ mt: 2 }}>
@@ -46,7 +50,8 @@ export default function GestionarAgenda() {
             />
         </Grid>
       </Grid>
-      {estado === 'Eliminado' && <Alert severity="error" onClose={() => {setEstado('')}}>Agenda eliminada</Alert>}
+	  {estado === 'Eliminado' && <Alert severity="error" onClose={() => {setEstado('')}}>Agenda eliminada</Alert>}
+	  {estado === 'Modificado' && <Alert severity="warning" onClose={() => {setEstado('')}}>Agenda modificada</Alert>}	
       {estado === 'Creado' && <Alert severity="success" onClose={() => {setEstado('')}}>Agenda creada</Alert>}
       {isLoading && <Alert severity="info" sx={{width:'100%'}}>Cargando...</Alert>}
       {error && <Alert severity="error" sx={{width:'100%'}}>{error}</Alert>}
@@ -102,7 +107,11 @@ export default function GestionarAgenda() {
       {modalShow && (
         <ModalVerAgenda
           open={modalShow}
-          onClose={() => setModalShow(false)}
+		onClose={() => {
+			setModalShow(false);
+			setEstado('Modificado');
+			}
+		}
           agendaSeleccionado={agendaSeleccionado}
         />
       )}
@@ -111,6 +120,7 @@ export default function GestionarAgenda() {
           open={modalShowCrear}
           onClose={() => setModalShowCrear(false)}
           setEstado={setEstado}
+          setEstadoCrear={setEstadoCrear}
         />
       )}
       {modalShowEliminar && (
@@ -121,6 +131,7 @@ export default function GestionarAgenda() {
           este={"esta agenda"}
           setEstadoModal={setEstado}
           url={'/agendas/'}
+          setEstadoEliminar={setEstadoEliminar}
         />
       )}
 

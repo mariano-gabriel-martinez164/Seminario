@@ -91,7 +91,7 @@ function SelectorCentro({selectedValue, setSelectedValue, textFieldProps={}}) {
 }
 
 function SelectorAdministrativo({selectedValue, setSelectedValue, textFieldProps={}}) {
-  const administrativoFormat = (administrativo) => `${administrativo.nombre} ${administrativo.apellido}`;
+  const administrativoFormat = (administrativo) => `${administrativo.first_name} ${administrativo.last_name}`;
   return (
     <AutocompleteAPIComponent
       selectedValue={selectedValue}

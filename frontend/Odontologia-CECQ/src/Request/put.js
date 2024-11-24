@@ -10,13 +10,14 @@ export function putData(url, data) {
             'Content-Type': 'application/json',
             'Authorization': `token ${token}`,
 
-        },
+          },
         body: JSON.stringify(data),
         })
-  )
-}
-
+      )
+    }
+    
 export async function putDataWithResponse(url, data) {
+  const token = localStorage.getItem('token');
   const response = await fetch(apiUrl+url, {
     method: 'PUT',
     headers: {

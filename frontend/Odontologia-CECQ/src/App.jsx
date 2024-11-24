@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import GestionarUsuario from './Components/GestionarUsuario/gestionarUsuario';
 import GestionarAgenda from './Components/GestionarAgenda/gestionarAgenda';
 import GestionarPrestacion from './Components/GestionarPrestacion/gestionarPrestacion';
+import GestionarOdontologo from './Components/GestionarOdontologo/gestionarOdontologo';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -50,7 +51,8 @@ function RouteHandler() {
     { path: '/facturaciones', Component: <Facturaciones /> },
     { path: '/gestionarUsuario', Component: <GestionarUsuario />, adminOnly: true },
     { path: '/gestionarAgenda', Component: <GestionarAgenda />, adminOnly: true },
-    { path: '/gestionarPrestacion', Component: <GestionarPrestacion />, adminOnly: true }
+    { path: '/gestionarPrestacion', Component: <GestionarPrestacion />, adminOnly: true },
+    { path: '/gestionarOdontologo', Component: <GestionarOdontologo />, adminOnly: true }
   ];
   
 

@@ -2,25 +2,30 @@ import { Fab, Paper, Table, TableBody, TableContainer, TableHead, TableRow, Cont
 import AddIcon from "@mui/icons-material/Add"
 import { StyledTableCell, StyledTableRow } from '../MaterialUI/styledTable.jsx';
 import { useState, useEffect } from 'react'
-import { useFetchSearch } from '../../Request//v2/fetch.js';
+import { useFetchSearch } from '../../Request/v2/fetch.js';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteData } from "../../Request/delete.js";
 import SearchIcon from '@mui/icons-material/Search';
 import CrearPrestacion from "./crearPrestacion.jsx";
 import ModalEliminar from '../ModalEliminar/modalEliminar.jsx';
+import { set } from "date-fns";
 
 export default function GestionarPrestacion() {
   const [modalShowCrear, setModalShowCrear] = useState(false);
   const [estado, setEstado] = useState('');
+  const [estadoCrear, setEstadoCrear] = useState('');
   const [prestacion, setPrestacion] = useState('');
   const [modalShowEliminar, setModalShowEliminar] = useState(false);
+  const [ estadoEliminar, setEstadoEliminar ] = useState('');
   const [prestacionSeleccionado, setPrestacionSeleccionado] = useState(null); 
   const parseData = (data) => data;
   const [ data, loading, error, searchData ] = useFetchSearch('/prestaciones/', 300, parseData);
 
   useEffect(() => {
       searchData(prestacion);
-  }, [prestacion, modalShowEliminar, estado]);
+      setEstadoEliminar('');
+      setEstadoCrear('');
+  }, [prestacion, estadoEliminar, estado, estadoCrear]);
 
   return (
     <Container fixed sx={{ mt: 2 }}>
@@ -44,7 +49,7 @@ export default function GestionarPrestacion() {
           <TableRow>
             <StyledTableCell align="center">Nombre</StyledTableCell>
             <StyledTableCell align="center">Precio</StyledTableCell>
-            <StyledTableCell align="center">Opcion</StyledTableCell>
+            <StyledTableCell align="center">Opción</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -79,7 +84,7 @@ export default function GestionarPrestacion() {
         onClick={() => {setModalShowCrear(true)}}
       >
         <AddIcon sx={{ mr: 1 }} />
-        Crear prestacion
+        Crear prestación
       </Fab>
 
       {modalShowCrear && (
@@ -87,6 +92,7 @@ export default function GestionarPrestacion() {
           open={modalShowCrear}
           onClose={() => setModalShowCrear(false)}
           setEstado={setEstado}
+          setEstadoCrear={setEstadoCrear}
         />
       )}
       {modalShowEliminar && (
@@ -97,6 +103,7 @@ export default function GestionarPrestacion() {
           este={"esta prestacion"}
           setEstadoModal={setEstado}
           url={'/prestaciones/'}
+          setEstadoEliminar={setEstadoEliminar}
         />
       )}
     </Container>

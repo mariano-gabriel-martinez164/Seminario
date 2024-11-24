@@ -1,11 +1,11 @@
-import { Dialog, Alert, Button, DialogActions, DialogContent, Container } from '@mui/material'
+import { Dialog, Alert, Button, DialogActions, DialogContent, Container, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { SelectorOdontologo, SelectorCentro } from '../MaterialUI/selectores'
 import { useState } from 'react'
 import { usePostData } from '../../Request/v2/post'
 import { agenda } from './agenda'
 
-export default function CrearAgenda({open, onClose, setEstado}) {
+export default function CrearAgenda({open, onClose, setEstado, setEstadoCrear}) {
   const [centro, setCentro] = useState(null);
   const [ odontologo, setOdontologo ] = useState([]);
 
@@ -15,6 +15,7 @@ export default function CrearAgenda({open, onClose, setEstado}) {
       postData('/agendas/', agenda(odontologo.matricula, centro.id))
       .then(() => {
         setEstado('Creado');
+        setEstadoCrear('Creado');
         onClose();
       })
       .catch((error) => {
@@ -28,9 +29,12 @@ export default function CrearAgenda({open, onClose, setEstado}) {
     onClose={onClose}
   >
     <DialogContent>
-    {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}
-    <Container id='container'>
-    <Grid container spacing={2} sx={{ mt:3, mb:3 , justifyContent: 'center' }}>
+		{errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}	 
+	  <Typography variant="h6" sx={{ backgroundColor: '#343a40', color: 'white', p: 2, mb: 2, borderRadius: '8px' }}>
+			Crear agenda
+	  </Typography>
+	<Container id='container'>
+    <Grid container spacing={2} sx={{mb: 3,  justifyContent: 'center' }}>
       <Grid size={12}>
         <SelectorOdontologo
           selectedValue={odontologo}
@@ -53,7 +57,7 @@ export default function CrearAgenda({open, onClose, setEstado}) {
           variant="contained" color='success' id='button'
           disabled={!centro || !odontologo }
           >
-            Crear agenda 
+            Crear  
           </Button>
 
           <Button onClick={() => onClose()} variant="contained" id='button'>Cerrar</Button>

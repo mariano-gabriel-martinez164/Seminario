@@ -8,17 +8,32 @@ import { styled } from '@mui/material/styles';
 import  MostrarHistorias  from './historias.jsx';
 import { SelectorPacientes } from '../MaterialUI/selectores.jsx';
 import CrearPaciente from './Modal/crearPaciente.jsx';
+
 import EditarPaciente from './Modal/editarPaciente.jsx';
+//import EditarPaciente from './Modal/editarPaciente.jsx';
+import Editar from './Modal/nuevoEditar.jsx'
+import { useMultipleFetch } from '../../Request/v2/fetch';
+
 
 export default function buscarPaciente() {
 	const [ paciente, cambiarPaciente ] = useState('');
 	const [abiertoE,abrirE] = useState(false);
-	const cerrarEditor = () => abrirE(false);
 	const abrirEditor = () => abrirE(true);
 	const [abiertoB, abrirB] = useState(false);
 	const [abiertoC, abrirC] = useState(false);
 	const abrirCrear = () => abrirC(true);
 	const cerrarCrear = () => abrirC(false);
+	const [data, loading, error, fetchData] = useMultipleFetch();
+	const cerrarEditor = () => {		
+		abrirE(false);
+		console.log(paciente.dni);
+		fetchData(`/pacientes/${paciente.dni}/`);
+	}
+
+	useEffect(() => {
+		console.log('data es:', data);
+		cambiarPaciente(data);
+	},[data])
 
 	const cerrarNuevo = () => {
 		cambiarPaciente('');
@@ -74,10 +89,11 @@ export default function buscarPaciente() {
         	   		       	     	<h5> {paciente.email} </h5>
 									<h5> {paciente.telefono} </h5>
 								</Stack>
-								<Button sx={{ position: 'absolute', left: 0, mt: '43vh', mr: 5 }} variant="contained" color="warning" onClick={abrirEditor}>
+							<Button sx={{ position: 'absolute', left: 0, mt: '43vh', mr: 5 }} variant="contained" color="warning" onClick={abrirEditor}>
 									Editar paciente
 								</Button>					
-								<EditarPaciente abrir={abiertoE} cerrar={cerrarEditor} paciente={paciente}/>
+								{/* <EditarPaciente abrir={abiertoE} cerrar={cerrarEditor} paciente={paciente}/> */}
+								<Editar abrir={abiertoE} cerrar={cerrarEditor} paciente={paciente} />
 							</Grid>
 							<Box sx={{ flexGrow: 1}}>
 								<MostrarHistorias paciente={paciente} />
