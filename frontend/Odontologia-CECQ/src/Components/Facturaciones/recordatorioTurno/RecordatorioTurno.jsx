@@ -38,7 +38,7 @@ function RecordatorioTurno({ turno, enabled = false }) {
           odontologo={agenda[0].odontologo}
         />
       }
-      fileName="recordatorio-de-turno.pdf"
+      fileName={`recordatorio-de-turno-${format(turno.fecha, "YYYY-mm-dd")}.pdf`}
       style={{ textDecoration: "none" }}
     >
       {({ loading, url, error, blob }) =>

@@ -66,7 +66,7 @@ export function Recibo({ range, turnos, odontologo }) {
       document={
         <ReciboPDF range={range} agendas={agendas} odontologo={odontologo} />
       }
-      fileName="recibo.pdf"
+      fileName={`recibo-${odontologo.nombre}-${odontologo.apellido}.pdf`}
       style={{ textDecoration: "none" }}
     >
       {({ loading, url, error, blob }) =>
