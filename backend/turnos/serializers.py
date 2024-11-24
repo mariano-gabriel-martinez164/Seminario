@@ -40,6 +40,7 @@ class TurnoSerializer(serializers.ModelSerializer):
 class ShortTurnoSerializer(serializers.ModelSerializer):
     paciente = PacienteSerializer(read_only=True)
     dni = serializers.IntegerField(write_only=True, source='paciente__dni', required=False, allow_null=True, default=None)
+    turnoTemplateId = serializers.IntegerField(read_only=True ,required=False, allow_null=True, default=None)
 
     def create(self, validated_data):
         if dni := validated_data.pop('paciente__dni'):

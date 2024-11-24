@@ -44,7 +44,7 @@ export function TablaTurnos({ turnos, handleClickTurno, loading, error }) {
           <StyledTableRow
             key={
               turno.id ||
-              `${turno.paciente}-${turno.agenda}-${turno.fecha}`
+              `tt${turno.turnoTemplateId}-${turno.fecha}`
             }
           >
             <StyledTableCell>{format(parseISO(turno.fecha), "MMM dd")}</StyledTableCell> 

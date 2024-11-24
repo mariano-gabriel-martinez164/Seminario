@@ -70,6 +70,7 @@ class TurnoAndTurnoTemplateList(generics.ListCreateAPIView):
         
         # Serializar y devolver respuesta
         serializer = self.get_serializer(queryset, many=True)
+        print(queryset)
         return Response(serializer.data)
         
     
@@ -137,7 +138,8 @@ class TurnoAndTurnoTemplateList(generics.ListCreateAPIView):
                         agenda=agenda,
                         esSobreturno=False,
                         monto=0,
-                        estado='Disponible'
+                        estado='Disponible',
+                        turnoTemplateId=tt.id
                     ) for tt in turnos_template if 
                         tt.agenda == agenda and 
                         int(tt.diaSemana) == fecha.weekday() and
