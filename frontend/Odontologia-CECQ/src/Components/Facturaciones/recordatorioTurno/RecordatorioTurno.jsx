@@ -5,6 +5,7 @@ import RecordatorioTurnoPDF from "./RecordatorioTurnoPDF.jsx";
 import { Button } from "@mui/material";
 import { useFetch } from "../../../Request/v2/fetch";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import { format } from "date-fns";
 
 function RecordatorioTurno({ turno, enabled = false }) {
   const agendas = useFetch("/agendas/");
@@ -38,7 +39,7 @@ function RecordatorioTurno({ turno, enabled = false }) {
           odontologo={agenda[0].odontologo}
         />
       }
-      fileName={`recordatorio-de-turno-${format(turno.fecha, "YYYY-mm-dd")}.pdf`}
+      fileName={`recordatorio-de-turno-${format(turno.fecha, "yyyy-MM-dd")}.pdf`}
       style={{ textDecoration: "none" }}
     >
       {({ loading, url, error, blob }) =>
