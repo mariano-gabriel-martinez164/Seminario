@@ -1,4 +1,4 @@
-import { Dialog, Alert, Button, DialogActions, TextField, DialogContent, Container } from '@mui/material'
+import { Dialog, Alert, Button, DialogActions, TextField, DialogContent, Container, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { usePostData } from '../../Request/v2/post'
 import { useState } from 'react'
@@ -39,7 +39,10 @@ export default function CrearPrestacion({open, onClose, setEstado, setEstadoCrea
   > 
   <DialogContent>
   {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}
-  <Container id='container' >
+  <Container id='container'>
+	  <Typography variant="h6" gutterBottom sx={{ pb: 1, borderBottom: '2px solid grey', mb:2 , textAlign: 'left'}}>
+		Nueva prestacion
+	 </Typography>
     <Grid container spacing={2} sx={{ mt:3, mb:3 , justifyContent: 'center' }}>
       <Grid size={12}>
         <TextField 
@@ -52,7 +55,8 @@ export default function CrearPrestacion({open, onClose, setEstado, setEstadoCrea
       </Grid>
       <Grid size={12}>
         <TextField 
-        id="outlined-basic" 
+		id="outlined-basic"
+		type="number"
         label="Código" 
         value={codigo}
         onChange={(e) => setCodigo(e.target.value)} 
