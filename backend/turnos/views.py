@@ -139,7 +139,8 @@ class TurnoAndTurnoTemplateList(generics.ListCreateAPIView):
                         estado='Disponible'
                     ) for tt in turnos_template if 
                         tt.agenda == agenda and 
-                        int(tt.diaSemana) == fecha.weekday()
+                        int(tt.diaSemana) == fecha.weekday() and
+                        fecha.date() >= datetime.now().date()
                 ] 
                 # print(f'pre filtro: {aux_tt_turnos}')
 
