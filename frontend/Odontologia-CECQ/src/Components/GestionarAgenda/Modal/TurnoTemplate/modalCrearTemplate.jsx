@@ -67,7 +67,7 @@ export function ModalCrearTemplate({ open, onClose, agendaSeleccionado, setEstad
           variant="h6" 
           sx={{ backgroundColor: '#343a40', color: 'white', p: 2, mb: 2, borderRadius: '8px' }}
         >
-          Agregar odontólogo
+          Crear turno vacio
         </Typography>
         {errorPost && <Alert severity="error" sx={{ mb: 2 }}>{errorPost}</Alert>}
 
