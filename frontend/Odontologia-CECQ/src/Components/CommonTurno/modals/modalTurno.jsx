@@ -12,6 +12,8 @@ import Slide from '@mui/material/Slide';
 import { Formulario } from './formularioTurno';
 import { PanelTurnosPieza } from './panelTurnosPieza';
 
+import RecordatorioTurno from '../../Facturaciones/recordatorioTurno/RecordatorioTurno';
+
 const options = {
   'Disponible':{
     'transiciones':['Asignado', 'Cancelado'],
@@ -91,8 +93,11 @@ export function ModalTurno({ open, onHide, turno={}}) {
     });
   }
 
-
-  
+  const activarBotonConstancia = () => {
+    if (turno.estado == 'Asignado') return true;
+    if (turno.estado == 'Disponible' && formOK) return true;
+    return false;
+  }
 
   return(
     <Dialog open={open} onClose={onHide} fullScreen TransitionComponent={Transition}>
@@ -126,6 +131,10 @@ export function ModalTurno({ open, onHide, turno={}}) {
             accion={selectedEstado}
             setFormOK={setFormOK}
           />
+
+          <Grid mt={2} sx={{display:'flex', justifyContent:'center'}}>
+            <RecordatorioTurno turno={newTurno} enabled={activarBotonConstancia()} />
+          </Grid>
 
         </Grid>
         {paso == 2 && <Grid mt={2} display={paso!=2&&'none'}>
