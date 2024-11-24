@@ -40,7 +40,7 @@ export function TablaTurnos({ turnos, handleClickTurno, loading, error }) {
           </StyledTableRow>
         )}
         
-        {turnos.map((turno) => (
+        {!error && turnos.map((turno) => (
           <StyledTableRow
             key={
               turno.id ||

@@ -34,7 +34,7 @@ export default function EditarPaciente({ abrir, cerrar, paciente }) {
 			.catch((err) => {
 				console.error('error en ',err);
 		})}
-	
+
 	const cambios = (event, dato ) => {
 		const {name, value } = event.target;
 		dato(prevState => ({

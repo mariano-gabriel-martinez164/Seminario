@@ -8,6 +8,8 @@ import { styled } from '@mui/material/styles';
 import  MostrarHistorias  from './historias.jsx';
 import { SelectorPacientes } from '../MaterialUI/selectores.jsx';
 import CrearPaciente from './Modal/crearPaciente.jsx';
+
+import EditarPaciente from './Modal/editarPaciente.jsx';
 //import EditarPaciente from './Modal/editarPaciente.jsx';
 import Editar from './Modal/nuevoEditar.jsx'
 import { useMultipleFetch } from '../../Request/v2/fetch';

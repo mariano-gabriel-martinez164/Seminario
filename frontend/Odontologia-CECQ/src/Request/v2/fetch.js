@@ -89,6 +89,8 @@ export const useMultipleFetch = () => {
       const response = await _fetchWithHeaders(url);
       const jsonData = await response.json();
       setData(jsonData);
+      if (response.ok) setError(null);
+      if (!response.ok) throw new Error(response.statusText);
     } catch (err) {
       setError(err.message);
     } finally {

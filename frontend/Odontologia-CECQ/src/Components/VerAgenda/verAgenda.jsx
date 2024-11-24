@@ -39,7 +39,7 @@ export default function VerAgenda() {
   // }
 
   const [data, isLoading, error, fetchData] = useMultipleFetch();
-  const {modalTurnoFeatures, handleClickTurno} = useTurnoModal(()=>fetchData(url));
+  const {modalTurnoFeatures, handleClickTurno} = useTurnoModal(()=>{if(url) return fetchData(url)});
 
   useEffect(() => {
     if (agenda) {
