@@ -158,16 +158,18 @@ const ReciboPDF = ({ range, agendas, odontologo }) => {
             </View>
             {agenda.turnos.map((turno) => (
               <View style={styles.tableRow} key={turno?.id}>
-                <Text style={styles.tableCell}>{turno?.paciente.nombre} {turno?.paciente.apellido}</Text>
+                <Text style={styles.tableCell}>
+                  {turno?.paciente.nombre} {turno?.paciente.apellido}
+                </Text>
                 <Text style={styles.tableCell}>{turno?.fecha}</Text>
                 <Text style={styles.tableCell}>${turno?.monto}</Text>
               </View>
             ))}
             <View style={styles.tableRow}>
-                <Text style={styles.tableCell}>Total: </Text>
-                <Text style={styles.tableCell}></Text>
-                <Text style={styles.tableCell}>${agenda.monto}</Text>
-              </View>
+              <Text style={styles.tableCell}>Total: </Text>
+              <Text style={styles.tableCell}></Text>
+              <Text style={styles.tableCell}>${agenda.monto}</Text>
+            </View>
           </View>
 
           <Text style={styles.footer}>
