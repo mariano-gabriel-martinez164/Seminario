@@ -11,7 +11,8 @@ function CrearPaciente({ abrir, cerrar }) {
 	const { postData, errorPost, loadingPost } = usePostData();
 
 	useEffect(() => {
-		if(Object.keys(errores).every((key) => !errores[key])){
+		if(Object.keys(errores).every((key) => !errores[key]) && formValor.dni != ''){
+			console.log(formValor)
 			postData('/pacientes/', formValor);
 		}
 	}, [errores, formValor]);
