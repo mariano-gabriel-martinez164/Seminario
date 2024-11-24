@@ -82,7 +82,7 @@ export default function CrearPrestacion({open, onClose, setEstado, setEstadoCrea
             handleSubmit();
           }} 
           variant="contained" color='success' id='button'
-        disabled={!nombre || !precio || !codigo || !isValidPrice(precio)}
+        disabled={!nombre || !precio || !codigo || !isValidPrice(precio) || codigo.startsWith('0')}
           >
             Crear 
           </Button>
