@@ -61,25 +61,27 @@ export function Recibo({ range, turnos, odontologo }) {
     return <></>;
   }
 
-  return (
-    <PDFDownloadLink
-      document={
-        <ReciboPDF range={range} agendas={agendas} odontologo={odontologo} />
-      }
-      fileName={`recibo-${odontologo.nombre}-${odontologo.apellido}.pdf`}
-      style={{ textDecoration: "none" }}
-    >
-      {({ loading, url, error, blob }) =>
-        loading ? (
-          <Button variant="contained" disabled>
-            <PictureAsPdfIcon /> Cargando..
-          </Button>
-        ) : (
-          <Button variant="contained">
-            <PictureAsPdfIcon /> Descargar Recibo
-          </Button>
-        )
-      }
-    </PDFDownloadLink>
-  );
+  if ( odontologo != null ){
+    return (
+      <PDFDownloadLink
+        document={
+          <ReciboPDF range={range} agendas={agendas} odontologo={odontologo} />
+        }
+        fileName={`recibo-${odontologo.nombre}-${odontologo.apellido}.pdf`}
+        style={{ textDecoration: "none" }}
+      >
+        {({ loading, url, error, blob }) =>
+          loading ? (
+            <Button variant="contained" disabled>
+              <PictureAsPdfIcon /> Cargando..
+            </Button>
+          ) : (
+            <Button variant="contained">
+              <PictureAsPdfIcon /> Descargar Recibo
+            </Button>
+          )
+        }
+      </PDFDownloadLink>
+    );
+  }
 }
