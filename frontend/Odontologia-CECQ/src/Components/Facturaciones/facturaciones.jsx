@@ -17,7 +17,6 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { Recibo } from "./Recibo/recibo.jsx";
 import Typography from "@mui/material/Typography";
 
-
 export default function Facturaciones() {
   const defaultRange = [
     {
@@ -30,7 +29,7 @@ export default function Facturaciones() {
   const [range, setRange] = useState(defaultRange);
   const [turnos, setTurnos] = useState([]);
   const [monto, setMonto] = useState(0);
-  
+
   const { data, loading, error } = useFetchTurnos(
     range[0].startDate,
     range[0].endDate,
@@ -50,11 +49,11 @@ export default function Facturaciones() {
           return {
             odontologo: {
               nombre: odontologo?.nombre,
-              apellido: odontologo?.apellido
+              apellido: odontologo?.apellido,
             },
             paciente: {
               nombre: turno?.paciente.nombre,
-              apellido: turno?.paciente.apellido
+              apellido: turno?.paciente.apellido,
             },
             id: turno?.id,
             fecha: turno?.fecha,
@@ -136,7 +135,7 @@ export default function Facturaciones() {
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
-                { monto!=0 ? (
+                {monto != 0 ? (
                   <StyledTableRow>
                     <StyledTableCell>Total</StyledTableCell>
                     <StyledTableCell>
@@ -150,17 +149,15 @@ export default function Facturaciones() {
                       {monto.toFixed(2)}
                     </StyledTableCell>
                   </StyledTableRow>
-                ):(<></>)}
+                ) : (
+                  <></>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
         <Grid size={8} sx={{ textAlign: "center" }}>
-          <Recibo
-            turnos={turnos}
-            range={range}
-            odontologo={odontologo}
-          />
+          <Recibo turnos={turnos} range={range} odontologo={odontologo} />
         </Grid>
       </Grid>
     </>
