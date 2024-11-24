@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import ReciboPDF from "./RecordatorioTurnoPDF.jsx";
+import RecordatorioTurnoPDF from "./RecordatorioTurnoPDF.jsx";
 import { Button } from "@mui/material";
 import { useFetch } from "../../../Request/v2/fetch";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 
-function RecordatorioTurno({turno}){
+function RecordatorioTurno({turno,enabled=false}){
   const agendas = useFetch("/agendas/")
   const [agenda, setAgenda] = useState([])
   useEffect(() => {
@@ -17,14 +17,19 @@ function RecordatorioTurno({turno}){
   
   if (agenda.length < 1){
     return (
-    <Button variant="contained">
+    <Button variant="contained" disabled>
       <PictureAsPdfIcon /> Cargando..
     </Button>);
   }
+  if(!enabled || !turno.paciente) return (
+      <Button variant="contained" disabled>
+        <PictureAsPdfIcon /> Descargar Constancia de turno
+      </Button>
+  );
 
   return (
     <PDFDownloadLink
-      document={<ReciboPDF 
+      document={<RecordatorioTurnoPDF 
         centro = {agenda[0].CentroOdontologico}
         turno = {turno}
         odontologo = {agenda[0].odontologo}
@@ -33,10 +38,11 @@ function RecordatorioTurno({turno}){
       style={{ textDecoration: "none" }}
     >
       <Button variant="contained">
-        <PictureAsPdfIcon /> Descargar Recibo
+        <PictureAsPdfIcon /> Descargar Constancia de turno
       </Button>
     </PDFDownloadLink>
   );
+
 }
 
 export default RecordatorioTurno;

@@ -8,6 +8,7 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import img from "../../../assets/CECQIcon.png";
+import { format, parseISO } from "date-fns";
 
 // Create styles
 const styles = StyleSheet.create({
@@ -68,8 +69,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const RecordatorioTurnoPDF = ({ centro, turno, odontologo }) => (
-  <Document>
+const RecordatorioTurnoPDF = ({ centro, turno, odontologo }) => {
+  const formattedDate = format(parseISO(turno.fecha), "dd/MM/yyyy");
+  const formattedTime = format(parseISO(`1970-01-01T${turno.horaInicio}`), "hh:mm a");
+
+return ( <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
         <View style={styles.header}>
@@ -81,12 +85,12 @@ const RecordatorioTurnoPDF = ({ centro, turno, odontologo }) => (
               {centro.nombre}, {centro.direccion}
             </Text>
             <Text style={styles.subtitle}>
-              doctor {odontologo.nombre} {odontologo.apellido}
+              Doctor/a {odontologo.nombre} {odontologo.apellido}
             </Text>
             <Text style={styles.address}>
-              {turno.paciente.nombre} {turno.paciente.apellido}
+              {turno.paciente?.nombre} {turno.paciente?.apellido}
             </Text>
-            <Text style={styles.address}>{turno.fecha} {turno.horaInicio}</Text>
+            <Text style={styles.address}>{formattedDate} {formattedTime}</Text>
           </View>
           <View style={styles.rightContent}>
             <Image style={styles.logo} src={img} />
@@ -98,7 +102,7 @@ const RecordatorioTurnoPDF = ({ centro, turno, odontologo }) => (
         </View>
       </View>
     </Page>
-  </Document>
-);
+  </Document> );
+};
 
 export default RecordatorioTurnoPDF;
