@@ -6,6 +6,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
 import { usePostData } from '../../../Request/v2/post';
 import { usuarioFormato } from '../usuario';
+import { SelectorCentro } from '../../MaterialUI/selectores';
 
 
 export function ModalCrearUsuario({ open, onClose, handleManejarUsuario }) {
@@ -25,10 +26,11 @@ export function ModalCrearUsuario({ open, onClose, handleManejarUsuario }) {
   };
 
   const { postData, errorPost, loading } = usePostData();
+  const [selectedCentro, setSelectedCentro] = useState(null);
 
   const handleSubmit = async (formData) => {
     if (!isFormValid(formData)) return; // Validación del formulario
-      postData('/auth/administrativos/', usuarioFormato(formData))
+      postData('/auth/administrativos/', usuarioFormato(formData, selectedCentro.id))
       .then(() => {
         handleManejarUsuario('Creado');
       })
@@ -55,6 +57,12 @@ export function ModalCrearUsuario({ open, onClose, handleManejarUsuario }) {
 			<form>		
 	              <Grid container spacing={2}>
               
+              <Grid size={12}>
+                <SelectorCentro
+                  selectedValue={selectedCentro}
+                  setSelectedValue={setSelectedCentro} 
+                />
+              </Grid>
               <Grid size={6}>
                 <TextField
                   label='Nombre'
@@ -169,7 +177,7 @@ export function ModalCrearUsuario({ open, onClose, handleManejarUsuario }) {
           variant="contained"
           color='success'
           id='button'
-          disabled={!isFormValid(formData)}
+          disabled={!isFormValid(formData) || selectedCentro === null}
         >
           Crear
         </Button>

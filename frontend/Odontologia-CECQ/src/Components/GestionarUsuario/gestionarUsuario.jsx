@@ -56,7 +56,7 @@ export default function GestionarUsuario() {
             <StyledTableCell align="center">Apellido</StyledTableCell>
             <StyledTableCell align="center">Email</StyledTableCell>
             <StyledTableCell align="center">Cuil</StyledTableCell>
-            <StyledTableCell align="center">Agenda</StyledTableCell>
+            <StyledTableCell align="center">Centro</StyledTableCell>
             <StyledTableCell align="center">Opciones</StyledTableCell>
           </TableRow>
         </TableHead>
