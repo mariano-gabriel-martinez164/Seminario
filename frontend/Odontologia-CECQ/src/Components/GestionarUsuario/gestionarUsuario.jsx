@@ -25,6 +25,9 @@ export default function GestionarUsuario() {
   const { data: administrativos, loading: isLoading, error, fetchData } = useFetchDataOnDemand(url);
   const { data: me, loading: isLoadingMe, error: errorMe } = useFetch('/auth/administrativos/me/');
 
+  const { data: centros, loading: isLoadingCentro, error: errorCentro } = useFetch('/centros/');
+  console.log(centros);
+
   useEffect(() => {
     setTimeout(async () => {
       await fetchData();
@@ -73,7 +76,15 @@ export default function GestionarUsuario() {
               <StyledTableCell align="center">{administrativo.last_name}</StyledTableCell>
               <StyledTableCell align="center">{administrativo.email}</StyledTableCell>
               <StyledTableCell align="center">{administrativo.cuil}</StyledTableCell>
-              <StyledTableCell align="center">{administrativo.centro}</StyledTableCell>
+              <StyledTableCell align="center">
+                {
+                  !errorCentro && centros.length > 0
+                  ? centros.find((centro) => centro.id === administrativo.centro)?.nombre
+                  : null
+                }
+              </StyledTableCell>
+
+
               <StyledTableCell align="center">
                 {administrativo.id !== me?.id && (
                   <>
