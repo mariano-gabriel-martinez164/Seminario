@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { handleChange, isFormValid } from '../../GestionarUsuario/verificarFormulario';
 import { FormControl, Alert,TextField, InputLabel, OutlinedInput, InputAdornment, FormHelperText,
-  IconButton, Button, Container, Dialog, DialogActions, DialogContent } from '@mui/material';
+  IconButton, Button, Container, Dialog, DialogActions, DialogContent, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
 import { usePostData } from '../../../Request/v2/post';
@@ -45,10 +45,15 @@ export function ModalCrearUsuario({ open, onClose, handleManejarUsuario }) {
       aria-describedby="alert-dialog-slide-description"
     >
       <DialogContent>
-        {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}
-        <Container id='container'>
-          <form>
-            <Grid container spacing={2}>
+		  {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}	
+		  
+	  <Typography variant="h6" sx={{ backgroundColor: '#343a40', color: 'white', p: 2, mb: 2, borderRadius: '8px' }}>
+			Crear Usuario
+	  </Typography>
+
+		<Container id='container'>
+			<form>		
+	              <Grid container spacing={2}>
               
               <Grid size={6}>
                 <TextField

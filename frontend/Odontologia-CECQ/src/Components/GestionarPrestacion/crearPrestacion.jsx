@@ -38,11 +38,11 @@ export default function CrearPrestacion({open, onClose, setEstado, setEstadoCrea
     onClose={onClose}
   > 
   <DialogContent>
-  {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}
+	  {errorPost && <Alert severity="error" sx={{mb:2}}>{errorPost}</Alert>}	 
+	  <Typography variant="h6" sx={{ backgroundColor: '#343a40', color: 'white', p: 2, mb: 2, borderRadius: '8px' }}>
+			Crear prestacion
+	  </Typography>
   <Container id='container'>
-	  <Typography variant="h6" gutterBottom sx={{ pb: 1, borderBottom: '2px solid grey', mb:2 , textAlign: 'left'}}>
-		Nueva prestacion
-	 </Typography>
     <Grid container spacing={2} sx={{ mt:3, mb:3 , justifyContent: 'center' }}>
       <Grid size={12}>
         <TextField 

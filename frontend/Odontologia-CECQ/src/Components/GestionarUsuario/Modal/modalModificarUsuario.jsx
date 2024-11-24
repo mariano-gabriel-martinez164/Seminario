@@ -4,7 +4,7 @@ import { Estado } from '../../BuscarTurno/CrudTurno/modalAsignado';
 import { handleChange } from '../../GestionarUsuario/verificarFormulario';
 import { usePutData } from '../../../Request/v2/put2';
 
-import { TextField, Container, Button, Dialog, DialogActions, DialogContent, Alert } from '@mui/material';
+import { TextField, Container, Button, Dialog, DialogActions, DialogContent, Alert, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSeleccionado, handleManejarUsuario }) {
@@ -48,8 +48,11 @@ export function ModalModificarUsuario({ open, onClose, setEstadoModal, usuarioSe
       {administrativo && !isLoading && !error && (
         <>
           <DialogContent>
-            <form>
-              <Container id='container'>
+			  <form>
+			    <Typography variant="h6" sx={{ backgroundColor: '#343a40', color: 'white', p: 2, mb: 3, borderRadius: '8px' }}>
+					Editar Usuario
+	  			</Typography>
+                <Container id='container'>
                 <Grid container spacing={2}>
                   <Grid size={6}>
                     <TextField
