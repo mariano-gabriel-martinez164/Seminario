@@ -82,10 +82,10 @@ return ( <Document>
               Centro de Empleados de Comercio de Quilmes
             </Text>
             <Text style={styles.subtitle}>
-              {centro.nombre}, {centro.direccion}
+              {centro?.nombre}, {centro.direccion}
             </Text>
             <Text style={styles.subtitle}>
-              Doctor/a {odontologo.nombre} {odontologo.apellido}
+              Doctor/a {odontologo?.nombre} {odontologo?.apellido}
             </Text>
             <Text style={styles.address}>
               {turno.paciente?.nombre} {turno.paciente?.apellido}
