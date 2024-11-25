@@ -122,7 +122,7 @@ function SelectorAdministrativo({selectedValue, setSelectedValue, textFieldProps
 }
 
 function SelectorAgenda({ selectedValue, setSelectedValue, textFieldProps = {} }) {
-  const agendaFormat = (agenda) => agenda.nombre || ""; 
+  const agendaFormat = (agenda) => agenda.nombre || "-"; 
   
   return (
     <AutocompleteAPIComponent

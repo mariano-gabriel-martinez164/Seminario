@@ -24,7 +24,7 @@ export default function GestionarAgenda() {
   const [estado, setEstado] = useState('');
 
   let url = `/agendas/?&`;
-  if (odontologo?.matricula) url += `&odontologo=${odontologo.matricula}`;
+  if (odontologo?.id) url += `&odontologo=${odontologo.id}`;
   if (centro?.id) url += `&CentroOdontologico=${centro.id}`;
   const { data: agenda, loading: isLoading, error, fetchData } = useFetchDataOnDemand(url);
 

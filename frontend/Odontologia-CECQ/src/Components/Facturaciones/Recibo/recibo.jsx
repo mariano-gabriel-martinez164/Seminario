@@ -12,7 +12,7 @@ export function Recibo({ range, turnos, odontologo }) {
   const [agendas, setAgendas] = useState([]);
 
   let agendaURL = "/agendas/";
-  if (odontologo) agendaURL += `?odontologo=${odontologo?.matricula}`;
+  if (odontologo) agendaURL += `?odontologo=${odontologo?.id}`;
   const dataAgendas = useFetch(agendaURL);
 
   useEffect(() => {

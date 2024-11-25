@@ -14,7 +14,7 @@ export default function CrearAgenda({open, onClose, setEstado, setEstadoCrear}) 
   const { postData, errorPost, loading } = usePostData();
 
   const handleSubmit = async (formData) => {
-      postData('/agendas/', agenda(odontologo.matricula, centro.id, nombre))
+      postData('/agendas/', agenda(odontologo.id, centro.id, nombre))
       .then(() => {
         setEstado('Creado');
         setEstadoCrear('Creado');

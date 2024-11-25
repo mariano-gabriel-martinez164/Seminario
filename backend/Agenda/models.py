@@ -23,7 +23,8 @@ class Agenda(models.Model):
     
 
     def __str__(self):
-        return f"Agenda de {self.odontologo} en {self.CentroOdontologico}"
+        return self.nombre
+        # return f"Agenda de {self.odontologo} en {self.CentroOdontologico}"
 
 class TurnoTemplate(models.Model):
     id = models.AutoField(primary_key=True)

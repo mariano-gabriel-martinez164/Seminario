@@ -59,7 +59,7 @@ export default function GestionaOdontologo() {
                   
                 <IconButton onClick={() => {
                   setModalShowEliminar(true);
-                  setodontologoSeleccionado(odontologo.matricula);
+                  setodontologoSeleccionado(odontologo.id);
                 }}color="error" variant="contained"> <DeleteIcon/></IconButton>
                   
               </StyledTableCell>
