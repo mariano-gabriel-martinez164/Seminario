@@ -121,6 +121,7 @@ function SelectorAgenda({ selectedValue, setSelectedValue, textFieldProps = {} }
       selectedValue={selectedValue}
       setSelectedValue={setSelectedValue}
       api_url={"/agendas/"}
+      getOptionKey={(x)=>x.id}
       format={agendaFormat}
       placeholder={"Seleccionar agenda"}
       textFieldProps={textFieldProps}
