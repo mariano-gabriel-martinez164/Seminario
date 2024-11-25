@@ -17,6 +17,7 @@ class DiaSemanaEnum(Enum):
 
 class Agenda(models.Model):
     id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=100)
     odontologo = models.ForeignKey(Odontologo, on_delete=models.SET_NULL, null=True)
     CentroOdontologico = models.ForeignKey(CentroOdontologico, on_delete=models.SET_NULL, null=True)
     

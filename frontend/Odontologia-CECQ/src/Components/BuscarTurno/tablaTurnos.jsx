@@ -4,7 +4,7 @@ import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import {StyledTableCell, StyledTableRow} from '../MaterialUI/styledTable.jsx';
-
+import { useFetch } from '../../Request/v2/fetch.js';
 import Paper from '@mui/material/Paper';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
@@ -18,6 +18,8 @@ export function TablaTurnos({ turnos, handleClickTurno, loading, error }) {
     
   }
   if (!turnos) return null;
+  const { data: agendas, loading: isLoadingAgenda, error: errorAgenda } = useFetch('/agendas/');
+
   
   return (
     <TableContainer component={Paper}>
@@ -59,7 +61,13 @@ export function TablaTurnos({ turnos, handleClickTurno, loading, error }) {
 
               }
             </StyledTableCell>
-            <StyledTableCell>{turno.agenda}</StyledTableCell>
+            <StyledTableCell>
+            {
+            !errorAgenda && agendas?.length > 0
+              ? agendas.find((agenda) => agenda.id === turno.agenda)?.nombre || ""
+              : ""
+            }
+            </StyledTableCell>
             <StyledTableCell>
               <Chip
                 label={turno.estado}

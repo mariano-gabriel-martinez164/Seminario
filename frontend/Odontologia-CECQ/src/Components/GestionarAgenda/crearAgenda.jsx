@@ -1,18 +1,20 @@
-import { Dialog, Alert, Button, DialogActions, DialogContent, Container, Typography } from '@mui/material'
+import { Dialog, Alert, Button, DialogActions, DialogContent, Container, Typography, TextField } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { SelectorOdontologo, SelectorCentro } from '../MaterialUI/selectores'
 import { useState } from 'react'
 import { usePostData } from '../../Request/v2/post'
 import { agenda } from './agenda'
 
+
 export default function CrearAgenda({open, onClose, setEstado, setEstadoCrear}) {
   const [centro, setCentro] = useState(null);
   const [ odontologo, setOdontologo ] = useState([]);
+  const [ nombre, setNombre ] = useState('');
 
   const { postData, errorPost, loading } = usePostData();
 
   const handleSubmit = async (formData) => {
-      postData('/agendas/', agenda(odontologo.matricula, centro.id))
+      postData('/agendas/', agenda(odontologo.matricula, centro.id, nombre))
       .then(() => {
         setEstado('Creado');
         setEstadoCrear('Creado');
@@ -35,6 +37,17 @@ export default function CrearAgenda({open, onClose, setEstado, setEstadoCrear}) 
 	  </Typography>
 	<Container id='container'>
     <Grid container spacing={2} sx={{mb: 3,  justifyContent: 'center' }}>
+    <Grid size={12}>
+      <TextField
+        label='Nombre'
+        multiline
+        maxRows={4}
+        name="nombre"
+        value={nombre}
+        onChange={(e) => setNombre(e.target.value)}
+        fullWidth
+      />
+    </Grid>
       <Grid size={12}>
         <SelectorOdontologo
           selectedValue={odontologo}
@@ -55,7 +68,7 @@ export default function CrearAgenda({open, onClose, setEstado, setEstadoCrear}) 
             handleSubmit();
           }} 
           variant="contained" color='success' id='button'
-          disabled={!centro || !odontologo }
+          disabled={!centro || !odontologo || !nombre}
           >
             Crear  
           </Button>

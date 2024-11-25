@@ -60,6 +60,7 @@ export default function GestionarAgenda() {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
+            <StyledTableCell align="center">Nombre</StyledTableCell>
             <StyledTableCell align="center">Odontologo</StyledTableCell>
             <StyledTableCell align="center">Centro odontologico</StyledTableCell>
             <StyledTableCell align="center">Opciones</StyledTableCell>
@@ -68,6 +69,7 @@ export default function GestionarAgenda() {
         <TableBody>
           {agenda?.map((agenda) => (
             <StyledTableRow key={agenda.id}>
+              <StyledTableCell align="center">{agenda?.nombre}</StyledTableCell>
               <StyledTableCell align="center">{agenda?.odontologo?.nombre}</StyledTableCell>
               <StyledTableCell align="center">{agenda?.CentroOdontologico?.nombre}</StyledTableCell>
               <StyledTableCell align="center">
