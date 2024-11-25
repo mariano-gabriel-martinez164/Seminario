@@ -6,11 +6,14 @@ import {
 	TextField, Modal,
 	Button, Stack,
 	Paper, Grid,
-	Alert 
+	Alert, Snackbar 
 } from '@mui/material';
 
 
 export default function Editar({ abrir, cerrar, paciente }) {
+	const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [severity, setSeverity] = useState('success');
 	const { putData, errorPut, loading } = usePutData();
 	const [auxDNI, cambiarDNI ] = useState(paciente.dni);
 	const [ formValor, cambiarForm ] = useState({
@@ -22,12 +25,22 @@ export default function Editar({ abrir, cerrar, paciente }) {
 		telefono: paciente?.telefono,
 	});
 	
-	const controlador = () => {
+	const controlador = async () => {
 		if(formValor){
-			console.log(formValor);
-			putData(`/pacientes/${formValor.dni}/`, formValor)
+			try {
+				await putData(`/pacientes/${formValor.dni}/`, formValor);
+				setSnackbarMessage('Paciente actualizado');
+				setSeverity('success');
+				setOpenSnackbar(true);
+				cerrar();
+			} catch (error) {
+				       setSnackbarMessage('Hubo un error al actualizar los datos');
+                setSeverity('error');
+                setOpenSnackbar(true);
+            }
 		}
 	}
+
 	const manejarCambio = (e) => {
 		const { name, value } = e.target;
 		cambiarForm((anterior) => ({
@@ -37,6 +50,7 @@ export default function Editar({ abrir, cerrar, paciente }) {
 	};
 
 	return (
+		<>
 		<Modal open={abrir} onClose={cerrar}>
 			<Box sx={{
 				position: 'absolute',
@@ -77,6 +91,16 @@ export default function Editar({ abrir, cerrar, paciente }) {
 				</>
 			)}
 			</Box>
-		</Modal>
+		</Modal>       <Snackbar 
+                open={openSnackbar} 
+                autoHideDuration={6000} 
+                onClose={() => setOpenSnackbar(false)} 
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Ubicación en la parte superior
+            >
+                <Alert onClose={() => setOpenSnackbar(false)} severity={severity} sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </Alert>
+			</Snackbar>
+	</>
 	)
 }
