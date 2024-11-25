@@ -4,13 +4,19 @@ import { useFetchDataOnDemand, useFetchSearch } from '../../Request/v2/fetch';
 import { SelectorCalendario } from './selectorCalendario';
 import Chip from '@mui/material/Chip';
 
-const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placeholder, getOptionKey=null, textFieldProps={}}) => {
+const AutocompleteAPIComponent = ({
+  setSelectedValue,
+  api_url,
+  format,
+  placeholder,
+  getOptionKey = null,
+  textFieldProps = {},
+}) => {
   const [open, setOpen] = useState(false);
   const [fetched, setFetched] = useState(false);
 
-  const { data, loading, error, fetchData } = useFetchDataOnDemand(api_url); 
+  const { data, loading, error, fetchData } = useFetchDataOnDemand(api_url);
 
-  // Cuando se abre el Autocomplete, se llama a la API solo la primera vez.
   const handleOpen = () => {
     setOpen(true);
     if (!fetched) {
@@ -24,22 +30,24 @@ const AutocompleteAPIComponent = ({ setSelectedValue, api_url, format, placehold
   if (error) return <div>Error: {error}</div>;
 
   return (
-      <Autocomplete
-        open={open} onOpen={handleOpen} onClose={handleClose}
-        options={data} loading={loading}
-        getOptionLabel={(option) => format(option)}
-        getOptionKey={getOptionKey}
-        onChange={(event, newValue) => setSelectedValue(newValue)}
-        noOptionsText="No hay resultados"
-        renderInput={(params) => (
-          <CustomTextField
-            {...params}
-            loading={loading}
-            {...{label: placeholder, ...textFieldProps}}
-          />
-
-        )}
-      />
+    <Autocomplete
+      open={open}
+      onOpen={handleOpen}
+      onClose={handleClose}
+      options={data}
+      loading={loading}
+      getOptionLabel={(option) => format(option)}
+      getOptionKey={getOptionKey}
+      onChange={(event, newValue) => setSelectedValue(newValue)}
+      noOptionsText="No hay resultados"
+      renderInput={(params) => (
+        <CustomTextField
+          {...params}
+          loading={loading}
+          {...{ label: placeholder, ...textFieldProps }}
+        />
+      )}
+    />
   );
 };
 
@@ -105,8 +113,9 @@ function SelectorAdministrativo({selectedValue, setSelectedValue, textFieldProps
   );
 }
 
-function SelectorAgenda({selectedValue, setSelectedValue, textFieldProps={}}) {
-  const agendaFormat = (agenda) => `${agenda.id}`;
+function SelectorAgenda({ selectedValue, setSelectedValue, textFieldProps = {} }) {
+  const agendaFormat = (agenda) => agenda.nombre || ""; 
+  
   return (
     <AutocompleteAPIComponent
       selectedValue={selectedValue}

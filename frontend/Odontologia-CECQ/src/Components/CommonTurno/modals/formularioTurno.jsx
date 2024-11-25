@@ -94,14 +94,17 @@ function Formulario({ turno, newTurno, setNewTurno, esSobreturno, accion=null, s
       <SelectorWrapper
         placeholder="Agenda"
         required={esSobreturno}
-        defaultValue={selectedAgenda}
+        defaultValue={
+          agendasFetch?.data?.find((agenda) => agenda.id === selectedAgenda)?.nombre || ""
+        }
       >
         <SelectorAgenda
           selectedValue={selectedAgenda}
           setSelectedValue={handleAgendaChange}
-          textFieldProps={{ variant: "outlined",label: "Agenda" }}
+          textFieldProps={{ variant: "outlined", label: "Agenda" }}
         />
       </SelectorWrapper>
+
         
 
       <Grid gap={3} sx={{display:'flex',flexDirection:'row', justifyContent:'space-around' }}>

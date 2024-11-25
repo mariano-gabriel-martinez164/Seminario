@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { Recibo } from "./Recibo/recibo.jsx";
 import Typography from "@mui/material/Typography";
+import { useFetch } from "../../Request/v2/fetch.js";
 
 export default function Facturaciones() {
   const defaultRange = [
@@ -29,6 +30,8 @@ export default function Facturaciones() {
   const [range, setRange] = useState(defaultRange);
   const [turnos, setTurnos] = useState([]);
   const [monto, setMonto] = useState(0);
+  const { data: agendas, loading: isLoadingAgenda, error: errorAgenda } = useFetch('/agendas/');
+  console.log(agendas);
 
   const { data, loading, error } = useFetchTurnos(
     range[0].startDate,
@@ -128,7 +131,16 @@ export default function Facturaciones() {
                     <StyledTableCell>
                       {format(turno.fecha, "MMM dd")}
                     </StyledTableCell>
-                    <StyledTableCell>{turno.agenda}</StyledTableCell>
+                    
+                    <StyledTableCell>
+                    {
+                    !errorAgenda && agendas?.length > 0
+                      ? agendas.find((agenda) => agenda.id === turno.agenda)?.nombre || ""
+                      : ""
+                    }
+                    </StyledTableCell>
+
+
                     <StyledTableCell>
                       <AttachMoneyIcon fontSize="small" color="action" />
                       {turno.monto}
