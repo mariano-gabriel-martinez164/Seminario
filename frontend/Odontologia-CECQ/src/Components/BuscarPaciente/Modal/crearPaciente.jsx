@@ -7,39 +7,22 @@ import '../buscarPaciente.css';
 
 function CrearPaciente({ abrir, cerrar }) {	
 	const { formValor, errores, cambiosForm, controlador, nuevosErrores } = Validar();
-	const { data: paciente, loading, error } = useFetch(`/pacientes/${formValor.dni}/`);
-	const { postData, errorPost, loadingPost } = usePostData();
 
-	useEffect(() => {
-		if(Object.keys(errores).every((key) => !errores[key]) && formValor.dni != ''){
-			console.log(formValor)
-			postData('/pacientes/', formValor);
-		}
-	}, [errores, formValor]);
 
-	useEffect(() => {
-		if(paciente) {
-			nuevosErrores((prevErrores) => ({
-				...prevErrores,
-				dni: 'el DNI ya esta registrado',
-			}));
-		}
-	}, [paciente]);
-
-	return (
-		<>
-			<Modal open={abrir} onClose={cerrar} aria-labelledby="modal-title" aria-describedby="modal-description">
-				<Box sx={{ 
-					position: 'absolute', 
-					top: '50%', 
-					left: '50%', 
-					transform: 'translate(-50%, -50%)',
-					backgroundColor: 'white',
-					p: 4,
-					borderRadius: 4,
-					boxShadow: 20,
-					width: 400
-				}}>
+		return (
+			<>
+				<Modal open={abrir} onClose={cerrar} aria-labelledby="modal-title" aria-describedby="modal-description">
+					<Box sx={{ 
+						position: 'absolute', 
+						top: '50%', 
+						left: '50%', 
+						transform: 'translate(-50%, -50%)',
+						backgroundColor: 'white',
+						p: 4,
+						borderRadius: 4,
+						boxShadow: 20,
+						width: 400
+					}}>
 				<form style={{ marginTop: 0 }} onSubmit={controlador}>
 					<Typography variant="h4" gutterBottom sx={{ mb: 2, textAlign: 'left' }}>
 						Nuevo paciente 

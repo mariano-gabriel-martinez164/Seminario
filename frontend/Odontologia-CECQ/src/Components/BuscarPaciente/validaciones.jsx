@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react';
 import './buscarPaciente.css';
+import { usePostData } from '../../Request/v2/post.js';
+import { useFetchSearch } from '../../Request/v2/fetch.js';
+
 
 export default function Validar() {	
+	const { postData, errorPost, loadingPost } = usePostData();
+	const parseData = (data) => data.results;
+	const [ data, loading, error, searchData ] = useFetchSearch('/pacientes/',0, parseData);
 	const [formValor, cambiarForm] = useState({
 		dni: '',
 		nombre: '',
@@ -78,7 +84,7 @@ export default function Validar() {
 		return mensajeError;
 	}
 
-	const controlador = (evento) => {
+	const  controlador = async (evento) => {
     	evento.preventDefault();
 	    const camposVacios = [];
  		if (!formValor.nombre) camposVacios.push("Nombre");
@@ -102,7 +108,19 @@ export default function Validar() {
 			return;
 		}
 		else {
-			alert("Datos actualizados");
+			await searchData(formValor.dni);
+			if (data.some((pac) => pac.dni === formValor.dni)){
+				alert("DNI en uso");
+				return;
+			}
+			try {
+				if(!loading && data){
+					await postData('/pacientes/', formValor);
+					alert("Datos actualizados");
+				}
+			} catch(error) {
+				alert("hubo un problema al enviar los datos: " + error.message);
+			}
 		}
 	};
 
