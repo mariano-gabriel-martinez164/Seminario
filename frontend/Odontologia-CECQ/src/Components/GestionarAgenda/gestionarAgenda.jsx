@@ -70,7 +70,7 @@ export default function GestionarAgenda() {
           {agenda?.map((agenda) => (
             <StyledTableRow key={agenda.id}>
               <StyledTableCell align="center">{agenda?.nombre}</StyledTableCell>
-              <StyledTableCell align="center">{agenda?.odontologo?.nombre}</StyledTableCell>
+              <StyledTableCell align="center">{`${agenda?.odontologo?.nombre} ${agenda?.odontologo?.apellido}`}</StyledTableCell>
               <StyledTableCell align="center">{agenda?.CentroOdontologico?.nombre}</StyledTableCell>
               <StyledTableCell align="center">
                 <IconButton onClick={() => {

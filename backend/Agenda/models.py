@@ -22,8 +22,8 @@ class Agenda(models.Model):
     CentroOdontologico = models.ForeignKey(CentroOdontologico, on_delete=models.SET_NULL, null=True)
     
 
-def __str__(self):
-    return f"Agenda de {self.odontologo} en {self.centro_odontologico}"
+    def __str__(self):
+        return f"Agenda de {self.odontologo} en {self.CentroOdontologico}"
 
 class TurnoTemplate(models.Model):
     id = models.AutoField(primary_key=True)
@@ -34,5 +34,5 @@ class TurnoTemplate(models.Model):
     )
     agenda = models.ForeignKey(Agenda, related_name='turnos', on_delete=models.CASCADE, null=True)
 
-def __str__(self):
-    return f"{self.diaSemana} de {self.horaInicio} a {self.horaFin}"
+    def __str__(self):
+        return f"{self.agenda.id} {self.diaSemana} de {self.horaInicio} a {self.horaFin}"
