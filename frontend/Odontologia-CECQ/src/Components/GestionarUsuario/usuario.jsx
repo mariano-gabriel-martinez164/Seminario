@@ -1,10 +1,10 @@
-export const usuarioFormato = (formData, selectedCentro) => ({
+export const usuarioFormato = (formData, selectedCentro, isChecked) => ({
     "first_name": formData.nombre,
     "last_name": formData.apellido,
     "email": formData.email,
     "cuil": formData.cuil,
     "password": formData.contraseña,
-    "is_staff": false,
+    "is_staff": isChecked,
     "centro": selectedCentro,
   });
 

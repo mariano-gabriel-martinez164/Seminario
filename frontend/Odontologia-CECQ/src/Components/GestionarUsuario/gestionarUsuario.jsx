@@ -72,6 +72,9 @@ export default function GestionarUsuario() {
                 {administrativo.id === me?.id && (
                   <Chip label="Tú" color="primary" size="small" sx={{ marginLeft: '8px' }} />
                 )}
+                {administrativo.is_staff && (
+                  <Chip label="Referente" color="secondary" size="small" sx={{ marginLeft: '8px' }} />
+                )}
               </StyledTableCell>
               <StyledTableCell align="center">{administrativo.last_name}</StyledTableCell>
               <StyledTableCell align="center">{administrativo.email}</StyledTableCell>

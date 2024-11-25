@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { handleChange, isFormValid } from '../../GestionarUsuario/verificarFormulario';
 import { FormControl, Alert,TextField, InputLabel, OutlinedInput, InputAdornment, FormHelperText,
-  IconButton, Button, Container, Dialog, DialogActions, DialogContent, Typography } from '@mui/material';
+  IconButton, Button, Container, Dialog, DialogActions, DialogContent, Typography, FormControlLabel, Switch } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
 import { usePostData } from '../../../Request/v2/post';
@@ -24,13 +24,18 @@ export function ModalCrearUsuario({ open, onClose, handleManejarUsuario }) {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+  
+  const [isChecked, setIsChecked] = useState(false);
 
+  const handleChange2 = (event) => {
+    setIsChecked(event.target.checked);
+  };
   const { postData, errorPost, loading } = usePostData();
   const [selectedCentro, setSelectedCentro] = useState(null);
 
   const handleSubmit = async (formData) => {
     if (!isFormValid(formData)) return; // Validación del formulario
-      postData('/auth/administrativos/', usuarioFormato(formData, selectedCentro.id))
+      postData('/auth/administrativos/', usuarioFormato(formData, selectedCentro.id, isChecked))
       .then(() => {
         handleManejarUsuario('Creado');
       })
@@ -38,6 +43,7 @@ export function ModalCrearUsuario({ open, onClose, handleManejarUsuario }) {
       console.error('Error al crear el usuario:', errorPost);
     });
   }
+
 
   return (
     <Dialog
@@ -57,11 +63,23 @@ export function ModalCrearUsuario({ open, onClose, handleManejarUsuario }) {
 			<form>		
 	              <Grid container spacing={2}>
               
-              <Grid size={12}>
+              <Grid size={8}>
                 <SelectorCentro
                   selectedValue={selectedCentro}
                   setSelectedValue={setSelectedCentro} 
                 />
+              </Grid>
+              <Grid size={2}>
+              <FormControlLabel
+                    control={
+                      <Switch
+                        checked={isChecked}
+                        onChange={handleChange2}
+                      />
+                    }
+                    label="Referente"
+                    sx={{ mt: 2 }}
+                  />
               </Grid>
               <Grid size={6}>
                 <TextField
@@ -185,4 +203,5 @@ export function ModalCrearUsuario({ open, onClose, handleManejarUsuario }) {
       </DialogActions>
     </Dialog>
   );
+
 }
