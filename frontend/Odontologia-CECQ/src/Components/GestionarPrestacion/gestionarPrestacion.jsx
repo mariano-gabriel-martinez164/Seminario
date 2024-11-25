@@ -38,12 +38,12 @@ export default function GestionarPrestacion() {
           />
         </FormControl>
       
-      <TableContainer component={Paper}>
         {estado === 'Eliminado' && <Alert severity="error" onClose={() => {setEstado('')}} >Prestacion eliminado</Alert>}
         {estado === 'Creado' && <Alert severity="success" onClose={() => {setEstado('')}} >Prestacion creado</Alert>}
         {loading && <Alert severity="info" sx={{width:'100%'}}>Cargando...</Alert>}
-        {error && <Alert severity="error" sx={{width:'100%'}}>{error}</Alert>}
+        {error && <Alert severity="error" sx={{width:'100%'}}>Error</Alert>}
         {data && !loading && !error &&
+      <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -71,8 +71,8 @@ export default function GestionarPrestacion() {
           ))}
         </TableBody>
       </Table>
-      }
     </TableContainer>
+      }
     <Fab
         sx={{
           position: "fixed",

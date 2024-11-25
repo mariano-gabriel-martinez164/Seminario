@@ -54,7 +54,7 @@ export default function GestionarAgenda() {
 	  {estado === 'Modificado' && <Alert severity="warning" onClose={() => {setEstado('')}}>Agenda modificada</Alert>}	
       {estado === 'Creado' && <Alert severity="success" onClose={() => {setEstado('')}}>Agenda creada</Alert>}
       {isLoading && <Alert severity="info" sx={{width:'100%'}}>Cargando...</Alert>}
-      {error && <Alert severity="error" sx={{width:'100%'}}>{error}</Alert>}
+      {error && <Alert severity="error" sx={{width:'100%'}}>Error</Alert>}
       {agenda && !isLoading && !error &&
       <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">

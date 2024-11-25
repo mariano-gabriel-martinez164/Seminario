@@ -49,7 +49,7 @@ export default function GestionarUsuario() {
       {estadoModal === 'Modificado' && <Alert severity="warning" onClose={() => {setEstadoModal('')}}>Usuario modificado</Alert>}
       {estadoModal === 'Creado' && <Alert severity="success" onClose={() => {setEstadoModal('')}}>Usuario creado</Alert>}
       {isLoading && <Alert severity="info">Cargando...</Alert>}
-      {error && <Alert severity="error">{error}</Alert>}
+      {error && <Alert severity="error">Error</Alert>}
       {administrativos && !isLoading && !error &&
       <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">

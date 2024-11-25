@@ -35,7 +35,7 @@ export default function GestionaOdontologo() {
       {estadoModal === 'Eliminado' && <Alert severity="error" onClose={() => {setEstadoModal('')}}>Odontologo eliminado</Alert>}
       {estadoModal === 'Creado' && <Alert severity="success" onClose={() => {setEstadoModal('')}}>Odontologo creado</Alert>}
       {isLoading && <Alert severity="info">Cargando...</Alert>}
-      {error && <Alert severity="error">{error}</Alert>}
+      {error && <Alert severity="error">Error</Alert>}
       {odontologos && !isLoading && !error &&
       <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">

@@ -3,6 +3,7 @@ import { TextField, Autocomplete, CircularProgress } from '@mui/material';
 import { useFetchDataOnDemand, useFetchSearch } from '../../Request/v2/fetch';
 import { SelectorCalendario } from './selectorCalendario';
 import Chip from '@mui/material/Chip';
+import Alert from '@mui/material/Alert';
 
 const AutocompleteAPIComponent = ({
   setSelectedValue,
@@ -27,7 +28,9 @@ const AutocompleteAPIComponent = ({
 
   const handleClose = () => setOpen(false);
 
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <div>
+  <Alert severity="error">Error</Alert>
+  </div>;
 
   return (
     <Autocomplete
