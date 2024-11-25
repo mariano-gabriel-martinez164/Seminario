@@ -18,7 +18,7 @@ class Prestacion(models.Model):
         return f'{self.codigo} - {self.nombre} - ${self.precio}'
     
 class Odontologo(models.Model):
-    matricula = models.IntegerField(unique=True, primary_key=True, null=False, blank=False)
+    matricula = models.CharField(max_length=30, unique=True, primary_key=True, null=False, blank=False)
     nombre = models.CharField(max_length=15)
     apellido = models.CharField(max_length=15)
     cuil = models.IntegerField(unique=True, null=False, blank=False)
