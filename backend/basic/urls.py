@@ -6,7 +6,7 @@ urlpatterns = [
     path('centros/<int:pk>/',views.CentroOdontologicoDetail.as_view()),
 
     path('odontologos/',views.OdontologosList .as_view()),
-    path('odontologos/<int:pk>/',views.OdontologoDetail.as_view()),
+    path('odontologos/<str:pk>/', views.OdontologoDetail.as_view()),
 
     path('piezasDentales/',views.PiezasDentalesList.as_view()),
     path('piezasDentales/<int:pk>/',views.PiezaDentalDetail.as_view()),
