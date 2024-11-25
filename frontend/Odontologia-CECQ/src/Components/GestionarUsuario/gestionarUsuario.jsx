@@ -8,6 +8,7 @@ import { StyledTableCell, StyledTableRow } from '../MaterialUI/styledTable.jsx';
 import { useFetch, useFetchDataOnDemand } from '../../Request/v2/fetch.js';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { deleteData } from "../../Request/delete.js";
 import ModalEliminar from '../ModalEliminar/modalEliminar.jsx';
 
@@ -55,8 +56,9 @@ export default function GestionarUsuario() {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
+            <StyledTableCell></StyledTableCell>
+            <StyledTableCell></StyledTableCell>
             <StyledTableCell>Nombre</StyledTableCell>
-            <StyledTableCell align="center">Apellido</StyledTableCell>
             <StyledTableCell align="center">Email</StyledTableCell>
             <StyledTableCell align="center">Cuil</StyledTableCell>
             <StyledTableCell align="center">Centro</StyledTableCell>
@@ -67,16 +69,21 @@ export default function GestionarUsuario() {
         {administrativos && administrativos.map((administrativo) => (
             administrativo ? (
             <StyledTableRow key={administrativo.id}>
-              <StyledTableCell component="th" scope="row">
-                {administrativo.first_name}
+              <StyledTableCell align="center" sx={{px:0}}>
+                {administrativo.is_staff && (
+                  <Chip color="secondary" size="small" sx={{ marginLeft: '8px'}}
+                    label={<StarBorderIcon />}
+                  />
+                )}
+              </StyledTableCell>
+              <StyledTableCell align="center" sx={{px:0}}>
                 {administrativo.id === me?.id && (
                   <Chip label="Tú" color="primary" size="small" sx={{ marginLeft: '8px' }} />
                 )}
-                {administrativo.is_staff && (
-                  <Chip label="Referente" color="secondary" size="small" sx={{ marginLeft: '8px' }} />
-                )}
+                </StyledTableCell>
+              <StyledTableCell component="th" scope="row">
+                {`${administrativo.first_name} ${administrativo.last_name}`}
               </StyledTableCell>
-              <StyledTableCell align="center">{administrativo.last_name}</StyledTableCell>
               <StyledTableCell align="center">{administrativo.email}</StyledTableCell>
               <StyledTableCell align="center">{administrativo.cuil}</StyledTableCell>
               <StyledTableCell align="center">
