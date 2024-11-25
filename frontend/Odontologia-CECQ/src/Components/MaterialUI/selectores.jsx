@@ -55,23 +55,28 @@ const AutocompleteAPIComponent = ({
 };
 
 function CustomTextField({ label, loading = false, ...params }) {
+  const endAdornment = params.InputProps?.endAdornment || null;
+
   return (
     <TextField
-    label={label}
-    variant="standard"
-    {...params}
-      slotProps={{ input: {
-        ...params.InputProps,
-        endAdornment: (
-          <>
-            {loading ? <CircularProgress color="inherit" size={20} /> : null}
-            {params.InputProps.endAdornment}
-          </>
-        ),
-      }}}
+      label={label}
+      variant="standard"
+      {...params}
+      slotProps={{
+        input: {
+          ...params.InputProps,
+          endAdornment: (
+            <>
+              {loading ? <CircularProgress color="inherit" size={20} /> : null}
+              {endAdornment}
+            </>
+          ),
+        },
+      }}
     />
   );
 }
+
 
 function SelectorOdontologo({selectedValue, setSelectedValue, textFieldProps={}}) {
   const odontologoFormat = (odontologo) => `${odontologo.nombre} ${odontologo.apellido} - ${odontologo.matricula}`;
@@ -148,7 +153,7 @@ function SelectorPrestaciones({selectedValue, setSelectedValue, textFieldProps={
 
 
 
-const SelectorPacientes = ({ setSelectedValue, sx={}, textFieldProps={} }) => {
+const SelectorPacientes = ({ setSelectedValue, sx = {}, textFieldProps = {} }) => {
   const [inputValue, setInputValue] = useState('');
   const parseData = (data) => data.results;
   const [data, loading, error, searchData] = useFetchSearch('/pacientes/', 300, parseData);
@@ -156,36 +161,44 @@ const SelectorPacientes = ({ setSelectedValue, sx={}, textFieldProps={} }) => {
   useEffect(() => {
     if (inputValue) {
       searchData(inputValue);
-    } 
+    }
   }, [inputValue, searchData]);
 
-  if (error) return <div>Error: {error}</div>;
+  // Manejar errores del servidor
+  if (error) {
+    return (
+      <CustomTextField
+        label="Buscar paciente"
+        error
+        helperText="Error"
+        {...textFieldProps}
+      />
+    );
+  }
 
   return (
-	  <Autocomplete
-	  sx={{ ...sx }}
-      options={data}
-      getOptionLabel={(option) => option.apellido +' '+option.nombre || ''}
+    <Autocomplete
+      sx={{ ...sx }}
+      options={Array.isArray(data) ? data : []} // Asegurarse de que `options` siempre sea un array
+      getOptionLabel={(option) => `${option.apellido} ${option.nombre}` || ''}
       getOptionKey={(option) => option.dni}
       filterOptions={(x) => x}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
-	  }}
-
+      }}
       onChange={(event, newValue) => {
         setSelectedValue(newValue);
       }}
-      
       renderInput={(params) => (
         <CustomTextField
-        {...params}
-        loading={loading}
-        {...{label: 'Buscar paciente', ...textFieldProps}}
-      />
+          {...params}
+          loading={loading}
+          {...{ label: 'Buscar paciente', ...textFieldProps }}
+        />
       )}
     />
   );
-}
+};
 
 
 function SelectorSobreTurno({ setSelectedValue }) {
