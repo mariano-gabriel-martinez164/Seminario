@@ -5,6 +5,8 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { Button } from "@mui/material";
 import { useFetch } from "../../../Request/v2/fetch";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import { format } from "date-fns";
+import addDays from "date-fns/addDays";
 
 export function Recibo({ range, turnos, odontologo }) {
   const [agendas, setAgendas] = useState([]);
@@ -67,7 +69,7 @@ export function Recibo({ range, turnos, odontologo }) {
         document={
           <ReciboPDF range={range} agendas={agendas} odontologo={odontologo} />
         }
-        fileName={`recibo-${odontologo.nombre}-${odontologo.apellido}.pdf`}
+        fileName={`recibo-${odontologo.nombre}-${odontologo.apellido}-${format(addDays(new Date(), 1 - new Date().getDay()), "yyyy-MM-dd")}.pdf`}
         style={{ textDecoration: "none" }}
       >
         {({ loading, url, error, blob }) =>
