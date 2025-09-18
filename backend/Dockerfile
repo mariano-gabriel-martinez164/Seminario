@@ -20,4 +20,4 @@ COPY . /app/
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
-EXPOSE 8000
+EXPOSE $PORT
