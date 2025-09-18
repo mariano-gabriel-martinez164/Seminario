@@ -1,0 +1,1 @@
+web: gunicorn --bind :$PORT odontologia_cecq.wsgi:application
