@@ -92,10 +92,11 @@ WSGI_APPLICATION = 'odontologia_cecq.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'odontologia-db',
-        'PASSWORD': 'Admin.123',
-        'HOST': '34.176.247.2',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': '/cloudsql/astute-arcanum-472423-e5:southamerica-west1:odontologia-db',
         'PORT': '5432',
     }
 }
