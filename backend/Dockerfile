@@ -17,7 +17,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
+RUN python manage.py collectstatic --noinput
+
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
 EXPOSE $PORT
+
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 odontologia_cecq.wsgi:application
