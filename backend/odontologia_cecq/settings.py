@@ -54,6 +54,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5174", # puerto alternativo de Vite
     "http://127.0.0.1:5173",
     "http://127.0.0.1:5174",
+    "http://localhost:*",
+    "http://127.0.0.1:*",
+    "https://frontend-odontologia.storage.googleapis.com" 
 ]
 
 # Para desarrollo, también permitir todos los orígenes de localhost
