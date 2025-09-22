@@ -56,7 +56,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5174",
     "http://localhost:*",
     "http://127.0.0.1:*",
-    "https://frontend-odontologia.storage.googleapis.com" 
+    "https://frontend-odontologia.storage.googleapis.com",
+    "https://storage.googleapis.com"
 ]
 
 
