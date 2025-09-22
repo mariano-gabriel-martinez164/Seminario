@@ -52,7 +52,8 @@ INSTALLED_APPS = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", # url del frontend
     "http://localhost:*",
-    "http://127.0.0.1:*"
+    "http://127.0.0.1:*",
+    "https://frontend-odontologia.storage.googleapis.com" 
 ]
 
 MIDDLEWARE = [
