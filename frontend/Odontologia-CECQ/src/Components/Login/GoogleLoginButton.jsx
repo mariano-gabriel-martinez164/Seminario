@@ -27,9 +27,7 @@ const GoogleLoginButton = ({ onGoogleLogin, disabled = false }) => {
         await initializeGoogleAuth();
         setIsGoogleReady(true);
         setInitError(null);
-        console.log('Google Login Button listo');
       } catch (error) {
-        console.error('Error inicializando Google Auth:', error);
         setInitError(error.message);
         setIsGoogleReady(false);
       }
@@ -40,11 +38,8 @@ const GoogleLoginButton = ({ onGoogleLogin, disabled = false }) => {
 
   const handleGoogleLogin = () => {
     if (!isGoogleReady) {
-      console.error('Google Identity Services no está listo');
       return;
     }
-
-    console.log('Iniciando sesión con Google...');
     
     if (onGoogleLogin) {
       onGoogleLogin();
