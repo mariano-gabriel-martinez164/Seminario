@@ -68,49 +68,66 @@ export const handleGoogleAuth = async () => {
 
             const userInfo = await userInfoResponse.json();
             
+            
             console.log('Usuario autenticado:', userInfo);
             
-            // Aquí es donde enviarías el token al backend para validación
-            // Por ahora retornamos datos simulados para que puedas probar
-            
-            // TODO: Descomentar cuando tengas el backend listo
-            /*
-            const backendResponse = await fetch(`${import.meta.env.VITE_BASE_URL}/api/auth/google/`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ 
-                access_token: response.access_token,
-                userInfo: userInfo 
-              }),
-            });
-            
-            if (!backendResponse.ok) {
-              throw new Error('Error en la validación del backend');
+            // Enviar datos al backend para validación y registro/login
+            try {
+              console.log('--- DEBUG FRONTEND ---');
+              console.log('Access token:', response.access_token);
+              console.log('User info:', userInfo);
+              console.log('Sending to backend...');
+              
+              const backendResponse = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/google/`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                  access_token: response.access_token,
+                  userInfo: userInfo 
+                }),
+              });
+              
+              console.log('Backend response status:', backendResponse.status);
+              console.log('Backend response headers:', Object.fromEntries(backendResponse.headers));
+              
+              const responseText = await backendResponse.text();
+              console.log('Backend response text:', responseText);
+              
+              if (!backendResponse.ok) {
+                let errorData;
+                try {
+                  errorData = JSON.parse(responseText);
+                } catch {
+                  errorData = { error: 'Error de respuesta del servidor', details: responseText };
+                }
+                console.error('Backend error:', errorData);
+                throw new Error(errorData.error || 'Error en la validación del backend');
+              }
+              
+              const data = JSON.parse(responseText);
+              
+              console.log('Respuesta del backend exitosa:', data);
+              console.log('--- END DEBUG FRONTEND ---');
+              
+              resolve({
+                success: true,
+                token: data.token,
+                userInfo: data.user,
+                created: data.created,
+                message: data.created 
+                  ? `¡Bienvenido ${data.user.first_name}! Tu cuenta ha sido creada exitosamente.`
+                  : `¡Bienvenido de vuelta ${data.user.first_name}!`
+              });
+              
+            } catch (backendError) {
+              console.error('Error con el backend:', backendError);
+              reject({
+                error: 'backend_error',
+                details: backendError.message
+              });
             }
-            
-            const data = await backendResponse.json();
-            resolve({
-              success: true,
-              token: data.token,
-              userInfo: data.user,
-              message: 'Autenticación exitosa'
-            });
-            */
-            
-            // Simulación temporal - remover cuando implementes el backend
-            resolve({
-              success: true,
-              token: `google_token_simulation_${Date.now()}`,
-              userInfo: {
-                id: userInfo.id,
-                name: userInfo.name,
-                email: userInfo.email,
-                imageUrl: userInfo.picture,
-              },
-              message: `¡Bienvenido ${userInfo.name}! Autenticación con Google exitosa.`
-            });
             
           } catch (error) {
             reject({
@@ -133,6 +150,13 @@ export const handleGoogleAuth = async () => {
       return {
         success: false,
         message: 'Autenticación cancelada por el usuario'
+      };
+    }
+    
+    if (error.error === 'backend_error') {
+      return {
+        success: false,
+        message: 'Error conectando con el servidor: ' + error.details
       };
     }
     
