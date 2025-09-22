@@ -1,8 +1,71 @@
+# Scripts personalizados
 abrir.sh
 abrirFront.sh
-node_modules
-package.json
+
+# Node.js y Frontend
+node_modules/
 package-lock.json
 icono1.png
-node_modules/
+
+# Python y Django
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+
+# Bases de datos
+*.sqlite3
+*.db
+*.sqlite
+*.sqlite3-journal
+*.sqlite-journal
+*.db-journal
+db.sqlite3
+
+# Django específico
+media/
+staticfiles/
+static/
+local_settings.py
+
+# Entornos virtuales de Python
+.env
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.tmp
+*.temp
+*.csv
+
+# Logs
+*.log
+logs/
 

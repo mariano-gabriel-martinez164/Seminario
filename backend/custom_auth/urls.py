@@ -8,4 +8,5 @@ urlpatterns = [
     path('gettoken/', obtain_auth_token),
     path('changepassword/', views.ChangePasswordView.as_view()),
     path('administrativos/me/', views.AdministrativoData.as_view()),
+    path('google/', views.GoogleAuthView.as_view(), name='google_auth'),
 ]
