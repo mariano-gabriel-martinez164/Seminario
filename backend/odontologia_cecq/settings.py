@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'corsheaders', # permite mandar request desde el frontend
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://storage.googleapis.com/frontend-odontologia/index.html', 'https://storage.googleapis.com']
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", # url del frontend
     "http://localhost:5174", # puerto alternativo de Vite
