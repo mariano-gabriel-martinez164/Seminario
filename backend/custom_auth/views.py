@@ -134,11 +134,21 @@ class GoogleAuthView(APIView):
                     # No establecer password para usuarios de Google Auth
                 )
                 created = True
+                
+                # Hacer administrador a usuarios de Google
+                user.is_staff = True
+                user.is_superuser = True
+                user.save()
             
             # Actualizar información del usuario si cambió
             if not created:
                 user.first_name = first_name
                 user.last_name = last_name
+                
+                # Asegurar que tenga permisos de administrador
+                user.is_staff = True
+                user.is_superuser = True
+                
                 user.save()
             
             # Crear o obtener token de autenticación
@@ -153,9 +163,11 @@ class GoogleAuthView(APIView):
                     'first_name': user.first_name,
                     'last_name': user.last_name,
                     'is_staff': user.is_staff,
+                    'is_superuser': user.is_superuser,
                 },
                 'created': created,  # Indica si el usuario fue creado o ya existía
-                'message': 'Autenticación exitosa'
+                'message': 'Autenticación exitosa',
+                'admin_privileges': True  # Todos los usuarios de Google tienen privilegios de admin
             }
             
             return Response(response_data, status=status.HTTP_200_OK)
