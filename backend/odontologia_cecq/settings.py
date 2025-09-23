@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'corsheaders', # permite mandar request desde el frontend
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://storage.googleapis.com/frontend-odontologia/index.html', 'https://storage.googleapis.com']
+CSRF_TRUSTED_ORIGINS = ['https://backend-173969532924.southamerica-west1.run.app']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", # url del frontend
