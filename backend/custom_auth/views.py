@@ -67,37 +67,22 @@ class GoogleAuthView(APIView):
     
     def post(self, request):
         try:
-            # Debug: Imprimir datos recibidos
-            print("--- DEBUG GOOGLE AUTH ---")
-            print(f"Request data: {request.data}")
-            print(f"Request headers: {dict(request.headers)}")
-            
             # Obtener el access token del request
             access_token = request.data.get('access_token')
             user_info = request.data.get('userInfo')
             
-            print(f"Access token received: {access_token[:50]}..." if access_token else "No access token")
-            print(f"User info received: {user_info}")
-            
             if not access_token or not user_info:
-                print("ERROR: Missing access_token or userInfo")
                 return Response({
                     'error': 'access_token y userInfo son requeridos'
                 }, status=status.HTTP_400_BAD_REQUEST)
             
             # Validar el access token con Google
-            print("Validating token with Google...")
-            
-            # Verificar que el token sea válido haciendo una petición a la API de Google
             google_response = requests.get(
                 f'https://www.googleapis.com/oauth2/v2/userinfo?access_token={access_token}',
-                timeout=10  # Agregar timeout para evitar cuelgues
+                timeout=10
             )
             
-            print(f"Google API response status: {google_response.status_code}")
-            
             if google_response.status_code != 200:
-                print(f"Google API error: {google_response.text}")
                 return Response({
                     'error': 'Token de Google inválido',
                     'details': google_response.text,
@@ -106,9 +91,7 @@ class GoogleAuthView(APIView):
             
             try:
                 google_user_data = google_response.json()
-                print(f"Google user data: {google_user_data}")
             except ValueError as e:
-                print(f"Error parsing Google response: {e}")
                 return Response({
                     'error': 'Respuesta inválida de Google',
                     'details': str(e)
@@ -124,7 +107,6 @@ class GoogleAuthView(APIView):
                 }, status=status.HTTP_400_BAD_REQUEST)
             
             if google_email != frontend_email:
-                print(f"Email mismatch: Google={google_email}, Frontend={frontend_email}")
                 return Response({
                     'error': 'La información del usuario no coincide con el token'
                 }, status=status.HTTP_400_BAD_REQUEST)
@@ -139,15 +121,12 @@ class GoogleAuthView(APIView):
                         ' '.join(user_info.get('name', '').split(' ')[1:]) or 
                         '')
             
-            print(f"Processing user: {email} - {first_name} {last_name}")
             # Buscar o crear el usuario
             try:
                 user = Administrativo.objects.get(email=email)
                 created = False
-                print(f'Usuario existente encontrado: {email}')
             except Administrativo.DoesNotExist:
                 # Crear nuevo usuario
-                print(f'Creando nuevo usuario: {email}')
                 user = Administrativo.objects.create_user(
                     email=email,
                     first_name=first_name,
@@ -155,18 +134,15 @@ class GoogleAuthView(APIView):
                     # No establecer password para usuarios de Google Auth
                 )
                 created = True
-                print(f'Nuevo usuario creado: {email}')
             
             # Actualizar información del usuario si cambió
             if not created:
                 user.first_name = first_name
                 user.last_name = last_name
                 user.save()
-                print(f'Usuario actualizado: {email}')
             
             # Crear o obtener token de autenticación
             token, token_created = Token.objects.get_or_create(user=user)
-            print(f'Token {"creado" if token_created else "obtenido"}: {token.key[:10]}...')
             
             # Retornar respuesta exitosa
             response_data = {
@@ -181,18 +157,10 @@ class GoogleAuthView(APIView):
                 'created': created,  # Indica si el usuario fue creado o ya existía
                 'message': 'Autenticación exitosa'
             }
-            print(f'Retornando respuesta exitosa: {response_data}')
-            print("--- END DEBUG GOOGLE AUTH ---")
             
             return Response(response_data, status=status.HTTP_200_OK)
             
         except Exception as e:
-            print(f'ERROR en Google Auth: {str(e)}')
-            print(f'Error type: {type(e).__name__}')
-            import traceback
-            print(f'Traceback: {traceback.format_exc()}')
-            print("--- END DEBUG GOOGLE AUTH (ERROR) ---")
-            
             return Response({
                 'error': 'Error interno del servidor',
                 'details': str(e),

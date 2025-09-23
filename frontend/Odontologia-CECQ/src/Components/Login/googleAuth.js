@@ -20,10 +20,8 @@ export const initializeGoogleAuth = () => {
       });
 
       isGoogleInitialized = true;
-      console.log('Google Identity Services inicializado correctamente');
       resolve();
     } catch (error) {
-      console.error('Error inicializando Google Identity Services:', error);
       reject(error);
     }
   });
@@ -31,14 +29,12 @@ export const initializeGoogleAuth = () => {
 
 // Callback para manejar la respuesta del credential (no se usa en nuestro caso de popup)
 const handleCredentialResponse = (response) => {
-  console.log('Credential response:', response);
+  // Callback requerido por Google Identity Services
 };
 
 // Función para manejar el login con Google usando popup
 export const handleGoogleAuth = async () => {
   try {
-    console.log('Iniciando proceso de autenticación con Google...');
-    
     // Verificar que Google Identity Services esté inicializado
     if (!isGoogleInitialized || typeof window.google === 'undefined') {
       await initializeGoogleAuth();
@@ -68,16 +64,8 @@ export const handleGoogleAuth = async () => {
 
             const userInfo = await userInfoResponse.json();
             
-            
-            console.log('Usuario autenticado:', userInfo);
-            
             // Enviar datos al backend para validación y registro/login
             try {
-              console.log('--- DEBUG FRONTEND ---');
-              console.log('Access token:', response.access_token);
-              console.log('User info:', userInfo);
-              console.log('Sending to backend...');
-              
               const backendResponse = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/google/`, {
                 method: 'POST',
                 headers: {
@@ -89,11 +77,7 @@ export const handleGoogleAuth = async () => {
                 }),
               });
               
-              console.log('Backend response status:', backendResponse.status);
-              console.log('Backend response headers:', Object.fromEntries(backendResponse.headers));
-              
               const responseText = await backendResponse.text();
-              console.log('Backend response text:', responseText);
               
               if (!backendResponse.ok) {
                 let errorData;
@@ -102,14 +86,10 @@ export const handleGoogleAuth = async () => {
                 } catch {
                   errorData = { error: 'Error de respuesta del servidor', details: responseText };
                 }
-                console.error('Backend error:', errorData);
                 throw new Error(errorData.error || 'Error en la validación del backend');
               }
               
               const data = JSON.parse(responseText);
-              
-              console.log('Respuesta del backend exitosa:', data);
-              console.log('--- END DEBUG FRONTEND ---');
               
               resolve({
                 success: true,
@@ -122,7 +102,6 @@ export const handleGoogleAuth = async () => {
               });
               
             } catch (backendError) {
-              console.error('Error con el backend:', backendError);
               reject({
                 error: 'backend_error',
                 details: backendError.message
@@ -143,8 +122,6 @@ export const handleGoogleAuth = async () => {
     });
     
   } catch (error) {
-    console.error('Error en autenticación con Google:', error);
-    
     // Manejar errores específicos
     if (error.error === 'popup_closed_by_user') {
       return {
@@ -179,22 +156,17 @@ export const handleGoogleAuth = async () => {
 // Función para cerrar sesión de Google
 export const googleSignOut = async () => {
   try {
-    console.log('Cerrando sesión de Google...');
-    
     // Con Google Identity Services, no hay un método directo de signOut
     // El logout se maneja principalmente en el lado del servidor
     // Aquí solo limpiamos el estado local
     
     isGoogleInitialized = false;
     
-    console.log('Sesión de Google cerrada correctamente');
-    
     return {
       success: true,
       message: 'Sesión de Google cerrada'
     };
   } catch (error) {
-    console.error('Error cerrando sesión de Google:', error);
     return {
       success: false,
       message: 'Error cerrando sesión de Google',

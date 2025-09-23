@@ -58,12 +58,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5174",
     "http://localhost:*",
     "http://127.0.0.1:*",
-    "https://frontend-odontologia.storage.googleapis.com" 
+    "https://frontend-odontologia.storage.googleapis.com",
+    "https://storage.googleapis.com"
 ]
 
-# Para desarrollo, también permitir todos los orígenes de localhost
-if DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -101,25 +99,25 @@ WSGI_APPLICATION = 'odontologia_cecq.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 # Configuración para desarrollo local con SQLite
-if DEBUG and os.environ.get('USE_LOCAL_DB', 'True').lower() == 'true':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
+#if DEBUG and os.environ.get('USE_LOCAL_DB', 'True').lower() == 'true':
+#    DATABASES = {
+#        'default': {
+#            'ENGINE': 'django.db.backends.sqlite3',
+#            'NAME': BASE_DIR / 'db.sqlite3',
+#        }
+#    }
+#else:
     # Configuración para producción con PostgreSQL en Google Cloud
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME'),
-            'USER': os.environ.get('DB_USER'),
-            'PASSWORD': os.environ.get('DB_PASSWORD'),
-            'HOST': '/cloudsql/astute-arcanum-472423-e5:southamerica-west1:odontologia-db',
-            'PORT': '5432',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': '/cloudsql/astute-arcanum-472423-e5:southamerica-west1:odontologia-db',
+        'PORT': '5432',
     }
+}
 
 
 # Password validation
